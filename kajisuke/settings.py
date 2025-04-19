@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +21,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-m#sw)vk4m5y8)n0)3#zqb-1e_oh-5e8s$w(n1(tsmj=a2@i(i('
+# SECRET_KEYを.envから取得
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+# DEBUGを.envから取得
+# envファイルにTrue、Falseと書くとDjangoがString型と認識してしまいます
+# os.environ.get("DEBUG") == "True"を満たすとboolean型のTrueになり、
+# env内のDEBUGがTrue以外ならFalseになります
+DEBUG = os.environ.get("DEBUG") == "True"
+
+
+# ALLOWED_HOSTSを.envから取得
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
 
 
 # Application definition
@@ -72,12 +80,24 @@ WSGI_APPLICATION = 'kajisuke.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# DATABASESをMySQLへ変更
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        # コンテナ内の環境変数をDATABASESのパラメータに反映
+        "NAME": os.environ.get("MYSQL_DATABASE"),
+        "USER": os.environ.get("MYSQL_USER"),
+        "PASSWORD": os.environ.get("MYSQL_PASSWORD"),
+        # DBサーバーの指定。コンテナの場合はDBコンテナのservice名
+        "HOST": "mysql",
+        "PORT": os.environ.get("MYSQL_PORT"),
+        "OPTIONS": {
+            # STRICT_TRANS_TABLES：InsertやUpdateをした値がテーブルの指定に従っていない場合に、SQLの実行を中止する
+            "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
+
 
 
 # Password validation

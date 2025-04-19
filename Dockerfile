@@ -21,12 +21,10 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 ENV PATH /root/.local/bin:$PATH
 
 # pyproject.toml、poetry.lock*をワークディレクトリにコピー
-# COPY ./pyproject.toml* ./poetry.lock* ./
+COPY ./pyproject.toml* ./poetry.lock* ./
 # 依存関係のみをインストール（ルートパッケージを除く）
-# RUN poetry install --no-root
+RUN poetry install --no-root
 
 # ソースコードをコピー
-# COPY . .
+COPY . .
 
-# entrypoint.shに実行権限を付与
-# RUN chmod 755 entrypoint.sh
