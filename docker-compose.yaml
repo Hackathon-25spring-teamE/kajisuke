@@ -1,0 +1,53 @@
+services:
+  django:
+    container_name: kajisuke-django
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - .:/backend
+    ports:
+      - 8000:8000
+    env_file:
+      - .env    
+    tty: true
+    # シェルスクリプトを実行
+    # command: sh -c "./entrypoint.sh"
+    # depends_on:
+    #   - mysql
+      # mysql:
+      #   condition: service_healthy
+
+#   mysql:
+#     container_name: kajisuke-mysql
+#     image: mysql:8.0.27
+#     environment:
+#       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+#       MYSQL_DATABASE: ${MYSQL_DATABASE}
+#       MYSQL_USER: ${MYSQL_USER}
+#       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+#       TZ: 'Asia/Tokyo'
+#     volumes:
+#       - kajisuke-db:/var/lib/mysql
+#     # 以下はbackendのcondition: service_healthyを使う場合に有効化（複数人での開発時？）
+#     # healthcheck:
+#     #   test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+#     #   interval: 10s
+#     #   timeout: 20s
+#     #   retries: 10
+
+#   phpmyadmin:
+#     container_name: kajisuke-pma
+#     image: phpmyadmin
+#     environment:
+#       - PMA_ARBITRARY=1
+#       - PMA_HOSTS=kajisuke-mysql
+#       - PMA_USER=root
+#       - PMA_PASSWORD=${MYSQL_ROOT_PASSWORD}
+#     ports:
+#       - 3001:80
+#     depends_on:
+#       - mysql
+   
+# volumes:
+#   kajisuke-db:
