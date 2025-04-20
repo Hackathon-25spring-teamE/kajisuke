@@ -14,9 +14,8 @@ services:
     # 実行権限に頼らず、shで明示的に実行（エラー回避のため）
     command: sh entrypoint.sh
     depends_on:
-      - mysql
-      # mysql:
-      #   condition: service_healthy
+      mysql:
+        condition: service_healthy
 
   mysql:
     container_name: kajisuke-mysql
@@ -28,12 +27,13 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - kajisuke-db:/var/lib/mysql
-    # 以下はbackendのcondition: service_healthyを使う場合に有効化（複数人での開発時？）
-    # healthcheck:
-    #   test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-    #   interval: 10s
-    #   timeout: 20s
-    #   retries: 10
+    # DBのコンテナのヘルスチェックを行う
+    # mysqladmin(MySQLサーバーの管理を行うクライアントを使ってDBコンテナ自身(127.0.0.1)にpingを送ってヘルスチェックを行う
+    healthcheck:
+      test: "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD"
+      interval: 10s
+      timeout: 10s
+      retries: 10
 
   phpmyadmin:
     container_name: kajisuke-pma
