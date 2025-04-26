@@ -1,14 +1,21 @@
 {
+    // この開発コンテナの名前（VSCodeに表示される）
     "name": "kajisuke-django",
+    // 使用するdocker-composeファイルを指定
     "dockerComposeFile": ["../docker-compose.yaml"],
+    // 開発対象にするサービス名（docker-compose.yamlのservicesで指定した名前）
     "service": "django",
+    // VS Codeを閉じた時にコンテナを停止するかどうかの設定（"none"は停止しない）
     "shutdownAction": "none",
+    // コンテナ内で作業するワークスペースのパスを指定
     "workspaceFolder": "/backend",
+    // VSCodeのカスタマイズ設定
     "customizations": {
         "vscode": {
+            // コンテナ起動時に自動インストールする拡張機能
             "extensions": [
-                "ms-python.python",
-                "ms-python.vscode-pylance"
+                "ms-python.python",           // Python用の基本拡張機能
+                "ms-python.vscode-pylance"    // Python補完機能（型チェックもできる）
             ]
         }
     }

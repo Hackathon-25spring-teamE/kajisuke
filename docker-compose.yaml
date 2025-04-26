@@ -1,52 +1,57 @@
+# サービス（コンテナ）を定義するセクション
 services:
-  django:
-    container_name: kajisuke-django
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+  # Djangoコンテナ
+  django:   # サービス名
+    container_name: kajisuke-django   # コンテナ名（任意）
+    build:  # Dockerイメージのbuild設定
+      context: .  # buildを実行する作業ディレクトリ
+      dockerfile: ./Dockerfile  # 使用するDockerfileのパスを指定
     volumes:
-      - .:/backend
+      - .:/backend  # ホストのカレントディレクトリをコンテナの/backendにマウント
     ports:
-      - 8000:8000
+      - 8000:8000   # ホストの8000番ポートをコンテナの8000番ポートに割り当て
     env_file:
-      - .env    
-    tty: true
+      - .env  # 環境変数を.envファイルから読み込む    
+    tty: true  # 疑似ターミナルを有効化（コンテナがすぐに正常終了するのを防ぐ）
+    # コンテナ起動後に実行するコマンドを指定
     # 実行権限に頼らず、shで明示的に実行（エラー回避のため）
     command: sh entrypoint.sh
-    depends_on:
+    depends_on:   # 先に起動するサービスを指定
       mysql:
-        condition: service_healthy
+        condition: service_healthy  # MySQLが正常に起動するまでDjangoコンテナの起動を待つ
 
+  # MySQLコンテナ
   mysql:
     container_name: kajisuke-mysql
-    image: mysql:8.0.27
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    image: mysql:8.0.27  # 使用するDockerイメージを指定
+    environment:  # コンテナ内の環境変数を指定
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}  # rootユーザーのパスワード
+      MYSQL_DATABASE: ${MYSQL_DATABASE}            # 作成するデータベース名
+      MYSQL_USER: ${MYSQL_USER}                    # 一般ユーザーの名前
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}            # 一般ユーザーのパスワード
     volumes:
-      - kajisuke-db:/var/lib/mysql
-    # DBのコンテナのヘルスチェックを行う
-    # mysqladmin(MySQLサーバーの管理を行うクライアントを使ってDBコンテナ自身(127.0.0.1)にpingを送ってヘルスチェックを行う
-    healthcheck:
+      - kajisuke-db:/var/lib/mysql  # DBデータを永続化するためのボリュームをマウント
+    healthcheck:  # コンテナのヘルスチェック設定
+      # mysqladmin(MySQLサーバーの管理を行うクライアント）を使ってDBコンテナ自身にpingを送る
       test: "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD"
-      interval: 10s
-      timeout: 10s
-      retries: 10
+      interval: 10s  # チェック間隔
+      timeout: 10s   # タイムアウト時間
+      retries: 10    # リトライ回数
 
+  # phpMyAdminコンテナ
   phpmyadmin:
     container_name: kajisuke-pma
     image: phpmyadmin
     environment:
-      - PMA_ARBITRARY=1
-      - PMA_HOSTS=kajisuke-mysql
-      - PMA_USER=root
-      - PMA_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - PMA_ARBITRARY=1             # 任意のMySQLサーバーに接続できるようにする
+      - PMA_HOSTS=kajisuke-mysql    # 接続先のMySQLコンテナ名を指定
+      - PMA_USER=root               # ログインユーザー
+      - PMA_PASSWORD=${MYSQL_ROOT_PASSWORD}  # ログインパスワード
     ports:
-      - 3001:80
+      - 3001:80  # ホストの3001番ポートでphpMyAdminにアクセス可能にする
     depends_on:
       - mysql
-   
+
+# 名前付きボリュームの定義（DBデータを永続化）   
 volumes:
   kajisuke-db:
