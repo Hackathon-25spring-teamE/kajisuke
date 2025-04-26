@@ -23,7 +23,7 @@ services:
   # MySQLコンテナ
   mysql:
     container_name: kajisuke-mysql
-    image: mysql:8.0.27  # 使用するDockerイメージを指定
+    image: mysql:8.0.36  # 使用するDockerイメージを指定
     environment:  # コンテナ内の環境変数を指定
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}  # rootユーザーのパスワード
       MYSQL_DATABASE: ${MYSQL_DATABASE}            # 作成するデータベース名
