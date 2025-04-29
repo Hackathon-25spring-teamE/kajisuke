@@ -7,8 +7,9 @@ ENV PYTHONUNBUFFERED=1
 # コンテナのワークディレクトリを/backendに指定
 WORKDIR /backend
 
-# curlと、mysqlclientのビルドに必要なパッケージをインストール
+# git、curl、mysqlclientのビルドに必要なパッケージをインストール
 RUN apt-get update && apt-get install -y \
+    git \
     curl \
     build-essential \
     default-libmysqlclient-dev \
