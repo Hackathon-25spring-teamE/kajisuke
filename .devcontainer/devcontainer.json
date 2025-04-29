@@ -9,6 +9,8 @@
     "shutdownAction": "none",
     // コンテナ内で作業するワークスペースのパスを指定
     "workspaceFolder": "/backend",
+    // コンテナ起動後にgitをインストール
+    "postCreateCommand": "apt-get update && apt-get install -y git",
     // VSCodeのカスタマイズ設定
     "customizations": {
         "vscode": {
