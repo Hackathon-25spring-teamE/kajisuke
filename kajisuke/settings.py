@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 開発用ツールを追加
+    'debug_toolbar', 
     # 作成したアプリケーションを追加
     'apps.apps.AppsConfig',
 ]
@@ -57,6 +59,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 開発用ツールを追加
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'kajisuke.urls'
@@ -142,3 +146,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+INTERNAL_IPS = ['127.0.0.1',]
+
+# debug tool barのconfig
+DEBUG_TOOLBAR_CONFIG = {
+    # ツールバーを表示させる
+    "SHOW_TOOLBAR_CALLBACK" : lambda request: True,
+}

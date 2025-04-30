@@ -79,6 +79,7 @@
   
   # 以下はpyproject.tomlがあるディレクトリで実行
   poetry add <pkg>         # パッケージの追加
+  poetry add -G dev <pkg>  # 開発用パッケージの追加
   poetry remove <pkg>      # パッケージの削除
   ```
 
