@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <title>開発用デバッグページ</title>
+        <style>
+            body {
+                font-family: sans-serif;
+                padding: 2rem;
+                background: #f7f7f7;
+            }
+            h1 {
+                margin-bottom: 1rem;
+            }
+            .context {
+                background: #fff;
+                padding: 1rem;
+                border: 1px solid #ccc;
+                border-radius: 6px;
+            }
+            .context pre {
+                background: #eee;
+                padding: 0.5rem;
+                border-radius: 4px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Context デバッグ表示</h1>
+        <div class="context">
+            {% for key, value in context.items %}
+                <h3>{{ key }}</h3>
+                <pre>{{ value|safe }}</pre>
+            {% empty %}
+                <p><em>Context は空です。</em></p>
+            {% endfor %}
+        </div>
+    </body>
+</html>

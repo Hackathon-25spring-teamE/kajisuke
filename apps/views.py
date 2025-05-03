@@ -1,10 +1,16 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 
 # Create your views here.
 
+# テスト用表示
 def hello_world(request):
-    return HttpResponse("Hello, world. KAJISUKEapp is here!")
+    context = {
+        "message1": "Hello, world.",
+        "message2": "KAJISUKEapp is here!",
+    }
+    # フロントページができたら、以下の形に書き換える（contextは直接渡す）
+    # return render(request, '<フロントページのhtml>', context)
+    return render(request, 'dev/dev.html', {'context': context})
 
 
 # サインアップ
