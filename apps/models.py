@@ -156,3 +156,5 @@ class ExceptionalSchedule(models.Model):
 
     class Meta:
         db_table = "exceptional_schedules"
+
+
