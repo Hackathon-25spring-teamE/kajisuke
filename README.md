@@ -106,3 +106,13 @@ poetry run python manage.py makemigrations
 poetry run python manage.py migrate
 ```
 
+### 管理ユーザーの作成とログイン
+
+- 下記コマンドでsuperuserを作成できます
+- email, user_name, passwordを聞かれるので入力して下さい
+```bash
+poetry run python manage.py createsuperuser
+```
+
+- [http://localhost:8000/admin](http://localhost:8000/admin)で管理画面が表示されます
+- superuser作成時に入力したemail, passwordでログインして下さい
