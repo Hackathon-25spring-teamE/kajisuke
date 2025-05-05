@@ -106,3 +106,26 @@ poetry run python manage.py makemigrations
 poetry run python manage.py migrate
 ```
 
+### DBの初期データ
+
+- initial_data.jsonにデフォルトのtask_categoryとtaskのデータを記載しています
+- DBのvolumeを削除や初期化した時に、下記コマンドで初期データをDBに反映できます
+```bash
+poetry run python manage.py loaddata initial_data.json
+```
+- もしDBにデータが残っていて初期化したい時は、先に下記コマンドでデータを消してから上記コマンドを実行して下さい
+```bash
+poetry run python manage.py flush --noinput
+```
+
+
+### 管理ユーザーの作成とログイン
+
+- 下記コマンドでsuperuserを作成できます
+- email, user_name, passwordを聞かれるので入力して下さい
+```bash
+poetry run python manage.py createsuperuser
+```
+
+- [http://localhost:8000/admin](http://localhost:8000/admin)で管理画面が表示されます
+- superuser作成時に入力したemail, passwordでログインして下さい
