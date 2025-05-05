@@ -1,8 +1,15 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser
+from .models import CustomUser, TaskCategory, Task, Schedule, PastSchedule, CompletedSchedule, ExceptionalSchedule
 
 # Register your models here.
+
+admin.site.register(TaskCategory)
+admin.site.register(Task)
+admin.site.register(Schedule)
+admin.site.register(PastSchedule)
+admin.site.register(CompletedSchedule)
+admin.site.register(ExceptionalSchedule)
 
 
 @admin.register(CustomUser)
