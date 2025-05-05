@@ -8,5 +8,5 @@ from .models import User
 
 
 #ログイン用フォーム
-class EmailLoginForm(AuthenticationForm):
-    username = forms.EmailField(label='メールアドレス', max_length=254)
+# class EmailLoginForm(AuthenticationForm):
+#     username = forms.EmailField(label='メールアドレス', max_length=254)

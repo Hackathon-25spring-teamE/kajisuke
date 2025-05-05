@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.contrib.auth.views import LoginView
+
 
 
 # Create your views here.
@@ -22,7 +24,7 @@ def hello_world(request):
 # サインアップ
 
 # サインイン
-class CustomLoginView(LoginView):
+# class CustomLoginView(LoginView):
     template_name = 'login.html'
     authentication_form = EmailLoginForm
 # サインアウト
