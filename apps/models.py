@@ -22,6 +22,7 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(user_name, email, password, **extra_fields)
     
+
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user_name = models.CharField(max_length=255)
@@ -155,5 +156,3 @@ class ExceptionalSchedule(models.Model):
 
     class Meta:
         db_table = "exceptional_schedules"
-
-
