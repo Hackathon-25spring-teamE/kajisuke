@@ -1,12 +1,14 @@
 
 from django.shortcuts import render ,redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, logout, authenticate
 from django.views.generic import CreateView
-from django.contrib.auth.views import LoginView as BaseLoginView
+from django.contrib.auth.views import LoginView as BaseLoginView, LogoutView as BaseLogoutView
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.views import View
+
 
 from .forms import SignUpForm, SigninFrom 
 
@@ -44,17 +46,17 @@ class SignupView(CreateView):
             return HttpResponseRedirect(reverse("signup"))
 
             
-        
-        
-
-
 # サインイン
 class SigninView(BaseLoginView):
     form_class = SigninFrom
     template_name = "dev/signin.html"
 
-# サインアウト
 
+# サインアウト
+class SignoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('apps:signin')
 # カレンダー表示
 
 # 日毎のスケジュール表示
