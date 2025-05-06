@@ -28,6 +28,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     user_name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     is_staff = models.BooleanField(default=False)   # superuser作成に必要なため追加
+    is_active = models.BooleanField(default=True)   #これがないとログインに失敗する
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

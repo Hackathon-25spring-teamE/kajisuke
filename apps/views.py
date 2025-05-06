@@ -10,7 +10,7 @@ from django.urls import reverse
 from django.views import View
 
 
-from .forms import SignUpForm, SigninFrom 
+from .forms import SignupForm, SigninForm
 
 # Create your views here.
 
@@ -27,7 +27,7 @@ def hello_world(request):
 
 # サインアップ
 class SignupView(CreateView):
-    form_class = SignUpForm
+    form_class = SignupForm
     template_name = "dev/signup.html"
     success_url = reverse_lazy("apps:hello_world")
 
@@ -48,8 +48,16 @@ class SignupView(CreateView):
             
 # サインイン
 class SigninView(BaseLoginView):
-    form_class = SigninFrom
+    form_class = SigninForm
     template_name = "dev/signin.html"
+
+    def form_valid(self, form):
+        # 明示的にログイン
+        login(self.request, form.get_user())
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('apps:hello_world')
 
 
 # サインアウト
