@@ -1,9 +1,13 @@
 from django.urls import path
-from .views import hello_world, CustomSigninView
+from .views import hello_world
+
 
 from . import views
 
+app_name = "apps"
+
 urlpatterns = [
     path('', hello_world, name="hello_world"),
-    path('signin/', views.CustomSigninView.as_view(), name='Signin'),
+    path('signup/', views.SignupView.as_view(), name="signup"),
+    path('signin/', views.SigninView.as_view(), name="signin"),
 ]

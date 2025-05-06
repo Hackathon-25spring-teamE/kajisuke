@@ -1,12 +1,14 @@
 
 from django.shortcuts import render ,redirect
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from django.contrib.auth.views import LoginView
+from django.contrib.auth import login, authenticate
+from django.views.generic import CreateView
+from django.contrib.auth.views import LoginView as BaseLoginView
+from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
-from .forms import EmailSigninForm
-
+from .forms import SignUpForm, SigninFrom 
 
 # Create your views here.
 
@@ -22,11 +24,35 @@ def hello_world(request):
 
 
 # サインアップ
+class SignupView(CreateView):
+    form_class = SignUpForm
+    template_name = "dev/signup.html"
+    success_url = reverse_lazy("apps:hello_world")
+
+    def form_valid(self, form):
+        # signin after signup
+        response = super().form_valid(form)
+        email = form.cleaned_data.get("email")
+        password = form.cleaned_data.get("password1")
+        user = authenticate(email=email, password=password)
+        
+        if user is not None:
+            login(self.request, user)
+            return response
+        else:
+            # ログインに失敗した場合、新規登録ページへリダイレクト
+            return HttpResponseRedirect(reverse("signup"))
+
+            
+        
+        
+
 
 # サインイン
-class CustomSigninView(LoginView):
-    template_name = 'dev/signin.html'
-    authentication_form = EmailSigninForm
+class SigninView(BaseLoginView):
+    form_class = SigninFrom
+    template_name = "dev/signin.html"
+
 # サインアウト
 
 # カレンダー表示
