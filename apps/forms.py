@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm 
+from django.contrib.auth import authenticate
 
 from .models import CustomUser
 from .validators import validate_unique_email, validate_min_length_8, validate_has_digit, validate_has_uppercase
@@ -20,6 +21,28 @@ class SignUpForm(UserCreationForm):
     
 
 #ログイン用フォーム
-class SigninFrom(AuthenticationForm):
+class SigninFrom(AuthenticationForm):                      
     class Meta:
         model = CustomUser
+    
+    #ラベル名をメールアドレスに変更
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].label = "メールアドレス"
+    
+    #メールアドレスかパスワードが間違っていた場合のエラー
+    def clean(self):
+        email = self.cleaned_data.get("username")  # フィールド名は username のまま
+        password = self.cleaned_data.get("password")
+
+        if email and password:
+            user = authenticate(self.request, username=email, password=password)
+            if user is None:
+                raise forms.ValidationError(
+                    "メールアドレスもしくはパスワードが間違っています。",
+                    code="invalid_login"
+                )
+            else:
+                self.confirm_login_allowed(user)
+
+        return self.cleaned_data
