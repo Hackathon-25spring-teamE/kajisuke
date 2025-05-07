@@ -1,1 +1,31 @@
-<h2>サインアップ</h2>
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}新規登録 - Kaji suke{% endblock %}
+{% block description %}Kaji sukeの新規登録ページ{% endblock %}
+{% block extra_css %}
+<link href="{% static 'css/signup.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <form class="signup-form" action="/signup" method="post" name="signup-form">
+        <div class="form-group">
+            <label for="name">ユーザー名</label>
+            <input type="text" placeholder="名前" id="name" name="name">
+        </div>
+        <div class="form-group">
+            <label for="email">メールアドレス</label>
+            <input type="email" placeholder="E-mail" id="email" name="email">
+        </div>
+        <div class="form-group">
+            <label for="password">パスワード</label>
+            <input type="password" placeholder="Password" id="password" name="password">
+        </div>
+        <div class="form-group">
+            <label for="confirm-password">パスワード(確認用)</label>
+            <input type="password" placeholder="Password(confirm)" id="confirm-password" name="confirm-password">
+        </div>
+        <button class="submit1">新規登録</button>
+        <button class="submit2">ログイン</button>
+    </form>
+{% endblock %}

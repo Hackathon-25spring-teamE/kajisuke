@@ -1,0 +1,81 @@
+@charset "UTF-8"; /* 文字エンコーディングをUTF-8に設定 */
+
+/*--------------------------------------------------
+リセットスタイル（ブラウザ間の統一）
+--------------------------------------------------*/
+
+/* すべての要素の余白・枠線をリセット */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0; /* 外側の余白をなくす */
+  padding: 0; /* 内側の余白をなくす */
+  border: none; /* 余計な枠線を削除 */
+  font-style: normal; /* フォントスタイルを通常に */
+  text-align: left; /* デフォルトのテキスト配置を左揃えに */
+  zoom: 1; /* ズームバグ対策（古いIE向け） */
+}
+
+/* HTML5の新しい要素をブロック要素として扱う */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block; /* ブロック要素として表示 */
+}
+
+/* テーブルのボーダーを統合し、フォントを継承 */
+table {
+  border-collapse: collapse; /* テーブル枠をまとめる */
+  font-family: inherit; /* 親要素のフォントを継承 */
+}
+
+/* 見出しタグのデフォルトサイズを調整 */
+h1, h2, h3, h4, h5 {
+  font-size: 100%; /* ブラウザの影響を防ぐ */
+  font-weight: normal; /* 太字を解除 */
+  line-height: 1; /* 行の高さを標準化 */
+}
+
+/* フォーム要素のフォントを統一 */
+input, textarea, select {
+  font-family: inherit; /* 親のフォントを適用 */
+  font-size: 16px; /* 視認性を確保する標準サイズ */
+}
+
+/* iOS・Safariのボタンや入力フォームのスタイルをリセット */
+input[type="button"], input[type="text"], input[type="submit"],
+textarea {
+  border-radius: 0; /* 角丸をなくす */
+  resize: none; /* テキストエリアのリサイズを禁止 */
+}
+
+/* テーブルセルのボーダー統合 */
+th, td {
+  border-collapse: collapse; /* 枠のズレを防止 */
+}
+
+/* テーブル内のセルの余白を統一 */
+table th, table td {
+  white-space: nowrap; /* 自動改行を防ぐ */
+}
+
+/* リストのデフォルトのマーカーを削除 */
+ul, ol {
+  list-style-type: none; /* マーカーをなくす */
+}
+
+/* 画像の表示を統一 */
+img {
+  vertical-align: middle; /* 画像の位置を揃える */
+  max-width: 100%; /* コンテナサイズに合わせる */
+  height: auto; /* 縦横比を維持 */
+}
