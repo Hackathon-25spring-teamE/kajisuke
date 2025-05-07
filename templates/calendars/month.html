@@ -1,193 +1,27 @@
 <!-- <h2>月のカレンダー表示</h2> -->
 
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ja">
     <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>カレンダー</title>
-
+    
+    <link href="{% static 'css/base_dev.css' %}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
-    <style>
-        /*-------------------------------------------
-	    ベース部分
-        -------------------------------------------*/
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <link href="{% static 'css/month.css' %}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js" defer></script>
+    <script src="{% static 'js/month.js' %}" defer></script>
 
-        html {
-            font-size: 100%;
-        }
-        
-        body {
-            font-family: "M PLUS Rounded 1c", sans-serif;
-            font-weight: 500;
-            font-style: normal;
-        }
 
-        main {
-            width: 100%;
-        }
-
-        img {
-            max-width: 100%;
-        }
-
-        li {
-            list-style: none;
-        }
-        
-        a {
-            text-decoration: none;
-            color: var(--text-gray);
-        }
-
-        body {
-            font-family: sans-serif;
-            background-color: #F9F5EF;
-            color: #636262;
-        }
-        #calendar {
-            max-width: 100%;
-        }
-        .my-events {   
-            color: #333333;
-            background-color: #C5D7FB;
-        }
-
-        /* 日付セルの境界線（罫線） */
-        .fc td, .fc th {
-        border-color: #cccccc;
-        }
-
-        /* prev, next ボタン */
-        .fc .fc-button {
-        background-color: #D7C0A4;  /* ボタン背景色 */
-        color: #F9F5EF;               /* 文字色 */
-        border: none;
-        }
-
-        .fc .fc-button:hover {
-        background-color: #D7C0A4;  /* ホバー時の色 */
-        }
-
-        .fc .fc-day-today {
-        background-color: #D7C0A4; /* 今日の日付の背景色 */
-        
-        }
-
-        /* 土曜日 */
-        .fc-day-sat .fc-daygrid-day-top,
-        .fc-day-sat .fc-scrollgrid-sync-inner .fc-col-header-cell-cushion,
-        .fc-day-sat .fc-list-day-cushion {
-        color: blue;
-        }
-
-        /* 日曜日 */
-        .fc-day-sun .fc-daygrid-day-top,
-        .fc-day-sun .fc-scrollgrid-sync-inner .fc-col-header-cell-cushion,
-        .fc-day-sun .fc-list-day-cushion {
-        color: red;
-        }
-
-        /* 前後の月の日付（非表示ではない） */
-        .fc-day-other .fc-daygrid-day-top,
-        .fc-day-other .fc-scrollgrid-sync-inner .fc-col-header-cell-cushion,
-        .fc-day-other .fc-list-day-cushion {
-        color: gray;
-        }
-
-        .fc .fc-event {
-            font-size: 10px;
-            padding: 1px 2px;
-            line-height: 1.1;
-        }
-
-        .fc-daygrid-event {
-            margin-bottom: 1px;
-        }
-        
-
-        /* 選択状態を完全に上書きして無効化 */
-        /* .fc-event:focus,
-        .fc-event.fc-event-selected,
-        .fc-event:active {
-        background-color: inherit !important;
-        border-color: inherit !important;
-        color: inherit !important;
-        outline: none !important;
-        box-shadow: none !important;
-        } */
-
-        /* さらに下記のように、hover 時のスタイルも打ち消してみてください */
-        .fc-event.my-events:focus,
-        .fc-event.my-events.fc-event-selected,
-        .fc-event.my-events:active,
-        .fc-event.my-events:hover {
-        background-color: inherit !important;
-        }
-
-    </style>
     </head>
 
     <body>
 
-    <h2>月のカレンダー表示</h2>
-    <div id="calendar"></div>
+        <h2>月のカレンダー表示</h2>
+        <div id="calendar"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-        const calendarEl = document.getElementById('calendar');
-
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            views: {
-		        dayGridMonth: {
-			        titleFormat: { month: "long" }
-		        }
-	        },
-            headerToolbar: {
-                left: 'prev',
-                center: 'title',
-                right: 'next'
-                },
-            events: '/api/events/',
-            timeZone: "Asia/Tokyo", //念のため
-            locale: "jp",
-            displayEventTime: false,  // 時間表示を消す設定
-            dayMaxEventRows: true,
-            height: 600, 
-            dayCellContent: function(arg){
-                return arg.date.getDate();
-            },
-            // ポップアップを開かないように明示
-            eventLimitClick: false,  // ← この設定は古いが残っていれば追加
-            moreLinkClick: function() {
-                return 'none';         // ← 「+N件」クリック時も無反応にする
-            },
-            selectable: false,  // ← 選択機能を無効化
-            eventClick: function(info) {
-                info.jsEvent.preventDefault(); // デフォルト動作無効
-                info.el.blur(); // 明示的に focus を外す
-            },
-
-            // 日付クリック時にURL遷移
-            dateClick: function(info) {
-                const date = new Date(info.dateStr);  // クリックされた日付
-                const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, '0'); // 月は0-index
-                const day = String(date.getDate()).padStart(2, '0');
-
-                const url = `/calendars/${year}/${month}/${day}`;
-                window.location.href = url;
-            }
-        });
-
-        calendar.render();
-        });
-    </script>
     </body>
 </html>

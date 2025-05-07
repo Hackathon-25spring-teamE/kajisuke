@@ -1,0 +1,35 @@
+/*-------------------------------------------
+ベース部分
+-------------------------------------------*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 100%;
+}
+
+body {
+    font-family: "M PLUS Rounded 1c", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+main {
+    width: 100%;
+}
+
+img {
+    max-width: 100%;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: var(--text-gray);
+}
