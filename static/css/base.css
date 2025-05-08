@@ -58,7 +58,7 @@ input[type="text"], input[type="email"], input[type="password"] {
     border-radius: 8px;
     height: 50px;
     cursor: pointer;
-    transition: opacity 0.3s ease-in-out; /* 透過度の変化を滑らかに */
+    transition: opacity 0.3s ease-in-out; /* 変化を滑らかに */
 }
 .submit1:hover {
     filter: brightness(1.3); /* ホバー時に明るさアップ */
@@ -75,6 +75,7 @@ input[type="text"], input[type="email"], input[type="password"] {
     cursor: pointer;
   }
 
+
 /* プレースホルダー */
     input::placeholder {
     font-size: var(--font-size-default);
@@ -88,10 +89,10 @@ img {
 }
 
 /* フッター */
-.footer {
+/*.footer {
     text-align: center;
     position: fixed;
     bottom: 15px;
     left: 0;
     width: 100%;
-}
+}*/

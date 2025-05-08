@@ -1,1 +1,26 @@
-<h2>サインイン</h2>
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ログイン - Kajisuke{% endblock %}
+{% block description %}Kajisukeのログインページ{% endblock %}
+{% block extra_css %}
+<link href="{% static 'css/signin.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <form class="login-form" action="/signin" method="post" name="signin-form">
+        <div class="form-group">
+            <label for="email">メールアドレス</label>
+            <input type="text" placeholder="E-mail" id="email" name="email">
+        </div>
+        <div class="form-group">
+            <label for="password">パスワード</label>
+            <input type="password" placeholder="Password" id="password" name="password">
+        </div>
+        <button class="submit1">ログイン</button>
+        <button class="submit2">新規登録はこちら</button>
+        <!-- 家事すけロゴ --> 
+        <div><img class="logo" src="{% static 'images/kajisuke.svg' %}" alt="Kaji suke">
+        </div>
+    </form>
+{% endblock %}
