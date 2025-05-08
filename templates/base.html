@@ -21,17 +21,17 @@
     </head>
 
     <body>
-        <header>
-            <h1>Kaji suke</h1>
-        </header>
-
-        <main>
-            {% block content %}{% endblock %}
-        </main>
-
-        <footer>
-            <p>&copy; 2025 Kaji suke</p>
-        </footer>
-        {% block extra_js %}{% endblock %}
+        <div class="container">
+            <header>
+                <h1>Kaji suke</h1>
+            </header>
+                <main>
+                    {% block content %}{% endblock %}
+                </main>
+            <footer>
+                <p class="footer"><small>&copy; 2025 Kaji suke</small></p>
+            </footer>
+                {% block extra_js %}{% endblock %}
+        </div>
     </body>
 </html>
