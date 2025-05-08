@@ -1,30 +1,69 @@
 # uWSGIで動かすからDjango味は極力出さない
-
-version: "3.8"
-
 services:
   web:
     container_name: kajisuke-web
-    build: kajisuke
+    build:
+      context: .
     restart: always
     command: >
       bash -c "python manage.py migrate && python manage.py collectstatic --noinput && exec uwsgi --ini /app/uwsgi.ini"
-    # volumes:
-    #   - static_volume:/app/static
-    #   - uwsgi_sock:/app/uwsgi.sock
     volumes:
-      - .:/app
+      - static_volume:/app/static
+      - uwsgi_sock:/app/uwsgi.sock
     ports:
-      # - "3031:3031"
-      - "8000:8000"
+      - "3031:3031"
     env_file:
       - .env
+    # RDS完了後、削除
+    tty: true  # 疑似ターミナルを有効化（コンテナがすぐに正常終了するのを防ぐ）
     healthcheck:
-      # test: ["CMD-SHELL", "curl -f http://localhost:3031 || exit 1"]
-      test: ["CMD-SHELL", "curl -f http://localhost:8000 || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://localhost:3031 || exit 1"]
       interval: 10s
       retries: 5
       start_period: 30s
+    # RDS完了後、下3行は必ず削除すること
+    depends_on:   # 先に起動するサービスを指定
+      mysql:
+        condition: service_healthy  # MySQLが正常に起動するまでDjangoコンテナの起動を待つ
+
+  # RDS作成後、settings.pyを.envなしで運用できるように変更して、削除すること。
+  # MySQLコンテナ
+  mysql:
+    container_name: kajisuke-mysql
+    image: mysql:8.0.36  # 使用するDockerイメージを指定
+    environment:  # コンテナ内の環境変数を指定
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}  # rootユーザーのパスワード
+      MYSQL_DATABASE: ${MYSQL_DATABASE}            # 作成するデータベース名
+      MYSQL_USER: ${MYSQL_USER}                    # 一般ユーザーの名前
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}            # 一般ユーザーのパスワード
+    volumes:
+      - kajisuke-db:/var/lib/mysql  # DBデータを永続化するためのボリュームをマウント
+    healthcheck:  # コンテナのヘルスチェック設定
+      # mysqladmin(MySQLサーバーの管理を行うクライアント）を使ってDBコンテナ自身にpingを送る
+      test: "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD"
+      interval: 10s  # チェック間隔
+      timeout: 10s   # タイムアウト時間
+      retries: 10    # リトライ回数
+
+  nginx:
+    image: nginx:latest
+    container_name: kajisuke-nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - static_volume:/app/static
+      - uwsgi_sock:/app/uwsgi.sock
+    depends_on:
+      - web
+
+# 本番環境用にRDS設定完了後、調整すること。
+volumes:
+  kajisuke-db:
+  static_volume:
+  uwsgi_sock:
+    driver: local
 
 # # サービス（コンテナ）を定義するセクション
 # services:

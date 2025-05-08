@@ -16,7 +16,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from debug_toolbar.toolbar import debug_toolbar_urls
 
 
 
@@ -25,4 +24,4 @@ urlpatterns = [
     # フロントエンド開発用（アプリが完成したら削除する）
     path('mock/', include('apps.urls_mock')), 
     path('', include('apps.urls')),
-] + debug_toolbar_urls()
+]

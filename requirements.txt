@@ -3,3 +3,5 @@ mysqlclient==2.2.7
 python-decouple==3.8
 django-widget-tweaks==1.5.0
 uwsgi==2.0.28
+# 下記は後で削除
+python-dotenv

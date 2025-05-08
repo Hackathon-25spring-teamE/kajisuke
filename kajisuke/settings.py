@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,6 +32,8 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # env内のDEBUGがTrue以外ならFalseになります
 DEBUG = os.environ.get("DEBUG") == "True"
 
+# .envファイルを読み込むために存在するため、後ほど削除
+load_dotenv()
 
 # ALLOWED_HOSTSを.envから取得
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
@@ -45,8 +48,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 開発用ツールを追加
-    'debug_toolbar', 
     # 作成したアプリケーションを追加
     'apps.apps.AppsConfig',
 ]
@@ -59,8 +60,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 開発用ツールを追加
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'kajisuke.urls'
@@ -140,7 +139,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = 'static/'
+
+STATICFILES_DIR = [
+    BASE_DIR / "static",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -148,9 +152,3 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 INTERNAL_IPS = ['127.0.0.1',]
-
-# debug tool barのconfig
-DEBUG_TOOLBAR_CONFIG = {
-    # ツールバーを表示させる
-    "SHOW_TOOLBAR_CALLBACK" : lambda request: True,
-}
