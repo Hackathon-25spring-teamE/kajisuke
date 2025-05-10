@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
           center: 'title',
           right: 'next'
           },
-      events: '/api/events/',
+      events: '/api/tasks/',
       timeZone: "Asia/Tokyo", //念のため
       locale: "jp",
       displayEventTime: false,  // 時間表示を消す設定
