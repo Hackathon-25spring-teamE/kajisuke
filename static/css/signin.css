@@ -1,0 +1,55 @@
+/* -------------------------------------------
+　　Kaji suke表示（ログインページ専用）
+------------------------------------------- */
+h1 {
+  font-size: 40px;
+  font-weight: 900;
+  color: var(--secondary-color);
+  margin-top: 78px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+/* -------------------------------------------
+  入力フォーム（ログイン専用）
+------------------------------------------- */
+.form-group {
+  text-align: left;
+}
+
+input[type="email"],
+input[type="password"] {
+  margin-bottom: 30px;
+}
+
+/* -------------------------------------------
+  ボタン（ログインページ用）
+------------------------------------------- */
+.submit1 {
+  margin-top: 24px;
+  margin-bottom: 14px;
+}
+
+/*.submit2 {
+  background-color: var(--background-color);
+  color: var(--primary-color);
+  border: 1px solid var(--border-color);
+  width: 100%;
+  font-size: var(--font-size-default);
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}*/
+
+/* -------------------------------------------
+  家事すけロゴ（ログインページ専用）
+------------------------------------------- */
+.logo {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  z-index: 10;
+}

@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}Kajisuke{% endblock %}</title>
+        <meta name="description" content="家事のやる気が出ない一人暮らし女性のための、“やる気を引き出す”スケジュールアプリです。">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+        
+        <!-- リセットCSS & 共通スタイル -->
+        <link href="{% static 'css/reset.css' %}" rel="stylesheet">
+        <link href="{% static 'css/base.css' %}" rel="stylesheet">
+        
+        <!-- ページ固有のCSSを追加できる -->
+        {% block extra_css %}{% endblock %}
+
+        <!-- Googleフォント -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="container">
+            <header>
+                <h1>Kaji suke</h1>
+            </header>
+                <main>
+                    {% block content %}{% endblock %}
+                </main>
+                <!--
+                    <footer>
+                        <p class="footer"><small>&copy; 2025 Kaji suke</small></p>
+                    </footer>
+                -->
+                {% block extra_js %}{% endblock %}
+        </div>
+    </body>
+</html>
