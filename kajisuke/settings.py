@@ -148,4 +148,4 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 # ログインしていないユーザーのリダイレクト先を指定
-LOGIN_URL = 'apps:hello_world'
+LOGIN_URL = 'apps:signin'

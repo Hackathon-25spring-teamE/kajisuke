@@ -17,7 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
       locale: "jp",
       displayEventTime: false,  // 時間表示を消す設定
       dayMaxEventRows: true,
-      height: 600, 
+      height: 650, 
+      eventBorderColor: 'transparent', // ボーダーの色を透明にする
       dayCellContent: function(arg){
           return arg.date.getDate();
       },

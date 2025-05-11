@@ -14,6 +14,6 @@ urlpatterns = [
     path('signout', SignoutView.as_view(), name="signout"),
     # カレンダー表示
     path('calendars/<int:year>/<int:month>/<int:day>', calendar_day, name='calendar_day'),
-    path('calendars/', calendar_month, name='calendar_view'),
+    path('calendars/', calendar_month, name='calendar_month'),
     path('api/tasks/', task_list, name='task_list'),
 ]
