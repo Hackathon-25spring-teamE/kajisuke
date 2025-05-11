@@ -25,10 +25,11 @@
             <label for="confirm-password">パスワード(確認用)</label>
             <input type="password" placeholder="Password(confirm)" id="confirm-password" name="confirm-password">
         </div>
-        <button class="submit1">新規登録</button>
-        <button class="submit2">ログインはこちら</button>
-        <!-- 家事すけロゴ --> 
-        <div><img class="logo" src="{% static 'images/kajisuke.svg' %}" alt="Kaji suke">
-        </div> 
+            <button class="submit1">新規登録</button>
+            <button type="button" class="submit2" onclick="location.href='{% url 'mock_signin' %}'">ログインはこちら</button>
     </form>
+        <!-- 家事すけロゴ --> 
+        <div>
+            <img class="logo" src="{% static 'images/kajisuke.svg' %}" alt="Kaji suke">
+        </div> 
 {% endblock %}

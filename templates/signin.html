@@ -17,10 +17,11 @@
             <label for="password">パスワード</label>
             <input type="password" placeholder="Password" id="password" name="password">
         </div>
-        <button class="submit1">ログイン</button>
-        <button class="submit2">新規登録はこちら</button>
-        <!-- 家事すけロゴ --> 
-        <div><img class="logo" src="{% static 'images/kajisuke.svg' %}" alt="Kaji suke">
-        </div>
+            <button class="submit1">ログイン</button>
+            <button type="button" class="submit2" onclick="location.href='{% url 'mock_signup' %}'">新規登録はこちら</button>   
     </form>
-{% endblock %}
+    <!-- 家事すけロゴ --> 
+    <div>
+        <img class="logo" src="{% static 'images/kajisuke.svg' %}" alt="Kaji suke">
+    </div>
+        {% endblock %}
