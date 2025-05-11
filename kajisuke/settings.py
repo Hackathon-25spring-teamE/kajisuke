@@ -147,3 +147,5 @@ DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK" : lambda request: True,
 }
 
+# ログインしていないユーザーのリダイレクト先を指定
+LOGIN_URL = 'apps:hello_world'

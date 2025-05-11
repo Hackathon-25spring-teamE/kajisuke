@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.utils import timezone
@@ -6,6 +7,7 @@ from zoneinfo import ZoneInfo
 
 
 # カレンダー表示
+@login_required
 def calendar_month(request):
     return render(request, 'calendars/month.html')
 
@@ -18,12 +20,12 @@ def task_list(request):
     calendar_start_date = datetime.fromisoformat(request.GET["start"]).date()
     calendar_end_date = datetime.fromisoformat(request.GET["end"]).date()
     
-
-    
     print(today)
     print(calendar_start_date)
 
     # 1. today>calendar_start_dateなら、past_schedulesから対象userのcalendar_start_dateからtoday前までのレコードを取得する
+    if today > calendar_start_date:
+        pass
     # past_schedulesとschedules,tasks,task_categoriesをjoin
 
 
@@ -68,6 +70,7 @@ def task_list(request):
 
 
 # 日毎のスケジュール表示
+@login_required
 def calendar_day(request, year, month, day):
     context = {
         "message1": "1日のスケジュール一覧",
