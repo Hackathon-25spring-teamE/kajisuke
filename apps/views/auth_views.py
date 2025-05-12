@@ -7,9 +7,13 @@ from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import View
+from django.views.generic.edit import CreateView
+
+
 
 
 from ..forms import SignupForm, SigninForm
+
 
 # Create your views here.
 
@@ -44,7 +48,7 @@ class SignupView(CreateView):
             # ログインに失敗した場合、新規登録ページへリダイレクト
             return HttpResponseRedirect(reverse("signup"))
 
-            
+
 # サインイン
 class SigninView(BaseLoginView):
     form_class = SigninForm
