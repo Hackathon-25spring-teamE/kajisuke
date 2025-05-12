@@ -1,8 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm 
 from django.contrib.auth import authenticate
+from django.db.models import Q
 
-from .models import CustomUser
+
+from .models import CustomUser, Schedule, Task, TaskCategory
 from .validators import validate_unique_email, validate_min_length_8, validate_has_digit, validate_has_uppercase
 
 
@@ -21,7 +23,7 @@ class SignupForm(UserCreationForm):
     
 
 #サインイン用フォーム
-class SigninForm(AuthenticationForm):                      
+class SigninForm(AuthenticationForm):
     
     #ラベル名をメールアドレスに変更
     def __init__(self, request=None, *args, **kwargs):
@@ -50,3 +52,30 @@ class SigninForm(AuthenticationForm):
     
     def get_user(self):
         return getattr(self, 'user_cache', None)
+
+
+# スケジュール新規登録用のフォーム
+class ScheduleForm(forms.ModelForm):
+    task_category = forms.ModelChoiceField(
+        queryset=TaskCategory.objects.all(),
+        required=True,
+        label="カテゴリー"
+    )
+    task = forms.ModelChoiceField(
+        queryset=Task.objects.none(),  # 初期状態は空
+        required=True,
+        label="家事"
+    )
+
+    class Meta:
+        model = Schedule
+        fields = ['task', 'start_date', 'frequency', 'interval', 'day_of_week', 'nth_weekday', 'day_of_month', 'memo']
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')  # ユーザーを受け取る
+        super().__init__(*args, **kwargs)
+
+        if user:
+            self.fields['task_category'].queryset = TaskCategory.objects.all()
+            self.fields['task'].queryset = Task.objects.filter(user__in=[None, user])
+            
