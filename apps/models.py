@@ -100,7 +100,6 @@ class Schedule(models.Model):
     interval = models.IntegerField(null=True, blank=True)
     day_of_week = models.CharField(max_length=50, choices=DAY_OF_WEEK_CHOICES, null=True, blank=True)
     nth_weekday = models.IntegerField(null=True, blank=True)
-    day_of_month = models.IntegerField(null=True, blank=True)
     memo = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
