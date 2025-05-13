@@ -1,4 +1,3 @@
-
 from django.shortcuts import render ,redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
@@ -10,7 +9,7 @@ from django.urls import reverse
 from django.views import View
 
 
-from .forms import SignupForm, SigninForm
+from ..forms import SignupForm, SigninForm
 
 # Create your views here.
 
@@ -65,16 +64,3 @@ class SignoutView(View):
     def get(self, request):
         logout(request)
         return redirect('apps:signin')
-# カレンダー表示
-
-# 日毎のスケジュール表示
-
-# スケジュール登録
-
-# スケジュール変更・削除
-
-# スケジュール実施・未実施
-
-# 登録しているスケジュール表示
-
-# 昨日のスケジュールをpast_schedulesへ登録（バッチ処理）

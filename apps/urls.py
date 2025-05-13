@@ -1,11 +1,13 @@
 from django.urls import path
-from . import views
+from .views.auth_views import SigninView, SignupView, SignoutView, hello_world
 
 app_name = "apps"
 
 urlpatterns = [
-    path('', views.hello_world, name="hello_world"),
-    path('signup', views.SignupView.as_view(), name="signup"),
-    path('signin', views.SigninView.as_view(), name="signin"),
-    path('signout', views.SignoutView.as_view(), name="signout")
+    # テスト用ページ
+    path('', hello_world, name="hello_world"),
+    # 認証機能
+    path('signup', SignupView.as_view(), name="signup"),
+    path('signin', SigninView.as_view(), name="signin"),
+    path('signout', SignoutView.as_view(), name="signout")
 ]
