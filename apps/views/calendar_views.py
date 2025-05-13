@@ -31,13 +31,12 @@ def task_list(request):
             schedule__user=request.user, 
             schedule_date__gte=calendar_start.date()
         ).select_related(
-            'schedule__task',
             'schedule__task__task_category'
         ).order_by('schedule_date') 
         # print(past_schedules)
 
         for item in past_schedules:
-            category_settings = get_category_settings(item.schedule.task.task_category.id)
+            category_settings = category_dict.get(item.schedule.task.task_category.id)
             schedule = {
                 "title": category_settings["icon"] + item.schedule.task.task_name, 
                 "start": item.schedule_date, 
@@ -56,14 +55,13 @@ def task_list(request):
             start_date__lte=calendar_end.date(),
             is_active=True
         ).select_related(
-            'task',
             'task__task_category'
         ).order_by('start_date') 
         # print(future_schedules)
         # print(future_schedules[0].task.task_name)
 
         # frequency を文字列からdateutil.rruleの定数に変換するための辞書
-        frequency_map = { "DAILY": DAILY,"WEEKLY": WEEKLY,"MONTHLY": MONTHLY,"YEARLY,": YEARLY }
+        frequency_map = { "DAILY": DAILY, "WEEKLY": WEEKLY, "MONTHLY": MONTHLY, "YEARLY": YEARLY }
         # 曜日を文字列からdateutil.rruleの曜日オブジェクトに変換するための辞書
         weekday_map = { "MO": MO,"TU": TU,"WE": WE,"TH": TH,"FR": FR,"SA": SA,"SU": SU }
 
@@ -79,8 +77,8 @@ def task_list(request):
                     "freq": frequency_map.get(item.frequency), 
                     "interval": item.interval, 
                     "dtstart": item.start_date,
+                    "bymonth": item.start_date.month if item.frequency == "YEARLY" else None,
                     "byweekday": weekday_map.get(item.day_of_week),
-                    "bymonthday": item.day_of_month,
                     "bysetpos": item.nth_weekday,
                 }
                 # print(item.task.task_name, reccurences)
@@ -142,9 +140,7 @@ def calendar_day(request, year, month, day):
     return render(request, 'dev/dev.html', {'context': context})
 
 
-# category_idに対応するiconとcolorを返す
-def get_category_settings(category_id):
-    category_dict = {
+category_dict = {
         1 : { "icon" : "🧹", "color" : "#C5D7FB"},
         2 : { "icon" : "🍳", "color" : "#FFE380"},
         3 : { "icon" : "🧺", "color" : "#9BD4B5"},
@@ -152,7 +148,3 @@ def get_category_settings(category_id):
         5 : { "icon" : "🌸", "color" : "#99F2FF"},
         6 : { "icon" : "🛠", "color" : "#FFC199"},
     }
-    if category_id in category_dict:
-        return category_dict[category_id]
-    else:
-        return None
