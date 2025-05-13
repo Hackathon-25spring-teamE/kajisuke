@@ -35,7 +35,7 @@ class SignupView(CreateView):
     success_url = reverse_lazy("apps:hello_world")
 
     def form_valid(self, form):
-        # signin after signup
+        # サインアップに成功したら、サインインする
         response = super().form_valid(form)
         email = form.cleaned_data.get("email")
         password = form.cleaned_data.get("password1")
