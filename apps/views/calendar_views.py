@@ -2,10 +2,11 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.utils import timezone
+from django.db.models import Q
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from dateutil.rrule import rruleset, rrule, DAILY, WEEKLY, MONTHLY, YEARLY, MO, TU, WE, TH, FR, SA, SU
-from ..models import PastSchedule, Schedule
+from ..models import PastSchedule, Schedule, ExceptionalSchedule
 
 
 # カレンダー表示
@@ -60,19 +61,30 @@ def task_list(request):
         # print(future_schedules)
         # print(future_schedules[0].task.task_name)
 
+        # 2-1. exptional_schedulesとschedulesをjoinして、
+        # 上記条件＋exptional_schedulesの2つのdateのどちらかがtodayからcalendar_end_dateまでの期間に入っているレコードを取得する
+        exptional_schedules = ExceptionalSchedule.objects.filter(
+            schedule__user=request.user, 
+            schedule__start_date__lte=calendar_end.date(),
+            schedule__is_active=True,
+        ).filter(
+        Q(original_date__gte=today, original_date__lte=calendar_end.date()) |  # original_dateが期間内
+        Q(modified_date__gte=today, modified_date__lte=calendar_end.date())    # modified_dateが期間内
+        )
+
         # frequency を文字列からdateutil.rruleの定数に変換するための辞書
         frequency_map = { "DAILY": DAILY, "WEEKLY": WEEKLY, "MONTHLY": MONTHLY, "YEARLY": YEARLY }
         # 曜日を文字列からdateutil.rruleの曜日オブジェクトに変換するための辞書
         weekday_map = { "MO": MO,"TU": TU,"WE": WE,"TH": TH,"FR": FR,"SA": SA,"SU": SU }
 
-        # 2-1. schedulesの繰り返しから、todayからcalendar_end_dateまでの期間の日付リストを作成する
+        # 2-2. 各schedulesで、繰り返し設定からtodayからcalendar_end_dateまでの期間の日付リストを作成する
         for item in future_schedules:
             # frequencyがNONEの時はstart_dateのみ日付リストに追加
             if item.frequency == "NONE":
                 date_list = []
                 date_list.append(item.start_date)
             else:
-                date_list = rruleset()
+                date_set = rruleset()
                 reccurences = {
                     "freq": frequency_map.get(item.frequency), 
                     "interval": item.interval, 
@@ -81,19 +93,34 @@ def task_list(request):
                     "byweekday": weekday_map.get(item.day_of_week),
                     "bysetpos": item.nth_weekday,
                 }
-                # print(item.task.task_name, reccurences)
+                # reccurencesからNoneの項目を除外する
                 filted_reccurences = { k: v for k, v in reccurences.items() if v is not None }
-                # print(item.task.task_name, filted_reccurences)
-                # print(calendar_start_date)
-                
-                date_list.rrule(
+                # 上記を使って対象期間の日付リストを作成
+                date_set.rrule(
                     rrule(**filted_reccurences)
                     .between(calendar_start, calendar_end, inc=True)
                     )
                 # print(item.task.task_name, list(date_list))
-    # 2-2. exptional_schedulesから対象schedule_idの2つのdateのどちらかがtodayからcalendar_end_dateまでの期間に入っているレコードを取得する
-    # 2-3. 日付リストに対し、上記レコードのoriginal_dateを除外（exdate）し、modified_dateを追加（rdate）する
-    # 2-4. schedule_id毎に作成した日付リストを、各スケジュール情報を持たせた状態で一つのリストにまとめる
+
+                # 2-3. 日付リストに対し、original_dateを除外し、modified_dateを追加する
+                for except_item in exptional_schedules:
+                    if except_item.schedule.id == item.id:
+                        # 繰り返しからoriginal_dateを除外
+                        original_date = datetime.combine(except_item.original_date, datetime.min.time())
+                        date_set.exdate(original_date)
+                        # modified_dateがNoneでなければ追加
+                        if except_item.modified_date is not None:
+                            modified_date = datetime.combine(except_item.modified_date, datetime.min.time())
+                            date_set.rdate(modified_date)
+
+                # datetimeをdateリストに変換
+                date_list = [dt.date() for dt in date_set]
+                # print(item.task.task_name, date_list)
+
+        # 2-4. schedule_id毎に作成した日付リストを、各スケジュール情報を持たせた状態で一つのリストにまとめる
+         
+                
+
     # 3. 1と2のリストを合わせて、カレンダー側に渡すデータとしてまとめる
     # 4. データをJSON形式で返す
 
