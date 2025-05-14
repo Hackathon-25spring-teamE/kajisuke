@@ -16,17 +16,17 @@ def calendar_month(request):
 
 # タスク一覧をJSONとして渡す
 def task_list(request):
-    # ユーザーのTZでの今日の日付を取得する
+    # ユーザーのTZでの現在日時をdatetimeで取得する
     user_tz = ZoneInfo(request.GET["timeZone"])
-    today = timezone.now().astimezone(user_tz).date()
+    user_now = timezone.now().astimezone(user_tz).replace(tzinfo=None)
     # カレンダー表示の開始日と終了日をdatetimeで取得する
     calendar_start = datetime.fromisoformat(request.GET["start"])
     calendar_end = datetime.fromisoformat(request.GET["end"])
-
+    
     schedules_list = []
 
-    # 1. today>calendar_start_dateなら、past_schedulesから対象userのcalendar_start_dateからtoday前までのレコードを取得する
-    if today > calendar_start.date():
+    # 1. user_now>calendar_start_dateなら、past_schedulesから対象userのcalendar_start_dateからtoday前までのレコードを取得する
+    if user_now.date() > calendar_start.date():
         # past_schedulesとschedules,tasks,task_categoriesをjoinして、対象ユーザーの対象期間のレコードを取得する
         past_schedules = PastSchedule.objects.filter(
             schedule__user=request.user, 
@@ -34,7 +34,6 @@ def task_list(request):
         ).select_related(
             'schedule__task__task_category'
         ).order_by('schedule_date') 
-        # print(past_schedules)
 
         for item in past_schedules:
             category_settings = category_dict.get(item.schedule.task.task_category.id)
@@ -48,8 +47,9 @@ def task_list(request):
             }
             schedules_list.append(schedule)
 
-    # 2. today<=calendar_end_dateなら、schedulesから対象userのis_active=True,start_date<=calendar_end_dateのレコードを取得する
-    if today <= calendar_end.date():
+
+    # 2. user_now<=calendar_end_dateなら、schedulesから対象userのis_active=True,start_date<=calendar_end_dateのレコードを取得する
+    if user_now.date() <= calendar_end.date():
         # schedulesとtasks,task_categoriesをjoinして、対象ユーザーの対象期間のレコードを取得する
         future_schedules = Schedule.objects.filter(
             user=request.user, 
@@ -58,8 +58,6 @@ def task_list(request):
         ).select_related(
             'task__task_category'
         ).order_by('start_date') 
-        # print(future_schedules)
-        # print(future_schedules[0].task.task_name)
 
         # 2-1. exptional_schedulesとschedulesをjoinして、
         # 上記条件＋exptional_schedulesの2つのdateのどちらかがtodayからcalendar_end_dateまでの期間に入っているレコードを取得する
@@ -68,8 +66,8 @@ def task_list(request):
             schedule__start_date__lte=calendar_end.date(),
             schedule__is_active=True,
         ).filter(
-        Q(original_date__gte=today, original_date__lte=calendar_end.date()) |  # original_dateが期間内
-        Q(modified_date__gte=today, modified_date__lte=calendar_end.date())    # modified_dateが期間内
+        Q(original_date__gte=user_now.date(), original_date__lte=calendar_end.date()) |  # original_dateが期間内
+        Q(modified_date__gte=user_now.date(), modified_date__lte=calendar_end.date())    # modified_dateが期間内
         )
 
         # frequency を文字列からdateutil.rruleの定数に変換するための辞書
@@ -77,12 +75,14 @@ def task_list(request):
         # 曜日を文字列からdateutil.rruleの曜日オブジェクトに変換するための辞書
         weekday_map = { "MO": MO,"TU": TU,"WE": WE,"TH": TH,"FR": FR,"SA": SA,"SU": SU }
 
+
         # 2-2. 各schedulesで、繰り返し設定からtodayからcalendar_end_dateまでの期間の日付リストを作成する
         for item in future_schedules:
-            # frequencyがNONEの時はstart_dateのみ日付リストに追加
+            date_list = []
+            # frequencyがNONEの時→start_dateが今日以降であれば日付リストに追加
             if item.frequency == "NONE":
-                date_list = []
-                date_list.append(item.start_date)
+                if item.start_date >= user_now.date():
+                    date_list.append(item.start_date)
             else:
                 date_set = rruleset()
                 reccurences = {
@@ -98,9 +98,8 @@ def task_list(request):
                 # 上記を使って対象期間の日付リストを作成
                 date_set.rrule(
                     rrule(**filted_reccurences)
-                    .between(calendar_start, calendar_end, inc=True)
+                    .between(user_now, calendar_end, inc=True)
                     )
-                # print(item.task.task_name, list(date_list))
 
                 # 2-3. 日付リストに対し、original_dateを除外し、modified_dateを追加する
                 for except_item in exptional_schedules:
@@ -115,44 +114,23 @@ def task_list(request):
 
                 # datetimeをdateリストに変換
                 date_list = [dt.date() for dt in date_set]
-                # print(item.task.task_name, date_list)
 
-        # 2-4. schedule_id毎に作成した日付リストを、各スケジュール情報を持たせた状態で一つのリストにまとめる
-         
+            # print(item.task.task_name, date_list)
+
+            # 2-4. date_listの各日付にタスク情報を追記して、schedules_listへ追加
+            for dt in date_list:
+                category_settings = category_dict.get(item.task.task_category.id)
+                schedule = {
+                    "title": category_settings["icon"] + item.task.task_name, 
+                    "start": dt, 
+                    "end": dt,
+                    "allDay": True,
+                    'textColor': "#333333",
+                    'backgroundColor': category_settings["color"], 
+                }
+                schedules_list.append(schedule)    
                 
-
-    # 3. 1と2のリストを合わせて、カレンダー側に渡すデータとしてまとめる
-    # 4. データをJSON形式で返す
-
-    # events = Event.objects.all()
-    # data = [event.as_dict() for event in events]
-    test_data = [
-        {"title":"🧹掃除機", # task_categoryごとの絵文字+task_name
-         "start":'2025-05-01', # schedule_date or 
-         "end":'2025-05-01',
-         "allDay":True,
-         'textColor': '#333333', # 全部一緒
-         'backgroundColor': '#C5D7FB', # task_categoryごとのカラー
-        },
-        {"title":"🧺洗濯", 
-         "start":'2025-05-01', 
-         "end":'2025-05-01',
-         "allDay":True,
-         'textColor': '#333333',
-         'backgroundColor': '#9BD4B5',
-        },
-        {"title":"買い物", 
-         "start":datetime(2025, 5, 1, 10, 0), 
-         "end":datetime(2025, 5, 1, 11, 0),
-         'className': 'my-events',
-        },
-        {"title":"銀行振込", 
-         "start":datetime(2025, 5, 1, 10, 0), 
-         "end":datetime(2025, 5, 1, 11, 0),
-         'className': 'my-events',
-        },
-        
-        ]
+    # 3. schedules_listをJSON形式で返す
     return JsonResponse(schedules_list, safe=False)
 
 
