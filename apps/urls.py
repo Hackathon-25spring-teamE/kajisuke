@@ -1,6 +1,6 @@
 from django.urls import path
 from .views.auth_views import SigninView, SignupView, SignoutView, hello_world
-from .views.calendar_views import calendar_month, calendar_day, task_list
+from .views.calendar_views import calendar_month, calendar_day, schedules_list
 
 
 app_name = "apps"
@@ -15,5 +15,5 @@ urlpatterns = [
     # カレンダー表示
     path('calendars/<int:year>/<int:month>/<int:day>', calendar_day, name='calendar_day'),
     path('calendars/', calendar_month, name='calendar_month'),
-    path('api/tasks/', task_list, name='task_list'),
+    path('api/tasks/', schedules_list, name='schedules_list'),
 ]
