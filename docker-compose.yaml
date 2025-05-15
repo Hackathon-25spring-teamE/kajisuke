@@ -28,22 +28,22 @@ services:
 
   # RDS作成後、settings.pyを.envなしで運用できるように変更して、削除すること。
   # MySQLコンテナ
-  mysql:
-    container_name: kajisuke-mysql
-    image: mysql:8.0.36  # 使用するDockerイメージを指定
-    environment:  # コンテナ内の環境変数を指定
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}  # rootユーザーのパスワード
-      MYSQL_DATABASE: ${MYSQL_DATABASE}            # 作成するデータベース名
-      MYSQL_USER: ${MYSQL_USER}                    # 一般ユーザーの名前
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}            # 一般ユーザーのパスワード
-    volumes:
-      - kajisuke-db:/var/lib/mysql  # DBデータを永続化するためのボリュームをマウント
-    healthcheck:  # コンテナのヘルスチェック設定
-      # mysqladmin(MySQLサーバーの管理を行うクライアント）を使ってDBコンテナ自身にpingを送る
-      test: "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD"
-      interval: 10s  # チェック間隔
-      timeout: 10s   # タイムアウト時間
-      retries: 10    # リトライ回数
+  # mysql:
+  #   container_name: kajisuke-mysql
+  #   image: mysql:8.0.36  # 使用するDockerイメージを指定
+  #   environment:  # コンテナ内の環境変数を指定
+  #     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}  # rootユーザーのパスワード
+  #     MYSQL_DATABASE: ${MYSQL_DATABASE}            # 作成するデータベース名
+  #     MYSQL_USER: ${MYSQL_USER}                    # 一般ユーザーの名前
+  #     MYSQL_PASSWORD: ${MYSQL_PASSWORD}            # 一般ユーザーのパスワード
+  #   volumes:
+  #     - kajisuke-db:/var/lib/mysql  # DBデータを永続化するためのボリュームをマウント
+  #   healthcheck:  # コンテナのヘルスチェック設定
+  #     # mysqladmin(MySQLサーバーの管理を行うクライアント）を使ってDBコンテナ自身にpingを送る
+  #     test: "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD"
+  #     interval: 10s  # チェック間隔
+  #     timeout: 10s   # タイムアウト時間
+  #     retries: 10    # リトライ回数
 
   nginx:
     image: nginx:latest
@@ -60,7 +60,6 @@ services:
 
 # 本番環境用にRDS設定完了後、調整すること。
 volumes:
-  kajisuke-db:
   static_volume:
   uwsgi_sock:
     driver: local

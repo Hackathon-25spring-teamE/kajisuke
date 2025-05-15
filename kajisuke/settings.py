@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import boto3
+from botocore.exceptions import ClientError
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,19 +28,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECRET_KEYを.envから取得
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-
-# DEBUGを.envから取得
-# envファイルにTrue、Falseと書くとDjangoがString型と認識してしまいます
-# os.environ.get("DEBUG") == "True"を満たすとboolean型のTrueになり、
-# env内のDEBUGがTrue以外ならFalseになります
-DEBUG = os.environ.get("DEBUG") == "True"
+DEBUG = "False"
 
 # .envファイルを読み込むために存在するため、後ほど削除
 load_dotenv()
 
-# ALLOWED_HOSTSを.envから取得
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
+# ALLOWED_HOSTSを本番環境時に変更
+# ALLOWED_HOSTS = ['*']
 
+# 本番環境用
+ALLOWED_HOSTS = [
+    "kajisuke.com",
+]
 
 # Application definition
 
@@ -86,23 +88,65 @@ WSGI_APPLICATION = 'kajisuke.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 # DATABASESをMySQLへ変更
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.mysql",
+#         # コンテナ内の環境変数をDATABASESのパラメータに反映
+#         "NAME": os.environ.get("MYSQL_DATABASE"),
+#         "USER": os.environ.get("MYSQL_USER"),
+#         "PASSWORD": os.environ.get("MYSQL_PASSWORD"),
+#         # DBサーバーの指定。コンテナの場合はDBコンテナのservice名
+#         "HOST": "mysql",
+#         "PORT": os.environ.get("MYSQL_PORT"),
+#         "OPTIONS": {
+#             # STRICT_TRANS_TABLES：InsertやUpdateをした値がテーブルの指定に従っていない場合に、SQLの実行を中止する
+#             "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
+#         },
+#     }
+# }
+
+
+def get_secret():
+
+    secret_name = "kajisuke-db/credentials"
+    region_name = "ap-northeast-1"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+
+    try:
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name
+        )
+    except ClientError as e:
+        # For a list of exceptions thrown, see
+        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+        raise e
+
+    secret = get_secret_value_response['SecretString']
+    return json.loads(secret)
+
+
+db_credentials = get_secret()
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        # コンテナ内の環境変数をDATABASESのパラメータに反映
-        "NAME": os.environ.get("MYSQL_DATABASE"),
-        "USER": os.environ.get("MYSQL_USER"),
-        "PASSWORD": os.environ.get("MYSQL_PASSWORD"),
-        # DBサーバーの指定。コンテナの場合はDBコンテナのservice名
-        "HOST": "mysql",
-        "PORT": os.environ.get("MYSQL_PORT"),
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': db_credentials['dbname'],
+        'USER': db_credentials['username'],
+        'PASSWORD': db_credentials['password'],
+        'HOST': db_credentials['host'],
+        'PORT': db_credentials['port'],
         "OPTIONS": {
             # STRICT_TRANS_TABLES：InsertやUpdateをした値がテーブルの指定に従っていない場合に、SQLの実行を中止する
             "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
         },
     }
 }
-
 
 
 # Password validation
