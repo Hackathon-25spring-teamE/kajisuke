@@ -12,8 +12,8 @@ services:
       - uwsgi_sock:/app/uwsgi.sock
     ports:
       - "3031:3031"
-    env_file:
-      - .env
+    # env_file:
+    #   - .env
     # RDS完了後、削除
     tty: true  # 疑似ターミナルを有効化（コンテナがすぐに正常終了するのを防ぐ）
     healthcheck:
