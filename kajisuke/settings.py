@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import boto3
 from botocore.exceptions import ClientError
 import json
@@ -31,7 +31,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = "False"
 
 # .envファイルを読み込むために存在するため、後ほど削除
-load_dotenv()
+# load_dotenv()
 
 # ALLOWED_HOSTSを本番環境時に変更
 # ALLOWED_HOSTS = ['*']
