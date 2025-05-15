@@ -1,0 +1,117 @@
+/* -------------------------------------------
+　　タイトル表示（スケジュール登録）
+------------------------------------------- */
+h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--main-color);
+    margin-top: 40px;
+    margin-bottom: 27px;
+    text-align: center;
+}
+
+/* -------------------------------------------
+  入力フォーム（開始日）
+------------------------------------------- */
+.form-group-date {
+  display: flex;  /* 横並びにする */
+  align-items: center;  /* 垂直方向を中央揃え */
+  gap: 15px;  /* ラベルと入力欄の間隔を15pxに */
+  border-color: var(--border-color2);
+  margin-bottom: 20px;
+}
+
+.form-group-date label {
+  font-size: var(--font-size-default);
+  color: var(--text-color);
+  white-space: nowrap; /* テキストを折り返さない */
+  width: 90px; /* 適切な幅を固定（調整可能） */
+  text-align: left;
+}
+
+.form-group-date input {
+  width: calc(100% - 105px); /* ラベルの幅を考慮して調整 */
+  /*（100px は label の幅 + gap の合計で調整可能）*/
+  min-width: 160px; /* 最小幅を確保 */
+  padding: 10px;
+  border: 1px solid var(--border-color2);
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  box-sizing: border-box;
+  height: 40px;
+}
+
+#start-date {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #D4D4D4;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  box-sizing: border-box;
+  height: 40px;
+}
+
+select{
+  color: var(--secondary-color); /* メインのテキストカラーに設定 */
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border-color2);
+  border-radius: 8px;
+  box-sizing: border-box;
+  height: 40px;
+  margin-bottom: 20px;
+}
+
+.memo {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color2);
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    color: var(--text-color); /* メインのテキストカラーに設定 */
+    box-sizing: border-box;
+    margin-bottom: 28px;
+    height: 60px; /* 2行分の高さ */
+    line-height: 1.5; /* 行間を調整 */
+    overflow-y: auto; /* 縦方向のスクロールバーを表示 */
+    resize: none; /* ユーザーがサイズ変更できないように */
+}
+
+.memo::placeholder {
+    color: var(--secondary-color); /* カテゴリーや家事と同じ色に */
+    font-size: var(--font-size-default); /* サイズも統一 */
+}
+
+
+/* -------------------------------------------
+  繰り返し間隔選択ボタン（スケジュール登録用）
+------------------------------------------- */
+.repeat-options {
+    display: flex; /* 横並びにする */
+    width: 100%; /* コンテナ幅いっぱいにする */
+    margin-top: 3px;
+    margin-bottom: 58px;
+}
+
+.repeat-options input[type="radio"] {
+    display: none; /* デフォルトのラジオボタンを非表示 */
+}
+
+.repeat-options label {
+    width: 20%; /* 5つのボタンが均等に並ぶように */
+    padding: 10px;
+    background-color: #FFFFFF; /* デフォルトの背景色 */
+    border: 1px solid var(--border-color);
+    text-align: center;
+    cursor: pointer;
+}
+
+/* 選択されている場合のスタイル */
+.repeat-options input[type="radio"]:checked + label {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* -------------------------------------------
+  ボタン（スケジュール登録用）
+------------------------------------------- */
