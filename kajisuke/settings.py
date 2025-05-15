@@ -26,7 +26,36 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEYを.envから取得
-SECRET_KEY = os.environ.get("SECRET_KEY")
+# SECRET_KEY = os.environ.get("SECRET_KEY")
+
+def get_secret_key():
+
+    secret_name = "kajisuke/prod/secret_key"
+    region_name = "ap-northeast-1"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+
+    try:
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name
+        )
+    except ClientError as e:
+        # For a list of exceptions thrown, see
+        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+        raise e
+
+    secret = get_secret_value_response['SecretString']
+    return json.loads(secret)
+
+
+secret_keys = get_secret_key()
+
+SECRET_KEY = secret_keys("SECRET_KEY")
 
 DEBUG = "False"
 
@@ -106,7 +135,7 @@ WSGI_APPLICATION = 'kajisuke.wsgi.application'
 # }
 
 
-def get_secret():
+def get_secret_rds():
 
     secret_name = "kajisuke-db/credentials"
     region_name = "ap-northeast-1"
@@ -131,7 +160,7 @@ def get_secret():
     return json.loads(secret)
 
 
-db_credentials = get_secret()
+db_credentials = get_secret_rds()
 
 DATABASES = {
     'default': {
