@@ -15,6 +15,7 @@ def calendar_month(request):
     return render(request, 'calendars/month.html')
 
 # 指定された期間のスケジュール一覧をJSONとして返す
+@login_required
 def schedules_list(request):
     # ユーザーのTZでのtodayをdatetimeで取得する
     user_tz = ZoneInfo(request.GET["timeZone"])
