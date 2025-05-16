@@ -55,7 +55,7 @@ def get_secret_key():
 
 secret_keys = get_secret_key()
 
-SECRET_KEY = secret_keys("SECRET_KEY")
+SECRET_KEY = secret_keys["SECRET_KEY"]
 
 DEBUG = "False"
 
