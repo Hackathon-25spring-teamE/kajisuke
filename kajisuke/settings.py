@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-# from dotenv import load_dotenv
 import boto3
 from botocore.exceptions import ClientError
 import json
@@ -58,12 +57,6 @@ secret_keys = get_secret_key()
 SECRET_KEY = secret_keys["SECRET_KEY"]
 
 DEBUG = "False"
-
-# .envファイルを読み込むために存在するため、後ほど削除
-# load_dotenv()
-
-# ALLOWED_HOSTSを本番環境時に変更
-# ALLOWED_HOSTS = ['*']
 
 # 本番環境用
 ALLOWED_HOSTS = [
@@ -111,28 +104,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'kajisuke.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-# DATABASESをMySQLへ変更
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.mysql",
-#         # コンテナ内の環境変数をDATABASESのパラメータに反映
-#         "NAME": os.environ.get("MYSQL_DATABASE"),
-#         "USER": os.environ.get("MYSQL_USER"),
-#         "PASSWORD": os.environ.get("MYSQL_PASSWORD"),
-#         # DBサーバーの指定。コンテナの場合はDBコンテナのservice名
-#         "HOST": "mysql",
-#         "PORT": os.environ.get("MYSQL_PORT"),
-#         "OPTIONS": {
-#             # STRICT_TRANS_TABLES：InsertやUpdateをした値がテーブルの指定に従っていない場合に、SQLの実行を中止する
-#             "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
-#         },
-#     }
-# }
 
 
 def get_secret_rds():

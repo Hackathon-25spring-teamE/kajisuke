@@ -24,30 +24,5 @@ COPY . /app/
 # 静的ファイルを収集
 RUN python manage.py collectstatic --noinput
 
+# uWSGIの設定ファイルをコピー
 COPY ./uwsgi.ini /app/uwsgi.ini
-
-# # uWSGIの設定ファイルをコピー
-# COPY ./uwsgi.ini /app/uwsgi.ini
-
-# git、curl、mysqlclientのビルドに必要なパッケージをインストール
-# RUN apt-get update && apt-get install -y \
-#     git \
-#     curl \
-#     build-essential \
-#     default-libmysqlclient-dev \
-#     pkg-config \
-#     python3-dev \
-#     && rm -rf /var/lib/apt/lists/*
-
-# Poetryをインストールしてパスを通す
-# RUN curl -sSL https://install.python-poetry.org | python3 -
-# ENV PATH /root/.local/bin:$PATH
-
-# # pyproject.toml、poetry.lock*をワークディレクトリにコピー
-# COPY ./pyproject.toml* ./poetry.lock* ./
-# # 依存関係のみをインストール（ルートパッケージを除く）
-# RUN poetry install --no-root
-
-# ソースコードをコピー
-# COPY . .
-
