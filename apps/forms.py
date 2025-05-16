@@ -20,7 +20,7 @@ class SignupForm(UserCreationForm):
         model = CustomUser
         fields = ('user_name', 'email', 'password1', 'password2')
 
-    
+
 
 #サインイン用フォーム
 class SigninForm(AuthenticationForm):
@@ -55,6 +55,14 @@ class SigninForm(AuthenticationForm):
 
 
 # スケジュール新規登録用のフォーム
+FREQUENCY_CHOICES = [
+    ('NONE', 'なし'),
+    ('DAILY', '毎日'),
+    ('WEEKLY', '毎週'),
+    ('MONTHLY', '毎月'),
+    ('YEARLY', '毎年'),
+]
+
 class ScheduleForm(forms.ModelForm):
     task_category = forms.ModelChoiceField(
         queryset=TaskCategory.objects.all(),
@@ -66,16 +74,72 @@ class ScheduleForm(forms.ModelForm):
         required=True,
         label="家事"
     )
+    frequency = forms.ChoiceField(
+        choices=FREQUENCY_CHOICES,
+        label="繰り返し設定",
+        widget=forms.HiddenInput()  # 見た目には表示しない（ボタンに置き換えるため）
+    )
+    
 
     class Meta:
         model = Schedule
-        fields = ['task', 'start_date', 'frequency', 'interval', 'day_of_week', 'nth_weekday', 'day_of_month', 'memo']
+        fields = ['start_date', 'task_category', 'task', 'memo', 'frequency', 'interval', 'day_of_week', 'nth_weekday', 'day_of_month']
+        labels = {
+        'task': '家事',
+        'start_date': '開始日',
+        'frequency': '繰り返し設定',
+        'interval': '間隔（週ごと、月ごと）',
+        'day_of_week': '曜日',
+        'nth_weekday': '第何曜日',
+        'day_of_month': '月の何日',
+        'memo': 'メモ',
+    }
 
-    def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user')  # ユーザーを受け取る
+    def __init__(self, *args, user=None, task_category_id=None, **kwargs):
+        # userが文字列ならCustomUserを取得
+        if isinstance(user, str):
+            try:
+                user = CustomUser.objects.get(user_name=user)
+            except CustomUser.DoesNotExist:
+                user = None
+        #デバック用
+        print("userの型・ID・ユーザー名:", type(user), getattr(user, 'pk', None), getattr(user, 'user_name', None))
+
+        self.user = user
+        print("ユーザー:", user)#テスト用後で消す
         super().__init__(*args, **kwargs)
+
+        #カスタムウェジェット
+        self.fields['start_date'].widget = forms.DateInput(attrs={'type': 'date'})
+
+        # task_category_id は引数から受け取る
+        if task_category_id is None:
+            # POSTやGETから fallback で取る
+            task_category_id = self.data.get('task_category') or task_category_id
+
+        # task_category_id を整数に変換
+        try:
+            task_category_id = int(task_category_id)
+        except (TypeError, ValueError):
+            task_category_id = None
+
+        # 🔽 ここに追加してください！
+        print("フォーム初期化: user =", user)
+        print("フォーム初期化: task_category_id =", task_category_id)
+
 
         if user:
             self.fields['task_category'].queryset = TaskCategory.objects.all()
-            self.fields['task'].queryset = Task.objects.filter(user__in=[None, user])
-            
+
+            if task_category_id:
+                tasks = Task.objects.filter(
+                    Q(task_category_id=task_category_id),
+                    Q(user=None) | Q(user=user),
+                    is_active=True,
+                )
+                print("該当するタスク:", tasks)
+                self.fields['task'].queryset = tasks
+            else:
+                self.fields['task'].queryset = Task.objects.none()
+        else:
+            self.fields['task'].queryset = Task.objects.none()
