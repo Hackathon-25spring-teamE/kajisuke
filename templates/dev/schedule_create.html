@@ -1,0 +1,178 @@
+{% extends 'dev/base.html' %}
+{% load static %}
+{% block content %}
+<h3>スケジュール登録</h3>
+<form method="post">
+    {% csrf_token %}
+    {% if form.errors %}
+    <ul class="errorlist">
+        {% for field in form %}
+        {% for error in field.errors %}
+        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+        {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {{ form.start_date.label_tag }} {{ form.start_date }}<br>
+    {{ form.task_category.label_tag }} {{ form.task_category }}<br>
+    {{ form.task.label_tag }} {{ form.task }}<br>
+    {{ form.memo.label_tag }} {{ form.memo }}<br>
+
+    <div id="frequency-buttons">
+        <label>繰り返し設定:</label><br>
+        <button type="button" data-value="NONE">なし</button>
+        <button type="button" data-value="DAILY">毎日</button>
+        <button type="button" data-value="WEEKLY">毎週</button>
+        <button type="button" data-value="MONTHLY">毎月</button>
+        <button type="button" data-value="YEARLY">毎年</button>
+    </div>
+
+    {{ form.frequency }}
+
+    <div id="frequency-extra-fields">
+        <div id="interval-field">
+            {{ form.interval.label_tag }} {{ form.interval }}
+            <span class="field-help" id="interval-help"></span>
+        </div>
+        <div id="day-of-week-field">
+            {{ form.day_of_week.label_tag }} {{ form.day_of_week }}
+            <span class="field-help" id="day-of-week-help"></span>
+        </div>
+        <div id="nth-weekday-field">
+            {{ form.nth_weekday.label_tag }} {{ form.nth_weekday }}
+            <span class="field-help" id="nth-weekday-help"></span>
+        </div>
+    </div>
+    <br>
+    <button type="submit">登録</button>
+</form>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Ajaxタスクロード -->
+<script>
+    $("#id_task_category").change(function () {
+        const url = "{% url 'apps:ajax_load_tasks' %}";
+        const categoryId = $(this).val();
+
+        $.ajax({
+            url: url,
+            data: {
+                'task_category': categoryId
+            },
+            success: function (data) {
+                const $taskSelect = $("#id_task");
+                $taskSelect.empty();
+                $.each(data, function (index, task) {
+                    $taskSelect.append(`<option value="${task.id}">${task.task_name}</option>`);
+                });
+            }
+        });
+    });
+</script>
+
+<!-- 繰り返し設定の処理 -->
+<script>
+    $(document).ready(function () {
+        $("#interval-field, #day-of-week-field, #nth-weekday-field, #day-of-month-field").hide();
+
+        const helpTexts = {
+            daily: {
+                interval: "日ごと"
+            },
+            weekly: {
+                interval: "週間ごと",
+                day_of_week: "繰り返す曜日"
+            },
+            monthly: {
+                interval: "か月ごと",
+                nth_weekday: "第何週の何曜日",
+            },
+            yearly: {
+                interval: "年ごと"
+            }
+        };
+
+        // 曜日変換（JSの曜日 → Djangoの文字コード）
+        function jsWeekdayToDjangoCode(jsDay) {
+            const mapping = ['SU', 'MO', 'TU', 'WE', 'TH', 'FI', 'SA'];
+            return mapping[jsDay];
+        }
+
+        // 開始日から曜日をセット
+        function setDayOfWeekFromStartDate() {
+            const startDateStr = $("#id_start_date").val();
+            if (!startDateStr) return;
+
+            const dateObj = new Date(startDateStr);
+            if (isNaN(dateObj)) return;
+
+            const jsWeekday = dateObj.getDay();
+            const djangoWeekday = jsWeekdayToDjangoCode(jsWeekday);
+
+            const freq = $("#id_frequency").val();
+            console.log("setDayOfWeekFromStartDate - freq:", freq);
+            if (freq.toLowerCase() === "weekly") {
+                $("#id_day_of_week").val(djangoWeekday).change();
+                console.log("曜日セット:", djangoWeekday);
+            }
+        }
+
+        // ボタン選択時の処理
+        $("#frequency-buttons button").click(function () {
+            const value = $(this).data("value");
+            console.log("選択された frequency:", value);
+
+            $("#id_frequency").val(value);
+
+            $("#frequency-buttons button").removeClass("selected");
+            $(this).addClass("selected");
+
+            $("#interval-field, #day-of-week-field, #nth-weekday-field").hide();
+            $(".field-help").text("");
+
+            if (value === "DAILY") {
+                $("#interval-field").show();
+                $("#interval-help").text(helpTexts.daily.interval);
+            } else if (value === "WEEKLY") {
+                $("#interval-field, #day-of-week-field").show();
+                $("#interval-help").text(helpTexts.weekly.interval);
+                $("#day-of-week-help").text(helpTexts.weekly.day_of_week);
+                setDayOfWeekFromStartDate(); // 追加：曜日自動セット
+            } else if (value === "MONTHLY") {
+                $("#interval-field, #nth-weekday-field").show();
+                $("#interval-help").text(helpTexts.monthly.interval);
+                $("#nth-weekday-help").text(helpTexts.monthly.nth_weekday);
+            } else if (value === "YEARLY") {
+                $("#interval-field").show();
+                $("#interval-help").text(helpTexts.yearly.interval);
+            }
+        });
+
+        // 初期表示時の曜日セット（weeklyなら）
+        if ($("#id_frequency").val().toLowerCase() === "WEEKLY") {
+            setDayOfWeekFromStartDate();
+        }
+
+        // 日付変更時も対応
+        $("#id_start_date").change(function () {
+            if ($("#id_frequency").val().toLowerCase() === "WEEKLY") {
+                setDayOfWeekFromStartDate();
+            }
+        });
+    });
+</script>
+
+<!-- ボタンスタイル -->
+<style>
+    #frequency-buttons button.selected {
+        background-color: #4CAF50;
+        color: white;
+    }
+</style>
+{% endblock %}

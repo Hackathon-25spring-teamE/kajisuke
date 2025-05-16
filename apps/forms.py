@@ -62,36 +62,32 @@ FREQUENCY_CHOICES = [
     ('MONTHLY', '毎月'),
     ('YEARLY', '毎年'),
 ]
+JAPANESE_DAY_OF_WEEK_CHOICES = [
+    ('MO', '月曜日'),
+    ('TU', '火曜日'),
+    ('WE', '水曜日'),
+    ('TH', '木曜日'),
+    ('FI', '金曜日'),
+    ('SA', '土曜日'),
+    ('SU', '日曜日'),
+]
 
 class ScheduleForm(forms.ModelForm):
-    task_category = forms.ModelChoiceField(
-        queryset=TaskCategory.objects.all(),
-        required=True,
-        label="カテゴリー"
-    )
-    task = forms.ModelChoiceField(
-        queryset=Task.objects.none(),  # 初期状態は空
-        required=True,
-        label="家事"
-    )
-    frequency = forms.ChoiceField(
-        choices=FREQUENCY_CHOICES,
-        label="繰り返し設定",
-        widget=forms.HiddenInput()  # 見た目には表示しない（ボタンに置き換えるため）
-    )
-    
+    task_category = forms.ModelChoiceField(queryset=TaskCategory.objects.all(),required=True,label="カテゴリー")
+    task = forms.ModelChoiceField(queryset=Task.objects.none(), required=True,label="家事") # 初期状態は空
+    frequency = forms.ChoiceField(choices=FREQUENCY_CHOICES,label="繰り返し設定",widget=forms.HiddenInput() ) # 見た目には表示しない（ボタンに置き換えるため）
+    day_of_week = forms.ChoiceField(choices=JAPANESE_DAY_OF_WEEK_CHOICES, required=False)
 
     class Meta:
         model = Schedule
-        fields = ['start_date', 'task_category', 'task', 'memo', 'frequency', 'interval', 'day_of_week', 'nth_weekday', 'day_of_month']
+        fields = ['start_date', 'task_category', 'task', 'memo', 'frequency', 'interval', 'day_of_week', 'nth_weekday']
         labels = {
         'task': '家事',
         'start_date': '開始日',
         'frequency': '繰り返し設定',
-        'interval': '間隔（週ごと、月ごと）',
+        'interval': '間隔',
         'day_of_week': '曜日',
         'nth_weekday': '第何曜日',
-        'day_of_month': '月の何日',
         'memo': 'メモ',
     }
 
