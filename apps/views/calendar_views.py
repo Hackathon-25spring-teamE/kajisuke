@@ -99,48 +99,13 @@ def schedules_list(request):
 
         # 2-2. 各schedulesで、繰り返し設定からtodayからcalendar_end_dateまでの期間の日付リストを作成する
         for future_item in future_schedules:
-            date_list = []
-            # frequencyがNONEの時→start_dateが今日以降であれば日付リストに追加
-            if future_item.frequency == "NONE":
-                if future_item.start_date >= user_today.date():
-                    date_list.append(future_item.start_date)
-            # frequencyがNONE以外の時→繰り返し設定から日付リストを作成する
-            else:
-                date_set = rruleset()
-                reccurences = {
-                    "freq": frequency_dict.get(future_item.frequency), 
-                    "interval": future_item.interval, 
-                    "dtstart": future_item.start_date,
-                    "bymonth": future_item.start_date.month if future_item.frequency == "YEARLY" else None,
-                    "byweekday": weekday_dict.get(future_item.day_of_week),
-                    "bysetpos": future_item.nth_weekday,
-                }
-                # reccurencesからNoneの項目を除外する
-                filted_reccurences = { k: v for k, v in reccurences.items() if v is not None }
-                # 上記を使って対象期間の日付リストを作成
-                date_set.rrule(
-                    rrule(**filted_reccurences)
-                    .between(user_today, calendar_end, inc=True)
-                    )
-
-                # 2-3. 日付リストに対し、original_dateを除外し、modified_dateを追加する
-                for except_item in exptional_schedules:
-                    if except_item.schedule.id == future_item.id:
-                        # 繰り返しからoriginal_dateを除外
-                        original_date = datetime.combine(except_item.original_date, datetime.min.time())
-                        date_set.exdate(original_date)
-                        # modified_dateがNoneではなく、対象期間内なら追加
-                        if except_item.modified_date is not None:
-                            if user_today.date() <= except_item.modified_date <= calendar_end.date():
-                                modified_date = datetime.combine(except_item.modified_date, datetime.min.time())
-                                date_set.rdate(modified_date)
-
-                # datetimeをdateに変換
-                date_list = [dt.date() for dt in date_set]
-
-            # print(item.task.task_name, date_list)
-
-            # 2-4. date_listの各日付にタスク情報を追記して、schedules_listへ追加
+            date_list = get_reccureced_dates(
+                future_item, 
+                exptional_schedules, 
+                user_today, 
+                calendar_end
+            )
+            # 2-3. date_listの各日付にタスク情報を追記して、schedules_listへ追加
             for dt in date_list:
                 category_settings = category_dict.get(future_item.task.task_category.id)
                 schedule = {
@@ -233,46 +198,13 @@ def calendar_day(request, year, month, day):
 
         # 2-3-1.各スケジュール毎に繰り返し設定からview_date期間（1日）のスケジュールを生成
         for future_item in future_schedules:
-            date_list = []
-            # frequencyがNONEの時→start_dateがview_dateであれば日付リストに追加
-            if future_item.frequency == "NONE":
-                if future_item.start_date == view_date.date():
-                    date_list.append(future_item.start_date)
-            # frequencyがNONE以外の時→繰り返し設定から日付リストを作成する
-            else:
-                date_set = rruleset()
-                reccurences = {
-                    "freq": frequency_dict.get(future_item.frequency), 
-                    "interval": future_item.interval, 
-                    "dtstart": future_item.start_date,
-                    "bymonth": future_item.start_date.month if future_item.frequency == "YEARLY" else None,
-                    "byweekday": weekday_dict.get(future_item.day_of_week),
-                    "bysetpos": future_item.nth_weekday,
-                }
-                # reccurencesからNoneの項目を除外する
-                filted_reccurences = { k: v for k, v in reccurences.items() if v is not None }
-                # 上記を使って対象期間の日付リストを作成
-                date_set.rrule(
-                    rrule(**filted_reccurences)
-                    .between(view_date, view_date, inc=True)
-                    )
-
-                # 2-3-2.各スケジュール毎にexceptional_schedulesの変更を適応
-                for except_item in exptional_schedules:
-                    if except_item.schedule.id == future_item.id:
-                        # 繰り返しからoriginal_dateを除外
-                        original_date = datetime.combine(except_item.original_date, datetime.min.time())
-                        date_set.exdate(original_date)
-                        # modified_dateがNoneではなく、対象期間内なら追加
-                        if except_item.modified_date is not None:
-                            if view_date.date() <= except_item.modified_date <= view_date.date():
-                                modified_date = datetime.combine(except_item.modified_date, datetime.min.time())
-                                date_set.rdate(modified_date)
-
-                # datetimeをdateに変換
-                date_list = [dt.date() for dt in date_set]
-
-            # 2-3-3.各スケジュール毎にdate_listにスケジュールがあればschedules_listに追加
+            date_list = get_reccureced_dates(
+                future_item, 
+                exptional_schedules, 
+                view_date, 
+                view_date
+            )
+            # 2-3-2.各スケジュール毎にdate_listにスケジュールがあればschedules_listに追加
             if date_list:
                 # completed_schedulesに各スケジュールIDがあれば、実施済みにする
                 completed = False
@@ -282,13 +214,13 @@ def calendar_day(request, year, month, day):
                         break
 
                 schedule = {
-                "schedule_id": future_item.id, 
-                "task_id": future_item.task.id, 
-                "task_name": future_item.task.task_name, 
-                "category_id": future_item.task.task_category.id, 
-                "category_name": future_item.task.task_category.task_category_name,
-                "memo": future_item.memo,
-                "completed": completed,
+                    "schedule_id": future_item.id, 
+                    "task_id": future_item.task.id, 
+                    "task_name": future_item.task.task_name, 
+                    "category_id": future_item.task.task_category.id, 
+                    "category_name": future_item.task.task_category.task_category_name,
+                    "memo": future_item.memo,
+                    "completed": completed,
                 }
                 schedules_list.append(schedule)
 
@@ -311,6 +243,51 @@ def get_japanese_holidays(year, month):
         except ValueError:
             continue
     return holidays
+
+
+
+# DBクエリで取得したscheduleとexceptional_schedulesから、対象期間（datetime型）の日付リスト（date型）を生成
+def get_reccureced_dates(schedule_obj, except_obj, start_date, end_date):
+    date_list = []
+    # frequencyがNONEの時→schedule_obj.start_dateがstart_dateとend_dateの間であれば日付リストに追加
+    if schedule_obj.frequency == "NONE":
+        if start_date.date() <= schedule_obj.start_date <= end_date.date():
+            date_list.append(schedule_obj.start_date)
+    # frequencyがNONE以外の時→繰り返し設定から日付リストを作成する
+    else:
+        date_set = rruleset()
+        reccurences = {
+            "freq": frequency_dict.get(schedule_obj.frequency), 
+            "interval": schedule_obj.interval, 
+            "dtstart": schedule_obj.start_date,
+            "bymonth": schedule_obj.start_date.month if schedule_obj.frequency == "YEARLY" else None,
+            "byweekday": weekday_dict.get(schedule_obj.day_of_week),
+            "bysetpos": schedule_obj.nth_weekday,
+        }
+        # reccurencesからNoneの項目を除外する
+        filted_reccurences = { k: v for k, v in reccurences.items() if v is not None }
+        # 上記を使って対象期間の日付リストを作成
+        date_set.rrule(
+            rrule(**filted_reccurences)
+            .between(start_date, end_date, inc=True)
+            )
+
+        # 2-3. 日付リストに対し、original_dateを除外し、modified_dateを追加する
+        for except_item in except_obj:
+            if except_item.schedule.id == schedule_obj.id:
+                # 繰り返しからoriginal_dateを除外
+                original_date = datetime.combine(except_item.original_date, datetime.min.time())
+                date_set.exdate(original_date)
+                # modified_dateがNoneではなく、対象期間内なら追加
+                if except_item.modified_date is not None:
+                    if start_date.date() <= except_item.modified_date <= end_date.date():
+                        modified_date = datetime.combine(except_item.modified_date, datetime.min.time())
+                        date_set.rdate(modified_date)
+
+        # datetimeをdateに変換
+        date_list = [dt.date() for dt in date_set]
+
+    return date_list
 
 
 # frequency を文字列からdateutil.rruleの定数に変換するための辞書
