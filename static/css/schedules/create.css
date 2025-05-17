@@ -1,4 +1,33 @@
 /* -------------------------------------------
+　　右上閉じるボタン
+------------------------------------------- */
+.batsu {
+  position: absolute;
+  top: 14px; /* 画面最上部から16px - h2との距離2pxを考慮 */
+    right: 20px; /* 画面右端から20pxの位置 */
+  width: 24px;
+  height: 24px;
+}
+ 
+.batsu::before, .batsu::after { /* 共通設定 */
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px; /* 棒の幅（太さ） */
+  height: 30px; /* 棒の高さ */
+  background:#5D2F1A;
+}
+ 
+.batsu::before {
+  transform: translate(-50%,-50%) rotate(45deg);
+}
+ 
+.batsu::after {
+  transform: translate(-50%,-50%) rotate(-45deg);
+}
+
+/* -------------------------------------------
 　　タイトル表示（スケジュール登録）
 ------------------------------------------- */
 h2 {
@@ -52,7 +81,7 @@ h2 {
 }
 
 select{
-  color: var(--secondary-color); /* メインのテキストカラーに設定 */
+  color: var(--text-color); /* メインのテキストカラーに設定 */
   width: 100%;
   padding: 10px;
   border: 1px solid var(--border-color2);
@@ -78,7 +107,7 @@ select{
 }
 
 .memo::placeholder {
-    color: var(--secondary-color); /* カテゴリーや家事と同じ色に */
+    color: var(--text-color); /* カテゴリーや家事と同じ色に */
     font-size: var(--font-size-default); /* サイズも統一 */
 }
 

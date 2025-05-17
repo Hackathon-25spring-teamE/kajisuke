@@ -10,6 +10,9 @@
 {% block header_title %}{% endblock %}  <!-- ここで空にする -->
 
 {% block content %}
+
+        <span class="batsu"></span>
+
     <h2>スケジュール登録</h2>
     
     <form action="/schedule" method="post" name="schedule-form">
@@ -23,7 +26,7 @@
         <!-- カテゴリー -->
         <div class="form-group">
             <select id="category" name="category">
-                <option value="" hidden>カテゴリー</option>
+                <option value="" hidden>--カテゴリー--</option>
                 <option>A</option>
                 <option>B</option>
                 <option>C</option>
@@ -33,7 +36,7 @@
         <!-- 家事 -->
         <div class="form-group">
             <select id="task" name="task">
-                <option value="" hidden>家事</option>
+                <option value="" hidden>--家事--</option>
                 <option>A</option>
                 <option>B</option>
                 <option>C</option>
@@ -42,27 +45,28 @@
 
         <!-- メモ欄 -->
         <div>
-            <textarea class="memo" rows="2" cols"" rows="2" name="memo" placeholder="メモ欄"></textarea>
+            <textarea class="memo" rows="2" name="memo" placeholder="--メモ欄--"></textarea>
         </div>
 
-    <!-- 繰り返し設定 -->
-    <div id="repeat-form">
-        <label>繰り返し設定</label>
-            <div class="repeat-options">
-                <input type="radio" name="repeat" value="なし" id="none" checked>
-                    <label for="none">なし</label>
-                <input type="radio" name="repeat" value="everyday" id="everyday">
-                    <label for="everyday">毎日</label>
-                <input type="radio" name="repeat" value="day_of_week" id="day_of_week">
-                    <label for="day_of_week">毎週</label>
-                <input type="radio" name="repeat" value="nth_weekday" id="nth_weekday">
-                    <label for="nth_weekday">毎月</label>
-                <input type="radio" name="repeat" value="day_of_month" id="day_of_month">
-                    <label for="day_of_month">毎年</label>
-            </div>
-    </div>
+        <!-- 繰り返し設定 -->
+        <div id="repeat-form">
+            <label>繰り返し設定</label>
+                <div class="repeat-options">
+                    <input type="radio" name="frequency" value="NONE" id="NONE" checked>
+                        <label for="NONE">なし</label>
+                    <input type="radio" name="frequency" value="DAILY" id="DAILY">
+                        <label for="DAILY">毎日</label>
+                    <input type="radio" name="frequency" value="WEEKLY" id="WEEKLY">
+                        <label for="WEEKLY">毎週</label>
+                    <input type="radio" name="frequency" value="MONTHLY" id="MONTHLY">
+                        <label for="MONTHLY">毎月</label>
+                    <input type="radio" name="frequency" value="YEARLY" id="YEARLY">
+                        <label for="YEARLY">毎年</label>
+                </div>
+        </div>
+
+    <!-- スケジュール登録ボタン -->
+    <button class="submit1">スケジュールを登録する</button>
 </form>
 
-<!-- 送信ボタン 押すと月表示へ -->
-    <button type="button" class="submit1" onclick="location.href='{% url 'mock_calender_month' %}'">スケジュールを登録する</button>
 {% endblock %}
