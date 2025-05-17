@@ -1,27 +1,15 @@
-<!-- <h2>月のカレンダー表示</h2> -->
-
+{% extends "base.html" %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="ja">
-    <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>カレンダー</title>
-    
-    <link href="{% static 'css/base_dev.css' %}" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
-    <link href="{% static 'css/month.css' %}" rel="stylesheet">
-    <script src="{% static 'js/fullcalendar/index.global.min.js' %}" defer></script>
-    <script src="{% static 'js/month.js' %}" defer></script>
+{% block title %}カレンダー - Kajisuke{% endblock %}
+{% block description %}Kajisukeのカレンダー画面{% endblock %}
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+<link href="{% static 'css/month.css' %}" rel="stylesheet">
+<script src="{% static 'js/fullcalendar/index.global.min.js' %}" defer></script>
+<script src="{% static 'js/month.js' %}" defer></script>
+{% endblock %}
 
-
-    </head>
-
-    <body>
-
-        <h2>月のカレンダー表示</h2>
-        <div id="calendar"></div>
-
-    </body>
-</html>
+{% block content %}
+<div id="calendar"></div>
+{% endblock %}

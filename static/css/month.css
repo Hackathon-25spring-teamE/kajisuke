@@ -1,56 +1,61 @@
-body {
-    font-family: sans-serif;
-    background-color: #F9F5EF;
-    color: #636262;
+/* base.css調整 */
+.container{
+    width: 100%;
 }
+
 #calendar {
     max-width: 100%;
 }
-.my-events { 
-    color: #333333;
-    background-color: #C5D7FB;
+
+
+/* -------------------------------------------
+  Fullcalendar.jsのCSS調整
+------------------------------------------- */
+/* 曜日を中央揃え */
+.fc-scrollgrid-sync-inner {
+    text-align: center;
 }
 
 /* 日付セルの境界線（罫線） */
 .fc td, .fc th {
-border-color: #cccccc;
+    border-color: #cccccc;
 }
 
 /* prev, next ボタン */
 .fc .fc-button {
-background-color: #D7C0A4;  /* ボタン背景色 */
-color: #F9F5EF;               /* 文字色 */
-border: none;
+    background-color: var(--secondary-color);  /* ボタン背景色 */
+    color: var(--background-color);    /* 文字色 */
+    border: none;
 }
 
 .fc .fc-button:hover {
-background-color: #D7C0A4;  /* ホバー時の色 */
+    background-color: var(--secondary-color);  /* ホバー時の色 */
 }
 
+/* 今日の日付の背景色 */
 .fc .fc-day-today {
-background-color: #D7C0A4; /* 今日の日付の背景色 */
-
+    background-color: var(--secondary-color); 
 }
 
 /* 土曜日 */
 .fc-day-sat .fc-daygrid-day-top,
 .fc-day-sat .fc-scrollgrid-sync-inner .fc-col-header-cell-cushion,
 .fc-day-sat .fc-list-day-cushion {
-color: blue;
+    color: blue;
 }
 
 /* 日曜日 */
 .fc-day-sun .fc-daygrid-day-top,
 .fc-day-sun .fc-scrollgrid-sync-inner .fc-col-header-cell-cushion,
 .fc-day-sun .fc-list-day-cushion {
-color: red;
+    color: red;
 }
 
 /* 前後の月の日付（非表示ではない） */
 .fc-day-other .fc-daygrid-day-top,
 .fc-day-other .fc-scrollgrid-sync-inner .fc-col-header-cell-cushion,
 .fc-day-other .fc-list-day-cushion {
-color: gray;
+    color: gray;
 }
 
 .fc .fc-event {
@@ -61,24 +66,4 @@ color: gray;
 
 .fc-daygrid-event {
     margin-bottom: 1px;
-}
-
-
-/* 選択状態を完全に上書きして無効化 */
-/* .fc-event:focus,
-.fc-event.fc-event-selected,
-.fc-event:active {
-background-color: inherit !important;
-border-color: inherit !important;
-color: inherit !important;
-outline: none !important;
-box-shadow: none !important;
-} */
-
-/* さらに下記のように、hover 時のスタイルも打ち消してみてください */
-.fc-event.my-events:focus,
-.fc-event.my-events.fc-event-selected,
-.fc-event.my-events:active,
-.fc-event.my-events:hover {
-background-color: inherit !important;
 }
