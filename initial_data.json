@@ -1,0 +1,47 @@
+[
+    { "model": "apps.taskcategory", "pk": 1, "fields": { "task_category_name": "掃除", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.taskcategory", "pk": 2, "fields": { "task_category_name": "料理", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.taskcategory", "pk": 3, "fields": { "task_category_name": "洗濯", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.taskcategory", "pk": 4, "fields": { "task_category_name": "整理整頓", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.taskcategory", "pk": 5, "fields": { "task_category_name": "季節・年中行事", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.taskcategory", "pk": 6, "fields": { "task_category_name": "その他", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+  
+    { "model": "apps.task", "pk": 1, "fields": { "task_category": 1, "user": null, "is_active": true, "task_name": "掃除機", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 2, "fields": { "task_category": 1, "user": null, "is_active": true, "task_name": "床拭き", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 3, "fields": { "task_category": 1, "user": null, "is_active": true, "task_name": "家具のほこり取り", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 4, "fields": { "task_category": 1, "user": null, "is_active": true, "task_name": "トイレ", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 5, "fields": { "task_category": 1, "user": null, "is_active": true, "task_name": "浴室", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 6, "fields": { "task_category": 1, "user": null, "is_active": true, "task_name": "洗面所", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 7, "fields": { "task_category": 1, "user": null, "is_active": true, "task_name": "キッチン", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 8, "fields": { "task_category": 1, "user": null, "is_active": true, "task_name": "換気扇", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 9, "fields": { "task_category": 1, "user": null, "is_active": true, "task_name": "窓拭き", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 10, "fields": { "task_category": 1, "user": null, "is_active": true, "task_name": "網戸", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 11, "fields": { "task_category": 1, "user": null, "is_active": true, "task_name": "ベランダ", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 12, "fields": { "task_category": 1, "user": null, "is_active": true, "task_name": "玄関", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 13, "fields": { "task_category": 1, "user": null, "is_active": true, "task_name": "庭", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 14, "fields": { "task_category": 1, "user": null, "is_active": true, "task_name": "ゴミ出し", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 15, "fields": { "task_category": 1, "user": null, "is_active": true, "task_name": "布団干し", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+  
+    { "model": "apps.task", "pk": 16, "fields": { "task_category": 2, "user": null, "is_active": true, "task_name": "食材の買い物", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 17, "fields": { "task_category": 2, "user": null, "is_active": true, "task_name": "作り置き", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+  
+    { "model": "apps.task", "pk": 18, "fields": { "task_category": 3, "user": null, "is_active": true, "task_name": "洋服", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 19, "fields": { "task_category": 3, "user": null, "is_active": true, "task_name": "アイロンがけ", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 20, "fields": { "task_category": 3, "user": null, "is_active": true, "task_name": "クリーニングに出す", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 21, "fields": { "task_category": 3, "user": null, "is_active": true, "task_name": "寝具", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 22, "fields": { "task_category": 3, "user": null, "is_active": true, "task_name": "カーテン", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 23, "fields": { "task_category": 3, "user": null, "is_active": true, "task_name": "靴を洗う", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+  
+    { "model": "apps.task", "pk": 24, "fields": { "task_category": 4, "user": null, "is_active": true, "task_name": "書類", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 25, "fields": { "task_category": 4, "user": null, "is_active": true, "task_name": "クローゼット", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 26, "fields": { "task_category": 4, "user": null, "is_active": true, "task_name": "冷蔵庫・食品棚", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 27, "fields": { "task_category": 4, "user": null, "is_active": true, "task_name": "本棚", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 28, "fields": { "task_category": 4, "user": null, "is_active": true, "task_name": "不用品の処分", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+  
+    { "model": "apps.task", "pk": 29, "fields": { "task_category": 5, "user": null, "is_active": true, "task_name": "衣替え", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 30, "fields": { "task_category": 5, "user": null, "is_active": true, "task_name": "エアコン掃除", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+    { "model": "apps.task", "pk": 31, "fields": { "task_category": 5, "user": null, "is_active": true, "task_name": "防災グッズの点検", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } },
+  
+    { "model": "apps.task", "pk": 32, "fields": { "task_category": 6, "user": null, "is_active": true, "task_name": "銀行振り込み", "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z" } }
+  ]
+  
