@@ -1,1 +1,72 @@
-<h2>スケジュール登録</h2>
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}スケジュール作成 - Kajisuke{% endblock %}
+{% block description %}Kajisukeのスケジュール作成ページ{% endblock %}
+{% block extra_css %}
+<link href="{% static 'css/schedules/create.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block header_title %}{% endblock %}  <!-- ここで空にする -->
+
+{% block content %}
+
+        <span class="batsu"></span>
+
+    <h2>スケジュール登録</h2>
+    
+    <form action="/schedule" method="post" name="schedule-form">
+        
+        <!-- 開始日 -->
+        <div class="form-group-date">
+            <label for="start-date">開始日</label>
+            <input type="date" id="start-date" name="start-date">
+        </div>
+
+        <!-- カテゴリー -->
+        <div class="form-group">
+            <select id="category" name="category">
+                <option value="" hidden>--カテゴリー--</option>
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+            </select>
+        </div>
+
+        <!-- 家事 -->
+        <div class="form-group">
+            <select id="task" name="task">
+                <option value="" hidden>--家事--</option>
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+            </select>
+        </div> 
+
+        <!-- メモ欄 -->
+        <div>
+            <textarea class="memo" rows="2" name="memo" placeholder="--メモ欄--"></textarea>
+        </div>
+
+        <!-- 繰り返し設定 -->
+        <div id="repeat-form">
+            <label>繰り返し設定</label>
+                <div class="repeat-options">
+                    <input type="radio" name="frequency" value="NONE" id="NONE" checked>
+                        <label for="NONE">なし</label>
+                    <input type="radio" name="frequency" value="DAILY" id="DAILY">
+                        <label for="DAILY">毎日</label>
+                    <input type="radio" name="frequency" value="WEEKLY" id="WEEKLY">
+                        <label for="WEEKLY">毎週</label>
+                    <input type="radio" name="frequency" value="MONTHLY" id="MONTHLY">
+                        <label for="MONTHLY">毎月</label>
+                    <input type="radio" name="frequency" value="YEARLY" id="YEARLY">
+                        <label for="YEARLY">毎年</label>
+                </div>
+        </div>
+
+    <!-- スケジュール登録ボタン -->
+    <button class="submit1">スケジュールを登録する</button>
+</form>
+
+{% endblock %}
