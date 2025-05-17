@@ -30,8 +30,8 @@ nav {
   カレンダー部分
 ------------------------------------------- */
 /* base.css調整 */
-.container{
-    width: 100%;
+.container {
+    width: 100% !important;
 }
 
 #calendar {
