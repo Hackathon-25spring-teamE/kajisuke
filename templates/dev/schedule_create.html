@@ -16,12 +16,12 @@
         {% endfor %}
     </ul>
     {% endif %}
-
+    <!-- task_category と task の選択 -->
     {{ form.start_date.label_tag }} {{ form.start_date }}<br>
     {{ form.task_category.label_tag }} {{ form.task_category }}<br>
     {{ form.task.label_tag }} {{ form.task }}<br>
     {{ form.memo.label_tag }} {{ form.memo }}<br>
-
+    <!-- frequency をボタンで選択 -->
     <div id="frequency-buttons">
         <label>繰り返し設定:</label><br>
         <button type="button" data-value="NONE">なし</button>
@@ -30,16 +30,22 @@
         <button type="button" data-value="MONTHLY">毎月</button>
         <button type="button" data-value="YEARLY">毎年</button>
     </div>
-
+    <!-- Hidden フィールドで値を渡す -->
     {{ form.frequency }}
-
+    <!-- frequency に応じて表示する項目 -->
     <div id="frequency-extra-fields">
         <div id="interval-field">
             {{ form.interval.label_tag }} {{ form.interval }}
             <span class="field-help" id="interval-help"></span>
         </div>
         <div id="day-of-week-field">
-            {{ form.day_of_week.label_tag }} {{ form.day_of_week }}
+            <label class="day-label" data-day="MO"><input type="radio" name="day_of_week" value="MO" id="day-MO"> 月曜日</label>
+            <label class="day-label" data-day="TU"><input type="radio" name="day_of_week" value="TU" id="day-TU"> 火曜日</label>
+            <label class="day-label" data-day="WE"><input type="radio" name="day_of_week" value="WE" id="day-WE"> 水曜日</label>
+            <label class="day-label" data-day="TH"><input type="radio" name="day_of_week" value="TH" id="day-TH"> 木曜日</label>
+            <label class="day-label" data-day="FI"><input type="radio" name="day_of_week" value="FI" id="day-FI"> 金曜日</label>
+            <label class="day-label" data-day="SA"><input type="radio" name="day_of_week" value="SA" id="day-SA"> 土曜日</label>
+            <label class="day-label" data-day="SU"><input type="radio" name="day_of_week" value="SU" id="day-SU"> 日曜日</label>
             <span class="field-help" id="day-of-week-help"></span>
         </div>
         <div id="nth-weekday-field">
@@ -54,7 +60,7 @@
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Ajaxタスクロード -->
+<!-- Ajaxでカテゴリーに応じたタスクを表示処理 -->
 <script>
     $("#id_task_category").change(function () {
         const url = "{% url 'apps:ajax_load_tasks' %}";
@@ -76,35 +82,29 @@
     });
 </script>
 
-<!-- 繰り返し設定の処理 -->
+<!-- frequency ボタン切り替え処理 -->
 <script>
     $(document).ready(function () {
+        // 初期は全フィールド非表示
         $("#interval-field, #day-of-week-field, #nth-weekday-field, #day-of-month-field").hide();
 
-        const helpTexts = {
-            daily: {
-                interval: "日ごと"
-            },
-            weekly: {
-                interval: "週間ごと",
-                day_of_week: "繰り返す曜日"
-            },
-            monthly: {
-                interval: "か月ごと",
-                nth_weekday: "第何週の何曜日",
-            },
-            yearly: {
-                interval: "年ごと"
-            }
-        };
+        // 曜日コードマップ（日曜=0〜土曜=6 → Djangoの曜日コード）
+        const jsDayToDjangoCode = ["SU", "MO", "TU", "WE", "TH", "FI", "SA"];
 
-        // 曜日変換（JSの曜日 → Djangoの文字コード）
-        function jsWeekdayToDjangoCode(jsDay) {
-            const mapping = ['SU', 'MO', 'TU', 'WE', 'TH', 'FI', 'SA'];
-            return mapping[jsDay];
+        // 指定曜日だけ表示しチェック。その他非表示
+        function showOnlySelectedWeekday(selectedDay) {
+            $(".day-label").each(function () {
+                if ($(this).data("day") === selectedDay) {
+                    $(this).show();
+                    $(this).find("input[type=radio]").prop("checked", true);
+                } else {
+                    $(this).hide();
+                    $(this).find("input[type=radio]").prop("checked", false);
+                }
+            });
         }
 
-        // 開始日から曜日をセット
+        // 開始日から曜日セット
         function setDayOfWeekFromStartDate() {
             const startDateStr = $("#id_start_date").val();
             if (!startDateStr) return;
@@ -112,22 +112,21 @@
             const dateObj = new Date(startDateStr);
             if (isNaN(dateObj)) return;
 
-            const jsWeekday = dateObj.getDay();
-            const djangoWeekday = jsWeekdayToDjangoCode(jsWeekday);
+            const jsDay = dateObj.getDay();
+            const djangoDay = jsDayToDjangoCode[jsDay];
 
-            const freq = $("#id_frequency").val();
-            console.log("setDayOfWeekFromStartDate - freq:", freq);
-            if (freq.toLowerCase() === "weekly") {
-                $("#id_day_of_week").val(djangoWeekday).change();
-                console.log("曜日セット:", djangoWeekday);
+            if ($("#id_frequency").val() === "WEEKLY") {
+                showOnlySelectedWeekday(djangoDay);
+            } else {
+                // 週以外は全部表示してチェックなし
+                $(".day-label").show();
+                $("input[name='day_of_week']").prop("checked", false);
             }
         }
 
-        // ボタン選択時の処理
+        // frequencyボタンクリック
         $("#frequency-buttons button").click(function () {
             const value = $(this).data("value");
-            console.log("選択された frequency:", value);
-
             $("#id_frequency").val(value);
 
             $("#frequency-buttons button").removeClass("selected");
@@ -138,30 +137,41 @@
 
             if (value === "DAILY") {
                 $("#interval-field").show();
-                $("#interval-help").text(helpTexts.daily.interval);
+                $("#interval-help").text("日ごと");
+                $(".day-label").show();
+                $("input[name='day_of_week']").prop("checked", false);
             } else if (value === "WEEKLY") {
                 $("#interval-field, #day-of-week-field").show();
-                $("#interval-help").text(helpTexts.weekly.interval);
-                $("#day-of-week-help").text(helpTexts.weekly.day_of_week);
-                setDayOfWeekFromStartDate(); // 追加：曜日自動セット
+                $("#interval-help").text("週間ごと");
+                $("#day-of-week-help").text("繰り返す曜日");
+                setDayOfWeekFromStartDate();
             } else if (value === "MONTHLY") {
                 $("#interval-field, #nth-weekday-field").show();
-                $("#interval-help").text(helpTexts.monthly.interval);
-                $("#nth-weekday-help").text(helpTexts.monthly.nth_weekday);
+                $("#interval-help").text("か月ごと");
+                $("#nth-weekday-help").text("第何週の何曜日");
+                $(".day-label").show();
+                $("input[name='day_of_week']").prop("checked", false);
             } else if (value === "YEARLY") {
                 $("#interval-field").show();
-                $("#interval-help").text(helpTexts.yearly.interval);
+                $("#interval-help").text("年ごと");
+                $(".day-label").show();
+                $("input[name='day_of_week']").prop("checked", false);
+            } else {
+                $(".day-label").show();
+                $("input[name='day_of_week']").prop("checked", false);
             }
         });
 
-        // 初期表示時の曜日セット（weeklyなら）
-        if ($("#id_frequency").val().toLowerCase() === "WEEKLY") {
+        // ページ読み込み時
+        if ($("#id_frequency").val() === "WEEKLY") {
+            $("#frequency-buttons button[data-value='WEEKLY']").addClass("selected");
+            $("#interval-field, #day-of-week-field").show();
             setDayOfWeekFromStartDate();
         }
 
-        // 日付変更時も対応
+        // 開始日変更時
         $("#id_start_date").change(function () {
-            if ($("#id_frequency").val().toLowerCase() === "WEEKLY") {
+            if ($("#id_frequency").val() === "WEEKLY") {
                 setDayOfWeekFromStartDate();
             }
         });
