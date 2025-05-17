@@ -15,5 +15,5 @@ urlpatterns = [
     # カレンダー表示
     path('calendars/<int:year>/<int:month>/<int:day>', calendar_day, name='calendar_day'),
     path('calendars/', calendar_month, name='calendar_month'),
-    path('api/tasks/', schedules_list, name='schedules_list'),
+    path('api/schedules', schedules_list, name='schedules_list'),
 ]
