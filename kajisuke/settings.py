@@ -130,6 +130,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
 STATICFILES_DIRS = [ BASE_DIR / "static" ]
 
 # Default primary key field type
@@ -145,3 +146,5 @@ DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK" : lambda request: True,
 }
 
+# ログインしていないユーザーのリダイレクト先を指定
+LOGIN_URL = 'apps:signin'
