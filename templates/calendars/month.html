@@ -10,10 +10,11 @@
 <script src="{% static 'js/fullcalendar/index.global.min.js' %}" defer></script>
 <script src="{% static 'js/month.js' %}" defer></script>
 
-<!-- month.js用にカレンダーの現在の年月を定義 -->
+<!-- month.js用にカレンダーの現在の年月、その月の祝日を定義 -->
 <script defer>
-    const current_year = "{{current_year}}";
-    const current_month = "{{current_month}}";
+    const current_year = "{{ current_year }}";
+    const current_month = "{{ current_month }}";
+    const holidays = {{ holidays|safe }};
 </script>
 {% endblock %}
 

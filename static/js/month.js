@@ -17,6 +17,13 @@ document.addEventListener('DOMContentLoaded', function() {
     dayMaxEventRows: true,
     height: 650, 
     eventBorderColor: 'transparent', // イベントボーダーの色を透明にする
+    // holidaysを用いて祝日か判定する
+    dayCellDidMount: function(info) {
+    const dateStr = info.date.toISOString().split('T')[0];
+        if (holidays.includes(dateStr)) {
+        info.el.classList.add('holiday');
+        }
+    },
     // 日付から「日」表記を外す
     dayCellContent: function(arg){
         return arg.date.getDate();

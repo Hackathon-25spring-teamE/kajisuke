@@ -44,10 +44,11 @@
     color: blue;
 }
 
-/* 日曜日 */
+/* 日曜日・祝日 */
 .fc-day-sun .fc-daygrid-day-top,
 .fc-day-sun .fc-scrollgrid-sync-inner .fc-col-header-cell-cushion,
-.fc-day-sun .fc-list-day-cushion {
+.fc-day-sun .fc-list-day-cushion,
+.fc-daygrid-day.holiday .fc-daygrid-day-number {
     color: red;
 }
 

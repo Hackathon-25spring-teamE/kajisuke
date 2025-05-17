@@ -3,8 +3,9 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.utils import timezone
 from django.db.models import Q
-from datetime import datetime
+from datetime import datetime, date
 from zoneinfo import ZoneInfo
+import jpholiday
 from dateutil.rrule import rruleset, rrule, DAILY, WEEKLY, MONTHLY, YEARLY, MO, TU, WE, TH, FR, SA, SU
 from ..models import PastSchedule, Schedule, ExceptionalSchedule
 
@@ -12,6 +13,8 @@ from ..models import PastSchedule, Schedule, ExceptionalSchedule
 # カレンダー表示
 @login_required
 def calendar_month(request, year, month):
+    holidays = get_japanese_holidays(year, month)
+    print(holidays)
     # 前月を計算
     if month == 1:
         prev_year, prev_month = year - 1, 12
@@ -24,6 +27,7 @@ def calendar_month(request, year, month):
         next_year, next_month = year, month + 1
 
     context = {
+        "holidays": holidays,
         "current_year": year,
         "current_month": month,
         "prev_year": prev_year,
@@ -166,6 +170,19 @@ def calendar_day(request, year, month, day):
         "date": f'{year}年 {month}月 {day}日',
     }
     return render(request, 'dev/dev.html', {'context': context})
+
+
+# 祝日リスト作成
+def get_japanese_holidays(year, month):
+    holidays = []
+    for day in range(1, 32):
+        try:
+            d = date(year, month, day)
+            if jpholiday.is_holiday(d):
+                holidays.append(d.strftime('%Y-%m-%d'))
+        except ValueError:
+            continue
+    return holidays
 
 
 category_dict = {
