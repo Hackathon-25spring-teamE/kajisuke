@@ -3,13 +3,25 @@
 
 {% block title %}カレンダー - Kajisuke{% endblock %}
 {% block description %}Kajisukeのカレンダー画面{% endblock %}
+
 {% block extra_css %}
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 <link href="{% static 'css/month.css' %}" rel="stylesheet">
 <script src="{% static 'js/fullcalendar/index.global.min.js' %}" defer></script>
 <script src="{% static 'js/month.js' %}" defer></script>
+
+<!-- month.js用にカレンダーの現在の年月を定義 -->
+<script defer>
+    const current_year = "{{current_year}}";
+    const current_month = "{{current_month}}";
+</script>
 {% endblock %}
 
 {% block content %}
+<div class="calendar-nav">
+    <a href="{% url 'apps:calendar_month' year=prev_year month=prev_month %}">＜前の月</a>
+    <span>{{ current_year }}年{{ current_month }}月</span>
+    <a href="{% url 'apps:calendar_month' year=next_year month=next_month %}">次の月＞</a>
+</div>
 <div id="calendar"></div>
 {% endblock %}

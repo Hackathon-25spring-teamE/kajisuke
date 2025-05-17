@@ -1,11 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
   const calendarEl = document.getElementById('calendar');
   const calendar = new FullCalendar.Calendar(calendarEl, {
-    views: {
-        dayGridMonth: {
-        // titleFormat: { month: "long" }
-        }
-    },
+    initialView: 'dayGridMonth',
+    // month.htmlで定義した年月を初期表示に設定
+    initialDate: `${current_year}-${current_month.toString().padStart(2, '0')}-01`, 
     // headerToolbar: {
     //     left: 'prev',
     //     center: 'title',

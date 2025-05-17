@@ -11,8 +11,28 @@ from ..models import PastSchedule, Schedule, ExceptionalSchedule
 
 # カレンダー表示
 @login_required
-def calendar_month(request):
-    return render(request, 'calendars/month.html')
+def calendar_month(request, year, month):
+    # 前月を計算
+    if month == 1:
+        prev_year, prev_month = year - 1, 12
+    else:
+        prev_year, prev_month = year, month - 1
+    # 次月を計算
+    if month == 12:
+        next_year, next_month = year + 1, 1
+    else:
+        next_year, next_month = year, month + 1
+
+    context = {
+        "current_year": year,
+        "current_month": month,
+        "prev_year": prev_year,
+        "prev_month": prev_month,
+        "next_year": next_year,
+        "next_month": next_month,
+    }
+
+    return render(request, 'calendars/month.html', context)
 
 # 指定された期間のスケジュール一覧をJSONとして返す
 @login_required
@@ -103,9 +123,6 @@ def schedules_list(request):
                     rrule(**filted_reccurences)
                     .between(user_today, calendar_end, inc=True)
                     )
-                
-                print(future_item.task.task_name, list(date_set))
-
 
                 # 2-3. 日付リストに対し、original_dateを除外し、modified_dateを追加する
                 for except_item in exptional_schedules:
