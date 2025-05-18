@@ -7,6 +7,7 @@ from datetime import datetime, date
 from zoneinfo import ZoneInfo
 import jpholiday
 from dateutil.rrule import rruleset, rrule, DAILY, WEEKLY, MONTHLY, YEARLY, MO, TU, WE, TH, FR, SA, SU
+from dateutil.relativedelta import relativedelta
 from ..models import PastSchedule, Schedule, ExceptionalSchedule, CompletedSchedule
 
 
@@ -127,24 +128,24 @@ def schedules_list(request):
 @login_required
 def calendar_day(request, year, month, day):
     # 表示する日付をdatetimeで取得する
-    view_date = datetime(year, month, day)
+    current_date = datetime(year, month, day)
     # 今日の日付をdatetimeで取得する
     tz = ZoneInfo("Asia/Tokyo")
     today = timezone.now().astimezone(tz).replace(tzinfo=None).replace(hour=0, minute=0, second=0, microsecond=0)
 
     schedules_list = []
 
-    # 1.view_date<todayであれば、past_schedulesからview_dateのレコードを取得
-    if view_date < today:
+    # 1.current_date<todayであれば、past_schedulesからcurrent_dateのレコードを取得
+    if current_date < today:
         # CompletedScheduleに関するクエリを事前に定義
         completed_schedule_queryset = CompletedSchedule.objects.filter(
-            schedule_date=view_date.date()
+            schedule_date=current_date.date()
         )
         # past_schedulesとschedules,tasks,task_categoriesをinner join、
         # さらにcompleted_schedulesをleft joinして、対象ユーザーの対象期間のレコードを取得する
         past_schedules = PastSchedule.objects.filter(
             schedule__user=request.user, 
-            schedule_date=view_date.date(),
+            schedule_date=current_date.date(),
         ).select_related(
             'schedule__task__task_category'
         ).prefetch_related(
@@ -170,7 +171,7 @@ def calendar_day(request, year, month, day):
             }
             schedules_list.append(schedule)
 
-    # 2.view_date>=todayであれば、schedulesからview_date>=start_dateのレコードを取得
+    # 2.view_date>=todayであれば、schedulesから対象のレコードを取得
     else:
         # schedulesとtasks,task_categoriesをjoinして、対象ユーザーの対象期間のレコードを取得する
         future_schedules = Schedule.objects.filter(
@@ -181,28 +182,28 @@ def calendar_day(request, year, month, day):
         ).order_by('start_date') 
 
         # 2-1.exptional_schedulesとschedulesをjoinして、
-        # 上記条件＋exptional_schedulesの2つのdateのどちらかがview_dateであるレコードを取得
+        # 上記条件＋exptional_schedulesの2つのdateのどちらかがcurrent_dateであるレコードを取得
         exptional_schedules = ExceptionalSchedule.objects.filter(
             schedule__user=request.user, 
             schedule__is_active=True,
         ).filter(
-        Q(original_date=view_date.date()) | 
-        Q(modified_date=view_date.date()) 
+        Q(original_date=current_date.date()) | 
+        Q(modified_date=current_date.date()) 
         )
 
-        # 2-2.completed_schedulesから対象ユーザーの実施日がview_dateのレコードを取得
+        # 2-2.completed_schedulesから対象ユーザーの実施日がcurrent_dateのレコードを取得
         completed_schedules = CompletedSchedule.objects.filter(
             schedule__user=request.user, 
-            schedule_date=view_date.date(),
+            schedule_date=current_date.date(),
         )
 
-        # 2-3-1.各スケジュール毎に繰り返し設定からview_date期間（1日）のスケジュールを生成
+        # 2-3-1.各スケジュール毎に繰り返し設定からcurrent_date期間（1日）のスケジュールを生成
         for future_item in future_schedules:
             date_list = get_reccureced_dates(
                 future_item, 
                 exptional_schedules, 
-                view_date, 
-                view_date
+                current_date, 
+                current_date
             )
             # 2-3-2.各スケジュール毎にdate_listにスケジュールがあればschedules_listに追加
             if date_list:
@@ -225,10 +226,12 @@ def calendar_day(request, year, month, day):
                 schedules_list.append(schedule)
 
     context = {
-        "view_date": view_date,
+        "current_date": current_date,
+        "prev_date": current_date - relativedelta(days=1),
+        "next_date": current_date + relativedelta(days=1),     
         "schedules_list": schedules_list,
     }
-    return render(request, 'dev/dev.html', {'context': context})
+    return render(request, 'calendars/day.html', context)
 
 
 
