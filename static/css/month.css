@@ -1,3 +1,34 @@
+/* -------------------------------------------
+  ナビゲーションアイコン
+------------------------------------------- */
+nav {
+    display: flex;
+    justify-content: space-between; /* 左右の要素を分ける */
+    align-items: center; /* アイコンを中央揃え */
+    max-width: calc(100% - 48px); /* カレンダー幅より24px内側 */
+    margin: 0 auto;
+    padding: 15px;
+    background-color: var(--nav-background);
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* 左側アイコンの間隔を調整 */
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 25px; /* アイコンのサイズを調整 */
+}
+
+/* -------------------------------------------
+  カレンダー部分
+------------------------------------------- */
 /* base.css調整 */
 .container{
     width: 100%;
@@ -67,4 +98,16 @@
 
 .fc-daygrid-event {
     margin-bottom: 1px;
+}
+
+/* -------------------------------------------
+  スケジュール追加プラスボタン
+------------------------------------------- */
+img.add-schedule {
+    position: fixed;
+  /*基準を画面の右下に*/
+    bottom: 25px;
+    right: 25px;
+    width: auto;
+    z-index: 999;
 }
