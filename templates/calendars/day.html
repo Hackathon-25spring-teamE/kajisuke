@@ -29,10 +29,7 @@
             <div class="item-category">
                 <div class="item-category-container">
                     <p>{{ item.category_name }}</p>
-                    <!-- イメージはまだうまく動かない -->
-                    <!-- {% with 'images/category'|add:item.category_id|add:'.png' as image_path %} -->
-                    <img src="{% static 'images/category_1.png' %}" class="category-icon">
-                    <!-- {% endwith %} -->
+                    <img src="{% get_static_prefix %}images/category_icons/category_{{ item.category_id }}.png"  class="category-icon">
                 </div>
             </div>
             <div class="item-task">

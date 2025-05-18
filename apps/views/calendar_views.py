@@ -306,5 +306,5 @@ category_dict = {
         3 : { "icon" : "🧺", "color" : "#9BD4B5"},
         4 : { "icon" : "🗂", "color" : "#C0F354"},
         5 : { "icon" : "🌸", "color" : "#99F2FF"},
-        6 : { "icon" : "🛠", "color" : "#FFC199"},
+        6 : { "icon" : "☘", "color" : "#FFC199"},
     }
