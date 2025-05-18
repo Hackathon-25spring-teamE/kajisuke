@@ -69,8 +69,8 @@
                 </label>
 
                 <div id="monthly-nth-weekday-selects">
-                    <br>
-                    <div id="monthly-day-of-week-select">
+                    {{ form.nth_weekday }}<br>
+                    <!-- <div id="monthly-day-of-week-select">
                         <label class="day-label" data-day="MO"><input type="radio" name="monthly_day_of_week"
                                 value="MO"> </label>
                         <label class="day-label" data-day="TU"><input type="radio" name="monthly_day_of_week"
@@ -85,7 +85,7 @@
                                 value="SA"> </label>
                         <label class="day-label" data-day="SU"><input type="radio" name="monthly_day_of_week"
                                 value="SU"> </label>
-                    </div>
+                    </div> -->
                 </div>
                 <span class="field-help" id="nth-weekday-help"></span>
             </div>
@@ -104,7 +104,7 @@
 
                 <div id="yearly-nth-weekday-selects">
                     <br>
-                    <div id="yearly-day-of-week-select">
+                    <!-- <div id="yearly-day-of-week-select">
                         <label class="day-label" data-day="MO"><input type="radio" name="yearly_day_of_week" value="MO">
                         </label>
                         <label class="day-label" data-day="TU"><input type="radio" name="yearly_day_of_week" value="TU">
@@ -119,7 +119,7 @@
                         </label>
                         <label class="day-label" data-day="SU"><input type="radio" name="yearly_day_of_week" value="SU">
                         </label>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -176,7 +176,7 @@
             });
         }
 
-        // 開始日から曜日セット
+        // 開始日から曜日セット(毎週選択時使用)
         function setDayOfWeekFromStartDate() {
             const startDateStr = $("#id_start_date").val();
             if (!startDateStr) return;
@@ -196,35 +196,7 @@
             }
         }
 
-        // 開始日から第何週＋何曜日をセット
-        function setNthWeekdayFromStartDate() {
-            const startDateStr = $("#id_start_date").val();
-            if (!startDateStr) return;
-
-            const dateObj = new Date(startDateStr);
-            if (isNaN(dateObj)) return;
-
-            const jsDay = dateObj.getDay(); // 0=日〜6=土
-            const jsDayToDjangoCode = ["SU", "MO", "TU", "WE", "TH", "FI", "SA"];
-            const djangoDay = jsDayToDjangoCode[jsDay];
-
-            // 第何週？（1〜5）
-            const dayOfMonth = dateObj.getDate();
-            const nth = Math.floor((dayOfMonth - 1) / 7); // 0=第1週, 1=第2週...
-
-            // セレクトと曜日ラジオボタンを設定
-            $("#id_nth_weekday").val(nth);
-            $(".day-label").show();
-            $("input[name='day_of_week']").prop("checked", false);
-            $(`.day-label[data-day="${djangoDay}"] input`).prop("checked", true);
-
-            // ヘルプに表示（例：第3金曜日）
-            const weekNames = ["第1", "第2", "第3", "第4", "第5"];
-            const dayNames = ["日", "月", "火", "水", "木", "金", "土"];
-            const label = `${weekNames[nth]}${dayNames[jsDay]}曜日`;
-            $("#nth-weekday-help").text();
-        }
-        // 第何週何曜日取得の関数
+        // 第何週何曜日取得の関数(毎月選択時に使用)
         function getOrdinalWeekdayInfo(dateObj) {
             const jsDay = dateObj.getDay(); // 0〜6
             const jsDayToDjangoCode = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"];
@@ -240,7 +212,7 @@
                 label: `${weekNames[nth]}${dayNames[jsDay]}曜日`
             };
         }
-        // MonthlyOptions選択時
+        // MonthlyOptions選択時（毎月選択時に使用）
         function updateMonthlyOptionsFromStartDate() {
             const dateStr = $("#id_start_date").val();
             if (!dateStr) return;
@@ -259,7 +231,7 @@
             $("input[name='day_of_week']").prop("checked", false);
             $(`input[name='day_of_week'][value='${info.djangoDay}']`).prop("checked", true);
         }
-        // YearlyOptions選択時
+        // YearlyOptions選択時（毎年選択時に使用）
         function updateYearlyOptionsFromStartDate() {
             const dateStr = $("#id_start_date").val();
             if (!dateStr) return;
@@ -329,7 +301,6 @@
                 $(".monthly-options").show();
                 $("#interval-help").text("か月ごと");
                 $("input[name='monthly_day_of_week']").prop("checked", true).hide();
-                setNthWeekdayFromStartDate();
                 updateMonthlyOptionsFromStartDate();
                 $("input[name='monthly_option'][value='by_date']").prop("checked", true);
                 $("#monthly-nth-weekday-selects").hide();
@@ -339,13 +310,6 @@
                 $(".yearly-options").show();
                 $("input[name='yearly_day_of_week']").prop("checked", true);
                 updateYearlyOptionsFromStartDate();
-
-                const selectedOption = $("input[name='yearly_option']:checked").val();
-                if (selectedOption === "by_weekday") {
-                    $("#yearly-nth-weekday-selects").show();
-                } else {
-                    $("#yearly-nth-weekday-selects").hide();
-                }
             } else if (value === "NONE") {
                 $("#interval-field, #day-of-week-field, #nth-weekday-field").hide();
             }
@@ -362,7 +326,6 @@
                 $("#frequency-buttons button[data-value='MONTHLY']").addClass("selected");
                 $("#interval-field, #nth-weekday-field").show();
                 $(".monthly-options").show();
-                setNthWeekdayFromStartDate();
                 updateMonthlyOptionsFromStartDate();
                 if ($("input[name='monthly_option']:checked").val() === "by_weekday") {
                     $("#monthly-nth-weekday-selects").show();
@@ -372,14 +335,6 @@
                 $("#interval-field, #nth-weekday-field").show();
                 $(".yearly-options").show();
                 updateYearlyOptionsFromStartDate();
-                setNthWeekdayFromStartDate();
-
-                const selectedOption = $("input[name='yearly_option']:checked").val();
-                if (selectedOption === "by_weekday") {
-                    $("#yearly-nth-weekday-selects").show();
-                } else {
-                    $("#yearly-nth-weekday-selects").hide();
-                }
             }
         });
 
