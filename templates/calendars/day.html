@@ -13,9 +13,9 @@
 {% block content %}
 <div class="calendar-nav">
     <a href="{% url 'apps:calendar_day' year=prev_date.year month=prev_date.month day=prev_date.day %}">＜前の日</a>
-    <span>{{ current_date|date:"Y"  }}</span>
-    <span>{{ current_date|date:"n月j日"  }}</span>
-    <span>{{ current_date|date:"D曜日"  }}</span>
+    <span>{{ current_date|date:"Y" }}</span>
+    <span>{{ current_date|date:"n月j日" }}</span>
+    <span>{{ current_date|date:"D曜日" }}</span>
     <a href="{% url 'apps:calendar_day' year=next_date.year month=next_date.month day=next_date.day %}">次の日＞</a>
 </div>
 
@@ -24,7 +24,11 @@
     <div class="item category-{{ item.category_id }}">
         <div class="item-container">
             <div class="item-completed">
-                <img src="{% static 'images/completed.svg' %}" class="completed-check">
+                {% if item.completed %}
+                <img data-checked-id="{{ item.schedule_id }}" src="../../../static/images/checked.svg" class="completed-check">
+                {% else %}
+                <img data-checked-id="{{ item.schedule_id }}" src="../../../static/images/unchecked.svg" class="completed-check">
+                {% endif %}
             </div>
             <div class="item-category">
                 <div class="item-category-container">
@@ -39,9 +43,13 @@
                 {% endif %}
             </div>
             <div class="item-edit">
-                <a href="">
+                {% if is_editable %}
+                <a data-edit-id="{{ item.schedule_id }}" href="" >
                     <img src="{% static 'images/edit.svg' %}" alt="edit">
                 </a>
+                {% else %}
+                <img class="item-edit-uneditable" src="{% static 'images/edit.svg' %}" alt="edit">
+                {% endif %}
             </div>
         </div>   
     </div>

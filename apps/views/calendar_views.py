@@ -132,11 +132,14 @@ def calendar_day(request, year, month, day):
     # 今日の日付をdatetimeで取得する
     tz = ZoneInfo("Asia/Tokyo")
     today = timezone.now().astimezone(tz).replace(tzinfo=None).replace(hour=0, minute=0, second=0, microsecond=0)
-
+    
+    is_editable = True
     schedules_list = []
 
     # 1.current_date<todayであれば、past_schedulesからcurrent_dateのレコードを取得
     if current_date < today:
+        # past_schedulesのレコードは変更不可
+        is_editable = False
         # CompletedScheduleに関するクエリを事前に定義
         completed_schedule_queryset = CompletedSchedule.objects.filter(
             schedule_date=current_date.date()
@@ -228,7 +231,8 @@ def calendar_day(request, year, month, day):
     context = {
         "current_date": current_date,
         "prev_date": current_date - relativedelta(days=1),
-        "next_date": current_date + relativedelta(days=1),     
+        "next_date": current_date + relativedelta(days=1),
+        "is_editable": is_editable,     
         "schedules_list": schedules_list,
     }
     return render(request, 'calendars/day.html', context)

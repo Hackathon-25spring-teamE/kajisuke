@@ -65,6 +65,10 @@
 
 /* .item-edit {} */
 
+.item-edit-uneditable {
+  opacity: 0.6;
+}
+
 
 /* -------------------------------------------
   category_idによる色分け
