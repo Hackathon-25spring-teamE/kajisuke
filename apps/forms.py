@@ -90,6 +90,12 @@ class ScheduleForm(forms.ModelForm):
         'nth_weekday': '第何曜日',
         'memo': 'メモ',
     }
+        widgets = {
+            'memo': forms.Textarea(attrs={
+                'placeholder': 'メモ',
+                'rows': 3  # 高さの調整（任意）
+            }),
+        }
 
     def __init__(self, *args, user=None, task_category_id=None, **kwargs):
         # userが文字列ならCustomUserを取得
@@ -98,11 +104,7 @@ class ScheduleForm(forms.ModelForm):
                 user = CustomUser.objects.get(user_name=user)
             except CustomUser.DoesNotExist:
                 user = None
-        #デバック用
-        print("userの型・ID・ユーザー名:", type(user), getattr(user, 'pk', None), getattr(user, 'user_name', None))
-
         self.user = user
-        print("ユーザー:", user)#テスト用後で消す
         super().__init__(*args, **kwargs)
 
         #カスタムウェジェット
@@ -119,13 +121,10 @@ class ScheduleForm(forms.ModelForm):
         except (TypeError, ValueError):
             task_category_id = None
 
-        # 🔽 ここに追加してください！
-        print("フォーム初期化: user =", user)
-        print("フォーム初期化: task_category_id =", task_category_id)
-
 
         if user:
             self.fields['task_category'].queryset = TaskCategory.objects.all()
+            self.fields['task_category'].empty_label = 'カテゴリ'
 
             if task_category_id:
                 tasks = Task.objects.filter(
@@ -133,9 +132,11 @@ class ScheduleForm(forms.ModelForm):
                     Q(user=None) | Q(user=user),
                     is_active=True,
                 )
-                print("該当するタスク:", tasks)
                 self.fields['task'].queryset = tasks
+                self.fields['task'].empty_label = '家事'
             else:
                 self.fields['task'].queryset = Task.objects.none()
+                self.fields['task'].empty_label = '家事'
         else:
             self.fields['task'].queryset = Task.objects.none()
+            self.fields['task'].empty_label = '家事'
