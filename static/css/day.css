@@ -1,5 +1,80 @@
+.list-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.item {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  border-radius: 4px;
+}
+
+.item-container {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  margin: 6px 0;
+}
+
+.item-completed {
+  display: flex;
+  align-items: center;
+}
+
+.item-category {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 18%;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.item-category-container {
+  text-align: center;
+}
+
+.item-category p {
+  text-align: center;
+}
+
+.item-category img {
+  object-fit: none;
+}
+
+.item-task {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 60%;
+}
+
+.item-task-name {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.item-task-memo {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* .item-edit {} */
 
 
+/* -------------------------------------------
+  category_idによる色分け
+------------------------------------------- */
+.category-1 { background-color: var(--task-category-1); }
+.category-2 { background-color: var(--task-category-2); }
+.category-3 { background-color: var(--task-category-3); }
+.category-4 { background-color: var(--task-category-4); }
+.category-5 { background-color: var(--task-category-5); }
+.category-6 { background-color: var(--task-category-6); }
 
 
 /* -------------------------------------------

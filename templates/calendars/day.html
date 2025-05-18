@@ -19,29 +19,37 @@
     <a href="{% url 'apps:calendar_day' year=next_date.year month=next_date.month day=next_date.day %}">次の日＞</a>
 </div>
 
-{% for item in schedules_list %}
-<div >
-    <div>チェック</div>
-    <div>
-        <p>{{ item.category_name }}</p>
-        <!-- イメージはまだうまく動かない -->
-        {% with 'images/category'|add:item.category_id|add:'.png' as image_path %}
-        <img src="{% static image_path %}" class="category-icon">
-        {% endwith %}
+<div class="list-container">
+    {% for item in schedules_list %}
+    <div class="item category-{{ item.category_id }}">
+        <div class="item-container">
+            <div class="item-completed">
+                <img src="{% static 'images/completed.svg' %}" class="completed-check">
+            </div>
+            <div class="item-category">
+                <div class="item-category-container">
+                    <p>{{ item.category_name }}</p>
+                    <!-- イメージはまだうまく動かない -->
+                    <!-- {% with 'images/category'|add:item.category_id|add:'.png' as image_path %} -->
+                    <img src="{% static 'images/category_1.png' %}" class="category-icon">
+                    <!-- {% endwith %} -->
+                </div>
+            </div>
+            <div class="item-task">
+                <p class="item-task-name">{{ item.task_name }}</p>
+                {% if item.memo %}
+                <p class="item-task-memo">{{ item.memo }}</p>
+                {% endif %}
+            </div>
+            <div class="item-edit">
+                <a href="">
+                    <img src="{% static 'images/edit.svg' %}" alt="edit">
+                </a>
+            </div>
+        </div>   
     </div>
-    <div>
-        <p>{{ item.task_name }}</p>
-        <p>{{ item.memo }}</p>
-    </div>
-    <div>
-        <a href="">
-            <img src="{% static 'images/edit.svg' %}" alt="edit">
-        </a>
-    </div>
+    {% endfor %}
 </div>
-{% endfor %}
-
-
 
 <!-- 家事すけロゴ --> 
 <div>

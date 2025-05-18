@@ -166,7 +166,7 @@ def calendar_day(request, year, month, day):
                 "task_name": past_item.schedule.task.task_name, 
                 "category_id": past_item.schedule.task.task_category.id, 
                 "category_name": past_item.schedule.task.task_category.task_category_name,
-                "memo": past_item.schedule.memo,
+                "memo": past_item.memo,
                 "completed": bool(past_item.schedule.completed_schedules),
             }
             schedules_list.append(schedule)
