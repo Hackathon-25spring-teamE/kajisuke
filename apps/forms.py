@@ -105,6 +105,15 @@ class ScheduleForm(forms.ModelForm):
             raise forms.ValidationError("開始日は今日以降の日付を選択してください。")
         return start_date
     
+    def clean_interval(self):
+        interval = self.cleaned_data.get('interval')
+        frequency = self.cleaned_data.get('frequency')
+
+        # frequency が NONE 以外のとき、interval が空なら 1 を補完
+        if frequency != 'NONE' and not interval:
+            return 1
+        return interval
+    
     # YEARLY × by_date のとき、day_of_weekとnth_weekdayクリア
     def clean(self):
         cleaned_data = super().clean()

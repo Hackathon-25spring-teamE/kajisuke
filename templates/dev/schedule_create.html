@@ -227,7 +227,7 @@
             $("#monthly-weekday-info").text(`${info.label}`);
 
             // デフォルトでフォームに値をセット（初期表示）
-            $("#id_nth_weekday").val(info.nth);
+            $("#id_nth_weekday").val(info.nth + 1);
             $("input[name='day_of_week']").prop("checked", false);
             $(`input[name='day_of_week'][value='${info.djangoDay}']`).prop("checked", true);
         }
@@ -251,7 +251,7 @@
 
             $("#yearly-weekday-info").text(`${m}月${weekNames[nth]}${dayNames[jsDay]}曜日`);
 
-            $("#id_nth_weekday").val(nth);
+            $("#id_nth_weekday").val(nth + 1);
             $("input[name='day_of_week']").prop("checked", false);
             $(`input[name='day_of_week'][value='${djangoDay}']`).prop("checked", true);
         }
