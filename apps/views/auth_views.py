@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.views import View
 from django.views.generic.edit import CreateView
 
-
+from django.utils import timezone
 
 
 from ..forms import SignupForm, SigninForm
@@ -22,10 +22,11 @@ def hello_world(request):
     context = {
         "message1": "Hello, world.",
         "message2": "KAJISUKEapp is here!",
+        'today': timezone.now().date(),
     }
     # フロントページができたら、以下の形に書き換える（contextは直接渡す）
     # return render(request, '<フロントページのhtml>', context)
-    return render(request, 'dev/dev.html', {'context': context})
+    return render(request, 'dev/dev.html', context)
 
 
 # サインアップ
