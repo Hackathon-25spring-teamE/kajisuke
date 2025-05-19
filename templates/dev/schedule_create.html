@@ -199,7 +199,7 @@
         // 第何週何曜日取得の関数(毎月選択時に使用)
         function getOrdinalWeekdayInfo(dateObj) {
             const jsDay = dateObj.getDay(); // 0〜6
-            const jsDayToDjangoCode = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"];
+            const jsDayToDjangoCode = ["SU", "MO", "TU", "WE", "TH", "FI", "SA"];
             const djangoDay = jsDayToDjangoCode[jsDay];
 
             const nth = Math.floor((dateObj.getDate() - 1) / 7);
@@ -243,7 +243,7 @@
             $("#yearly-date-info").text(`${m}月${d}日`);
 
             const jsDay = dateObj.getDay(); // 0〜6
-            const jsDayToDjangoCode = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"];
+            const jsDayToDjangoCode = ["SU", "MO", "TU", "WE", "TH", "FI", "SA"];
             const djangoDay = jsDayToDjangoCode[jsDay];
             const nth = Math.floor((dateObj.getDate() - 1) / 7);
             const weekNames = ["第1", "第2", "第3", "第4", "第5"];
