@@ -26,7 +26,7 @@ def hello_world(request):
     }
     # フロントページができたら、以下の形に書き換える（contextは直接渡す）
     # return render(request, '<フロントページのhtml>', context)
-    return render(request, 'dev/dev.html', context)
+    return render(request, 'dev/dev.html', {'context': context})
 
 
 # サインアップ
