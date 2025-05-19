@@ -2,7 +2,8 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm 
 from django.contrib.auth import authenticate
 from django.db.models import Q
-
+from django.utils import timezone
+from django.utils.timezone import now
 
 from .models import CustomUser, Schedule, Task, TaskCategory
 from .validators import validate_unique_email, validate_min_length_8, validate_has_digit, validate_has_uppercase
@@ -97,6 +98,36 @@ class ScheduleForm(forms.ModelForm):
             }),
         }
 
+    #開始日を今日以降に制限する
+    def clean_start_date(self):
+        start_date = self.cleaned_data.get('start_date')
+        if start_date and start_date < timezone.now().date():
+            raise forms.ValidationError("開始日は今日以降の日付を選択してください。")
+        return start_date
+    
+    # YEARLY × by_date のとき、day_of_weekとnth_weekdayクリア
+    def clean(self):
+        cleaned_data = super().clean()
+        frequency = cleaned_data.get("frequency")
+
+        # yearly_option は hidden ではなくJS制御の外部フィールドなので、self.data から取得
+        if frequency == "YEARLY":
+            yearly_option = self.data.get("yearly_option")  # POSTデータから取得（formフィールドには含まれていない想定）
+
+            if yearly_option == "by_date":
+                # by_date選択時は曜日系フィールドを空に
+                cleaned_data["day_of_week"] = None
+                cleaned_data["nth_weekday"] = None
+
+        # MONTHLY: by_date のとき曜日情報をクリア
+        if frequency == "MONTHLY":
+            monthly_option = self.data.get("monthly_option")
+            if monthly_option == "by_date":
+                cleaned_data["day_of_week"] = None
+                cleaned_data["nth_weekday"] = None
+
+        return cleaned_data
+
     def __init__(self, *args, user=None, task_category_id=None, **kwargs):
         # userが文字列ならCustomUserを取得
         if isinstance(user, str):
@@ -107,8 +138,19 @@ class ScheduleForm(forms.ModelForm):
         self.user = user
         super().__init__(*args, **kwargs)
 
+        # frequencyが「なし」以外のときは interval の初期値を1に
+        frequency = self.data.get('frequency') or self.initial.get('frequency')
+        if frequency and frequency != 'NONE':  # ← 'none' はFREQUENCY_CHOICESの値に合わせてください
+            self.fields['interval'].initial = 1
+
+        #  当日の日付を初期値に設定（ただし既に指定されていないときだけ上書きしないように）
+        if not self.initial.get('start_date') and not self.data.get('start_date'):
+            self.initial['start_date'] = now().date()
+
         #カスタムウェジェット
-        self.fields['start_date'].widget = forms.DateInput(attrs={'type': 'date'})
+        #今日より前の日付は選べないように制限
+        today_str = timezone.now().date().strftime('%Y-%m-%d')
+        self.fields['start_date'].widget = forms.DateInput(attrs={'type': 'date', 'min': today_str})
 
         # task_category_id は引数から受け取る
         if task_category_id is None:

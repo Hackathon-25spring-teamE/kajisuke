@@ -258,21 +258,32 @@
 
         // MONTHLYオプション切替
         $("input[name='monthly_option']").change(function () {
-            if ($(this).val() === "by_weekday") {
+            const option = $(this).val();
+
+            if (option === "by_weekday") {
                 $("#monthly-nth-weekday-selects").hide();
-            } else {
+                // 選択された曜日を保持（すでに updatemonthlyOptionsFromStartDate() でセット済み）
+            } else if (option === "by_date") {
                 $("#monthly-nth-weekday-selects").hide();
+                //  by_date 選択時は day_of_week を空にする
+                $("#id_day_of_week").val("");
             }
         });
 
         // YEARLYオプション切替
         $("input[name='yearly_option']").change(function () {
-            if ($(this).val() === "by_weekday") {
+            const option = $(this).val();
+
+            if (option === "by_weekday") {
                 $("#yearly-nth-weekday-selects").hide();
-            } else {
+                // 選択された曜日を保持（すでに updateYearlyOptionsFromStartDate() でセット済み）
+            } else if (option === "by_date") {
                 $("#yearly-nth-weekday-selects").hide();
+                //  by_date 選択時は day_of_week を空にする
+                $("#id_day_of_week").val("");
             }
         });
+
 
         // frequencyボタンクリック
         $("#frequency-buttons button").click(function () {
@@ -281,6 +292,13 @@
 
             $("#frequency-buttons button").removeClass("selected");
             $(this).addClass("selected");
+
+            //  interval の初期値を1にセット（NONE以外の時）
+            if (value !== "NONE") {
+                $("#id_interval").val(1);
+            } else {
+                $("#id_interval").val("");  // NONE の時は空にする
+            }
 
             $("#interval-field, #day-of-week-field, #nth-weekday-field").hide();
             $(".monthly-options, .yearly-options").hide();
