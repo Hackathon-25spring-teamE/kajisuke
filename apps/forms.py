@@ -191,3 +191,20 @@ class ScheduleForm(forms.ModelForm):
         else:
             self.fields['task'].queryset = Task.objects.none()
             self.fields['task'].empty_label = '家事'
+
+# スケジュール繰り返し設定編集
+class ScheduleEditForm(ScheduleForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # 既存データがあれば編集モードとみなす
+        if self.instance.pk:
+            self.fields['task_category'].disabled = True
+            self.fields['task'].disabled = True
+
+            self.fields['task_category'].initial = self.instance.task.task_category
+            self.fields['task'].initial = self.instance.task
+
+            # 表示用のラベル
+            self.task_category_label = str(self.instance.task.task_category)
+            self.task_label = str(self.instance.task)

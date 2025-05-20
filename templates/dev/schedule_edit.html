@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}スケジュール作成 - Kajisuke{% endblock %}
+{% block description %}Kajisukeのスケジュール作成ページ{% endblock %}
+{% block extra_css %}
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="/static/js/schedule_form.js"></script>
+{% endblock %}
+
+{% block header_title %}{% endblock %}
+{% block content %}
+<span class="batsu"></span>
+<h2>スケジュール編集</h2>
+
+<form method="post" name="schedule-form">
+    {% csrf_token %}
+    {% if form.errors %}
+    <ul class="errorlist">
+        {% for field in form %}
+        {% for error in field.errors %}
+        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+        {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {{ form.start_date.label_tag }}{{ form.start_date }}<br>
+
+    <!-- カテゴリ（読み取り専用で表示し、hiddenで送信） -->
+    <div>
+        <input type="text" value="{{ form.task_category_label }}" disabled>
+        {{ form.task_category.as_hidden }}
+    </div>
+
+    <!-- 家事（読み取り専用で表示し、hiddenで送信） -->
+    <div>
+        <input type="text" value="{{ form.task_label }}" disabled>
+        {{ form.task.as_hidden }}
+    </div>
+
+    {{ form.memo }}<br>
+
+    <!-- frequency をボタンで選択 -->
+    <div id="frequency-buttons">
+        <label>繰り返し設定</label><br>
+        <button type="button" data-value="NONE">なし</button>
+        <button type="button" data-value="DAILY">毎日</button>
+        <button type="button" data-value="WEEKLY">毎週</button>
+        <button type="button" data-value="MONTHLY">毎月</button>
+        <button type="button" data-value="YEARLY">毎年</button>
+    </div>
+    <!-- Hidden フィールドで値を渡す -->
+    {{ form.frequency }}
+    <!-- frequency に応じて表示する項目 -->
+    <div id="frequency-extra-fields">
+        <div id="interval-field">
+            <label><input type="number" name="interval" id="id_interval" min="1"></label>
+            <span class="field-help" id="interval-help"></span>
+        </div>
+        <div id="day-of-week-field">
+            <label class="day-label" data-day="MO"><input type="radio" name="day_of_week" value="MO" id="day-MO">
+                月曜日</label>
+            <label class="day-label" data-day="TU"><input type="radio" name="day_of_week" value="TU" id="day-TU">
+                火曜日</label>
+            <label class="day-label" data-day="WE"><input type="radio" name="day_of_week" value="WE" id="day-WE">
+                水曜日</label>
+            <label class="day-label" data-day="TH"><input type="radio" name="day_of_week" value="TH" id="day-TH">
+                木曜日</label>
+            <label class="day-label" data-day="FI"><input type="radio" name="day_of_week" value="FI" id="day-FI">
+                金曜日</label>
+            <label class="day-label" data-day="SA"><input type="radio" name="day_of_week" value="SA" id="day-SA">
+                土曜日</label>
+            <label class="day-label" data-day="SU"><input type="radio" name="day_of_week" value="SU" id="day-SU">
+                日曜日</label>
+            <span class="field-help" id="day-of-week-help"></span>
+        </div>
+        <div id="nth-weekday-field">
+            <!-- 毎月オプション -->
+            <div class="monthly-options repeat-options">
+                <label>
+                    <input type="radio" name="monthly_option" value="by_date" checked>
+                    <span id="monthly-date-info" class="field-help"></span>
+                </label><br>
+
+                <label>
+                    <input type="radio" name="monthly_option" value="by_weekday">
+                    <span id="monthly-weekday-info" class="field-help"></span>
+                </label>
+
+                <div id="monthly-nth-weekday-selects">
+                    {{ form.nth_weekday }}<br>
+                </div>
+                <span class="field-help" id="nth-weekday-help"></span>
+            </div>
+
+            <!-- 毎年オプション -->
+            <div class="yearly-options repeat-options">
+                <label>
+                    <input type="radio" name="yearly_option" value="by_date" checked>
+                    <span id="yearly-date-info" class="field-help"></span>
+                </label><br>
+
+                <label>
+                    <input type="radio" name="yearly_option" value="by_weekday">
+                    <span id="yearly-weekday-info" class="field-help"></span>
+                </label>
+
+                <div id="yearly-nth-weekday-selects">
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <br>
+    <button type="submit">登録</button>
+</form>
+
+{% endblock %}
+
+{% block extra_js %}
+
+{% endblock %}
