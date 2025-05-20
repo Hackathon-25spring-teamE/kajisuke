@@ -41,26 +41,26 @@ nav {
 /* -------------------------------------------
   カレンダー上部　XXXX年　X月　令和X年
 ------------------------------------------- */
-.calendar-nav{
+.calendar-nav {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 30px; /* 各要素の間隔を調整 */
+    gap: 35px; /* 各要素の間隔を調整 */
     margin-bottom: 10px;
 }
 
-.western-calendar, .japanese-calendar{
+.calendar-nav-sub {
     font-size: 15px;
     font-weight: bold;
     color: var(--secondary-color);
 }
 
-.current-month{
+.calendar-nav-center {
     font-size: 24px;
     font-weight: bold;
 }
 
-.prevmonth, .nextmonth{
+.prev, .next {
     width: 35px;
 }
 

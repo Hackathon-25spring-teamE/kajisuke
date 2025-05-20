@@ -1,3 +1,61 @@
+/* -------------------------------------------
+  ナビゲーションアイコン
+------------------------------------------- */
+nav {
+    display: flex;
+    justify-content: space-between; /* 左右の要素を分ける */
+    align-items: center; /* アイコンを中央揃え */
+    /*max-width: calc(100% - 48px); /* カレンダー幅より24px内側 */
+    margin: 0 auto;
+    padding: 15px 15px 20px;
+    background-color: var(--nav-background);
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* 左側アイコンの間隔を調整 */
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 25px; /* アイコンのサイズを調整 */
+}
+
+/* -------------------------------------------
+  日付表示部分
+------------------------------------------- */
+.calendar-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px; /* 各要素の間隔を調整 */
+    margin-bottom: 20px;
+}
+
+.calendar-nav-sub {
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--secondary-color);
+}
+
+.calendar-nav-center {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.prev, .next {
+    width: 35px;
+}
+
+/* -------------------------------------------
+  スケジュールリスト部分
+------------------------------------------- */
+
 .list-container {
   width: 100%;
   display: flex;

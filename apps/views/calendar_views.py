@@ -15,27 +15,19 @@ from ..models import PastSchedule, Schedule, ExceptionalSchedule, CompletedSched
 # カレンダー表示
 @login_required
 def calendar_month(request, year, month):
+    # 表示する月の初日のdateを作成
+    current_month_date = date(year, month, 1)
+    # 和暦を算出
+    wareki_year = wareki(current_month_date)
+    # 表示する月の祝日を取得
     holidays = get_japanese_holidays(year, month)
-    print(holidays)
-    # 前月を計算
-    if month == 1:
-        prev_year, prev_month = year - 1, 12
-    else:
-        prev_year, prev_month = year, month - 1
-    # 次月を計算
-    if month == 12:
-        next_year, next_month = year + 1, 1
-    else:
-        next_year, next_month = year, month + 1
 
     context = {
+        "current_month": current_month_date,
+        "wareki_year": wareki_year,
+        "prev_month": current_month_date - relativedelta(months=1),
+        "next_month": current_month_date + relativedelta(months=1),
         "holidays": holidays,
-        "current_year": year,
-        "current_month": month,
-        "prev_year": prev_year,
-        "prev_month": prev_month,
-        "next_year": next_year,
-        "next_month": next_month,
     }
     return render(request, 'calendars/month.html', context)
 
@@ -237,6 +229,30 @@ def calendar_day(request, year, month, day):
     }
     return render(request, 'calendars/day.html', context)
 
+
+
+# 日付から和暦を算出する
+def wareki(date_obj):
+    if date_obj.year >= 2019:
+        era = "令和"
+        year = date_obj.year - 2018
+    elif date_obj.year >= 1989:
+        era = "平成"
+        year = date_obj.year - 1988
+    elif date_obj.year >= 1926:
+        era = "昭和"
+        year = date_obj.year - 1925
+    elif date_obj.year >= 1912:
+        era = "大正"
+        year = date_obj.year - 1911
+    elif date_obj.year >= 1868:
+        era = "明治"
+        year = date_obj.year - 1867
+    else:
+        return f"{date_obj.year}年"  # 和暦対象外
+
+    year_str = "元" if year == 1 else str(year)
+    return f"{era}{year_str}年"
 
 
 # 祝日リスト作成
