@@ -21,8 +21,9 @@ RUN pip install --upgrade pip && \
 # アプリケーションコードをコピー
 COPY . /app/
 
-# 静的ファイルを収集
-RUN python manage.py collectstatic --noinput
+# entrypoint.sh をコピーして実行権限を付与
+COPY ./entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 # uWSGIの設定ファイルをコピー
 COPY ./uwsgi.ini /app/uwsgi.ini
