@@ -13,20 +13,28 @@
 {% block content %}
 <nav>
     <div class="nav-left">
-        <img src="{% static 'images/icon-calendar.svg' %}" alt="calendar-icon">
+        <a href="{% url 'apps:calendar_month'  year=current_date.year month=current_date.month %}">
+            <img src="{% static 'images/icon-calendar.svg' %}" alt="calendar-icon">
+        </a>
         <img src="{% static 'images/icon-list.svg' %}" alt="list-icon">
     </div>
-    <div class="nav-right">   
-        <img src="{% static 'images/icon-signout.svg' %}" alt="signout-icon">
+    <div class="nav-right">
+        <a href="{% url 'apps:signout' %}">
+            <img src="{% static 'images/icon-signout.svg' %}" alt="signout-icon">
+        </a>   
     </div>
 </nav>
 
 <div class="calendar-nav">  
-    <a href="{% url 'apps:calendar_day' year=prev_date.year month=prev_date.month day=prev_date.day %}"><img class="prev" src="{% static 'images/icon-prev.svg' %}" alt="前の日"></a>
+    <a href="{% url 'apps:calendar_day' year=prev_date.year month=prev_date.month day=prev_date.day %}">
+        <img class="prev" src="{% static 'images/icon-prev.svg' %}" alt="前の日">
+    </a>
     <span class="calendar-nav-sub">{{ current_date|date:"Y" }}</span>
     <span class="calendar-nav-center">{{ current_date|date:"n月j日" }}</span>
     <span class="calendar-nav-sub">{{ current_date|date:"D曜日" }}</span>
-    <a href="{% url 'apps:calendar_day' year=next_date.year month=next_date.month day=next_date.day %}"><img class="next" src="{% static 'images/icon-next.svg' %}" alt="次の日"></a>
+    <a href="{% url 'apps:calendar_day' year=next_date.year month=next_date.month day=next_date.day %}">
+        <img class="next" src="{% static 'images/icon-next.svg' %}" alt="次の日">
+    </a>
 </div>
 
 <div class="list-container">
@@ -64,6 +72,11 @@
         </div>   
     </div>
     {% endfor %}
+</div>
+
+<!-- スケジュール追加プラスボタン --> 
+<div>
+    <img class="add-schedule" src="{% static 'images/icon-add.svg' %}" alt="add-schedule">
 </div>
 
 <!-- 家事すけロゴ --> 
