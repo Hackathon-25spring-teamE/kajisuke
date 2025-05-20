@@ -21,5 +21,5 @@ urlpatterns = [
     path('api/schedules', schedules_list, name='schedules_list'),
     #スケジュール登録
     path('schedules/create', ScheduleCreateView.as_view(), name="schedules_create"),
-    path('ajax/load-tasks', load_tasks, name='ajax_load_tasks'),
+    path('ajax/load-tasks/', load_tasks, name='ajax_load_tasks'),
 ]
