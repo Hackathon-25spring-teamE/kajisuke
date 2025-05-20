@@ -1,11 +1,10 @@
 /* 共通のカラーパレット */
-:root {
-    --primary-color: #5D2F1A;  /* メインカラー（ボタン・タイトルなど） */
+:root {--primary-color: #5D2F1A;  /* メインカラー（ボタン・タイトルなど） */
     --secondary-color: #D7C0A4; /* サブカラー（アクセントカラー） */
     --background-color: #F9F5EF; /* 背景色 */
     --text-color: #5D2F1A; /* メインのテキストカラー */
     --border-color: #D7C0A4; /* 新規登録・ログイン画面の枠線の色 */
-    --border-color2: #D4D4D4; /*枠線の色
+    --border-color2: #D4D4D4; /*枠線の色 */
 }
 
 /* 共通のフォント設定 */
@@ -95,5 +94,4 @@ img {
     position: fixed;
     bottom: 15px;
     left: 0;
-    width: 100%;
-}*/
+    width: 100%;} */

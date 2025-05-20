@@ -4,6 +4,8 @@
 {% block title %}カレンダー - Kajisuke{% endblock %}
 {% block description %}Kajisukeのカレンダー画面{% endblock %}
 
+{% block header_title %}{% endblock %}  <!-- ここで空にする -->
+
 {% block extra_css %}
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 <link href="{% static 'css/month.css' %}" rel="stylesheet">
@@ -19,10 +21,27 @@
 {% endblock %}
 
 {% block content %}
+<nav>
+    <div class="nav-left">
+        <img class="logo" src="{% static 'images/icon-calendar.svg' %}" alt="calendar-icon">
+        <img class="logo" src="{% static 'images/icon-list.svg' %}" alt="list-icon">
+    </div>
+    <div class="nav-right">   
+        <img class="logo" src="{% static 'images/icon-signout.svg' %}" alt="signout-icon">
+    </div>
+</nav>
+    
 <div class="calendar-nav">
-    <a href="{% url 'apps:calendar_month' year=prev_year month=prev_month %}">＜前の月</a>
-    <span>{{ current_year }}年{{ current_month }}月</span>
-    <a href="{% url 'apps:calendar_month' year=next_year month=next_month %}">次の月＞</a>
+    <a href="{% url 'apps:calendar_month' year=prev_year month=prev_month %}"><img class="prevmonth" src="{% static 'images/icon-prevmonth.svg' %}" alt="前の月"></a>
+    <span class="western-calendar">{{ current_year }}</span>
+    <span class="current-month">{{ current_month }}月</span>
+    <span class="japanese-calendar">令和7年</span>
+    <a href="{% url 'apps:calendar_month' year=next_year month=next_month %}"><img class="nextmonth" src="{% static 'images/icon-nextmonth.svg' %}" alt="次の月"></a>
 </div>
 <div id="calendar"></div>
+
+<!-- スケジュール追加プラスボタン --> 
+<div>
+    <img class="add-schedule" src="{% static 'images/icon-add.svg' %}" alt="add-schedule">
+</div>
 {% endblock %}

@@ -1,3 +1,34 @@
+/* -------------------------------------------
+  ナビゲーションアイコン
+------------------------------------------- */
+nav {
+    display: flex;
+    justify-content: space-between; /* 左右の要素を分ける */
+    align-items: center; /* アイコンを中央揃え */
+    /*max-width: calc(100% - 48px); /* カレンダー幅より24px内側 */
+    margin: 0 auto;
+    padding: 15px 15px 20px;
+    background-color: var(--nav-background);
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* 左側アイコンの間隔を調整 */
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 25px; /* アイコンのサイズを調整 */
+}
+
+/* -------------------------------------------
+  カレンダー部分
+------------------------------------------- */
 /* base.css調整 */
 .container{
     width: 100%;
@@ -7,6 +38,31 @@
     max-width: 100%;
 }
 
+/* -------------------------------------------
+  カレンダー上部　XXXX年　X月　令和X年
+------------------------------------------- */
+.calendar-nav{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px; /* 各要素の間隔を調整 */
+    margin-bottom: 10px;
+}
+
+.western-calendar, .japanese-calendar{
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--secondary-color);
+}
+
+.current-month{
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.prevmonth, .nextmonth{
+    width: 35px;
+}
 
 /* -------------------------------------------
   Fullcalendar.jsのCSS調整
@@ -67,4 +123,16 @@
 
 .fc-daygrid-event {
     margin-bottom: 1px;
+}
+
+/* -------------------------------------------
+  スケジュール追加プラスボタン
+------------------------------------------- */
+img.add-schedule {
+    position: fixed;
+  /*基準を画面の右下に*/
+    bottom: 25px;
+    right: 25px;
+    width: 55px;
+    z-index: 999;
 }
