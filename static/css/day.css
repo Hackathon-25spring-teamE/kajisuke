@@ -5,10 +5,8 @@ nav {
     display: flex;
     justify-content: space-between; /* 左右の要素を分ける */
     align-items: center; /* アイコンを中央揃え */
-    /*max-width: calc(100% - 48px); /* カレンダー幅より24px内側 */
     margin: 0 auto;
-    padding: 15px 15px 20px;
-    background-color: var(--nav-background);
+    padding: 20px 0px;
 }
 
 .nav-left {
@@ -20,10 +18,6 @@ nav {
 .nav-right {
     display: flex;
     align-items: center;
-}
-
-.logo {
-    width: 25px; /* アイコンのサイズを調整 */
 }
 
 /* -------------------------------------------
