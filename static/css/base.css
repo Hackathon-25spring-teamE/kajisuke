@@ -5,6 +5,13 @@
     --text-color: #5D2F1A; /* メインのテキストカラー */
     --border-color: #D7C0A4; /* 新規登録・ログイン画面の枠線の色 */
     --border-color2: #D4D4D4; /*枠線の色 */
+    /* 家事カテゴリー毎のカラーパレット */
+    --task-category-1: #C5D7FB;
+    --task-category-2: #FFE380;
+    --task-category-3: #9BD4B5;
+    --task-category-4: #C0F354;
+    --task-category-5: #99F2FF;
+    --task-category-6: #FFC199;
 }
 
 /* 共通のフォント設定 */

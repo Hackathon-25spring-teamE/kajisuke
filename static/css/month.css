@@ -2,13 +2,13 @@
   ナビゲーションアイコン
 ------------------------------------------- */
 nav {
+    width: 90%;
     display: flex;
     justify-content: space-between; /* 左右の要素を分ける */
     align-items: center; /* アイコンを中央揃え */
     /*max-width: calc(100% - 48px); /* カレンダー幅より24px内側 */
     margin: 0 auto;
-    padding: 15px 15px 20px;
-    background-color: var(--nav-background);
+    padding: 20px 0px;
 }
 
 .nav-left {
@@ -26,12 +26,16 @@ nav {
     width: 25px; /* アイコンのサイズを調整 */
 }
 
+.disable {
+    opacity: 0.6;
+}
+
 /* -------------------------------------------
   カレンダー部分
 ------------------------------------------- */
 /* base.css調整 */
-.container{
-    width: 100%;
+.container {
+    width: 100% !important;
 }
 
 #calendar {
@@ -41,26 +45,27 @@ nav {
 /* -------------------------------------------
   カレンダー上部　XXXX年　X月　令和X年
 ------------------------------------------- */
-.calendar-nav{
+.calendar-nav {
+    width: 90%;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 30px; /* 各要素の間隔を調整 */
-    margin-bottom: 10px;
+    gap: 10px; /* 各要素の間隔を調整 */
+    margin: 0 auto 10px auto;
 }
 
-.western-calendar, .japanese-calendar{
+.calendar-nav-sub {
     font-size: 15px;
     font-weight: bold;
     color: var(--secondary-color);
 }
 
-.current-month{
+.calendar-nav-center {
     font-size: 24px;
     font-weight: bold;
 }
 
-.prevmonth, .nextmonth{
+.prev, .next {
     width: 35px;
 }
 
