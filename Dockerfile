@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     default-libmysqlclient-dev \
     pkg-config \
     python3-dev \
+    mysql-client \
     jq \
     curl \
     unzip && \
