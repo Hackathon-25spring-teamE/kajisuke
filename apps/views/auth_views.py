@@ -7,6 +7,9 @@ from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import View
+from django.views.generic.edit import CreateView
+
+from django.utils import timezone
 
 
 from ..forms import SignupForm, SigninForm
@@ -18,6 +21,7 @@ def hello_world(request):
     context = {
         "message1": "Hello, world.",
         "message2": "KAJISUKEapp is here!",
+        'today': timezone.now().date(),
     }
     # フロントページができたら、以下の形に書き換える（contextは直接渡す）
     # return render(request, '<フロントページのhtml>', context)
@@ -31,7 +35,7 @@ class SignupView(CreateView):
     success_url = reverse_lazy("apps:hello_world")
 
     def form_valid(self, form):
-        # signin after signup
+        # サインアップに成功したら、サインインする
         response = super().form_valid(form)
         email = form.cleaned_data.get("email")
         password = form.cleaned_data.get("password1")
@@ -44,7 +48,6 @@ class SignupView(CreateView):
             # ログインに失敗した場合、新規登録ページへリダイレクト
             return HttpResponseRedirect(reverse("signup"))
 
-            
 # サインイン
 class SigninView(BaseLoginView):
     form_class = SigninForm

@@ -1,0 +1,125 @@
+/* -------------------------------------------
+　　右上閉じるボタン
+------------------------------------------- */
+.batsu {
+  position: absolute;
+  top: 14px; /* 画面最上部から16px - h2との距離2pxを考慮 */
+    right: 20px; /* 画面右端から20pxの位置 */
+  width: 24px;
+  height: 24px;
+}
+ 
+.batsu::before, .batsu::after { /* 共通設定 */
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px; /* 棒の幅（太さ） */
+  height: 30px; /* 棒の高さ */
+  background:#5D2F1A;
+}
+ 
+.batsu::before {
+  transform: translate(-50%,-50%) rotate(45deg);
+}
+ 
+.batsu::after {
+  transform: translate(-50%,-50%) rotate(-45deg);
+}
+
+/* -------------------------------------------
+　　タイトル表示（スケジュール登録）
+------------------------------------------- */
+h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--main-color);
+    margin-top: 40px;
+    margin-bottom: 27px;
+    text-align: center;
+}
+
+/* -------------------------------------------
+  入力フォーム（予定日・変更日）
+------------------------------------------- */
+.form-group-date {
+  display: flex;  /* 横並びにする */
+  align-items: center;  /* 垂直方向を中央揃え */
+  gap: 15px;  /* ラベルと入力欄の間隔を15pxに */
+  border-color: var(--border-color2);
+  margin-bottom: 20px;
+}
+
+.form-group-date label {
+  font-size: var(--font-size-default);
+  color: var(--text-color);
+  white-space: nowrap; /* テキストを折り返さない */
+  width: 90px; /* 適切な幅を固定（調整可能） */
+  text-align: left;
+}
+
+.form-group-date input {
+  width: calc(100% - 105px); /* ラベルの幅を考慮して調整 */
+  /*（100px は label の幅 + gap の合計で調整可能）*/
+  min-width: 160px; /* 最小幅を確保 */
+  padding: 10px;
+  border: 1px solid var(--border-color2);
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  box-sizing: border-box;
+  height: 40px;
+}
+
+#start-date, #edit-date{
+  width: 100%;
+}
+
+#start-date{
+  background-color: var(--locked-input-bg); /* 読み取り専用 */
+  cursor: not-allowed; /* 禁止アイコンを表示 */
+}
+
+/* -------------------------------------------
+  入力フォーム（カテゴリー・家事・メモ欄）
+------------------------------------------- */
+input:disabled, select:disabled {
+    width: 100%;
+    background-color: var(--locked-input-bg); /* 読み取り専用 */
+    color: #000000 !important; /* 文字色を維持 */
+    padding: 10px;
+    border: 1px solid var(--border-color2);
+    border-radius: 8px;
+    box-sizing: border-box;
+    height: 40px;
+    margin-bottom: 20px;
+    opacity: 1; /* デフォルトの半透明を防ぐ */
+    cursor: not-allowed; /* 禁止アイコンを表示 */
+}
+
+.memo {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color2);
+    border-radius: 8px;
+    background-color: var(--locked-input-bg); /* 読み取り専用 */ 
+    color: #000000; /* メインのテキストカラーに設定 */
+    box-sizing: border-box;
+    margin-bottom: 28px;
+    height: 60px; /* 2行分の高さ */
+    line-height: 1.5; /* 行間を調整 */
+    overflow-y: auto; /* 縦方向のスクロールバーを表示 */
+    resize: none; /* ユーザーがサイズ変更できないように */
+    cursor: not-allowed; /* 禁止アイコンを表示 */
+}
+
+/* -------------------------------------------
+  ボタン（スケジュール登録用）
+------------------------------------------- */
+.submit1 {
+  margin-top: 20px;
+  margin-bottom: 8px;
+}
+
+.submit2 {
+  margin-bottom: 8px;
+}

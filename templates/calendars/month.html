@@ -1,1 +1,53 @@
-<h2>月のカレンダー表示</h2>
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}カレンダー - Kajisuke{% endblock %}
+{% block description %}Kajisukeのカレンダー画面{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+<link href="{% static 'css/month.css' %}" rel="stylesheet">
+<script src="{% static 'js/fullcalendar/index.global.min.js' %}" defer></script>
+<script src="{% static 'js/month.js' %}" defer></script>
+
+<!-- month.js用にカレンダーの現在の年月、その月の祝日を定義 -->
+<script defer>
+    const current_year = "{{ current_month.year }}";
+    const current_month = "{{ current_month.month }}";
+    const holidays = {{ holidays|safe }};
+</script>
+{% endblock %}
+
+{% block header_title %}{% endblock %}  <!-- ここで空にする -->
+
+{% block content %}
+<nav>
+    <div class="nav-left">
+        <img class="logo disable" src="{% static 'images/icon-calendar.svg' %}" alt="calendar-icon">
+        <img class="logo" src="{% static 'images/icon-list.svg' %}" alt="list-icon">
+    </div>
+    <div class="nav-right">
+        <a href="{% url 'apps:signout' %}">
+            <img class="logo" src="{% static 'images/icon-signout.svg' %}" alt="signout-icon">
+        </a>   
+    </div>
+</nav>
+    
+<div class="calendar-nav">
+    <a href="{% url 'apps:calendar_month' year=prev_month.year month=prev_month.month %}">
+        <img class="prev" src="{% static 'images/icon-prev.svg' %}" alt="前の月">
+    </a>
+    <span class="calendar-nav-sub">{{ current_month|date:"Y" }}</span>
+    <span class="calendar-nav-center">{{ current_month|date:"n月" }}</span>
+    <span class="calendar-nav-sub">{{ wareki_year }}</span>
+    <a href="{% url 'apps:calendar_month' year=next_month.year month=next_month.month %}">
+        <img class="next" src="{% static 'images/icon-next.svg' %}" alt="次の月">
+    </a>
+</div>
+<div id="calendar"></div>
+
+<!-- スケジュール追加プラスボタン --> 
+<div>
+    <img class="add-schedule" src="{% static 'images/icon-add.svg' %}" alt="add-schedule">
+</div>
+{% endblock %}

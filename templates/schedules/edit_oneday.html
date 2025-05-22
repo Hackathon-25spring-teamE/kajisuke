@@ -1,1 +1,57 @@
-<h2>1日のみの変更・削除</h2>
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}スケジュール作成 - Kajisuke{% endblock %}
+{% block description %}Kajisukeのスケジュール1日のみの変更・削除{% endblock %}
+{% block extra_css %}
+<link href="{% static 'css/schedules/edit_oneday.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block header_title %}{% endblock %}  <!-- ここで空にする -->
+
+{% block content %}
+
+        <span class="batsu"></span>
+
+    <h2>この日付のみ変更</h2>
+    
+    <form action="/schedule" method="post" name="edit-oneday-form">
+        
+        <!-- 予定日 -->
+        <div class="form-group-date">
+            <label for="start-date">予定日</label>
+            <input type="date" id="start-date" name="start-date" value="{{ schedule.start_date|default:'' }}" readonly>
+        </div>
+
+        <!-- 変更日-->
+        <div class="form-group-date">
+            <label for="edit-date">変更日</label>
+            <input type="date" id="edit-date" name="edit-date">
+        </div>
+
+        <!-- カテゴリー -->
+        <div class="form-group">
+            <select id="category" name="category" disabled>
+                <option value="{{ schedule.category }}" selected>登録済カテゴリーを表示する{{ schedule.category }}</option>
+            </select>
+        </div>
+
+        <!-- 家事 -->
+        <div class="form-group">
+            <select id="task" name="task" disabled>
+                <option value="{{ schedule.category.task }}"selected>登録済家事を表示する{{ schedule.category.task }}</option>
+            </select>
+        </div> 
+
+        <!-- メモ欄 -->
+        <div>
+            <textarea class="memo" rows="2" name="memo" readonly>{{ schedule.memo|default:'メモが未入力です' }}</textarea>
+        </div>
+
+    <!-- スケジュール登録ボタン -->
+    <button class="submit1">この日付のみ変更する</button>
+    <button class="submit2">この日付のみ削除する</button>
+    <button class="submit2">スケジュール設定の変更はこちら</button>
+</form>
+
+{% endblock %}
