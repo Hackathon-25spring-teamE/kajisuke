@@ -1,50 +1,80 @@
+import logging
 from django.utils import timezone
+from django.db import IntegrityError
 from django.db.models import Q
-from datetime import datetime, date
 from zoneinfo import ZoneInfo
 from dateutil.relativedelta import relativedelta
 from apscheduler.schedulers.background import BackgroundScheduler
 from .models import PastSchedule, Schedule, ExceptionalSchedule
-from .views.calendar_views import get_reccureced_dates
+from .utils.calendar_utils import get_reccureced_dates
 
 
+# loggerの設定
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
+# 昨日のスケジュールをpast_schedulesテーブルへinsertする
 def insert_past_schedules():
-    print('APSchedulerのテストです')
+    try:
+        # 昨日の日付をdatetimeで取得する
+        tz = ZoneInfo("Asia/Tokyo")
+        today =  timezone.now().astimezone(tz).replace(tzinfo=None).replace(hour=0, minute=0, second=0, microsecond=0) 
+        yesterday = today - relativedelta(days=1)
 
-    # 昨日の日付をdatetimeで取得する
-    tz = ZoneInfo("Asia/Tokyo")
-    yesterday =  timezone.now().astimezone(tz).replace(tzinfo=None).replace(
-        hour=0, minute=0, second=0, microsecond=0) - relativedelta(days=1)
-    
-    # 1.is_active=Trueなscheduleを全て取得する
-    schedules = Schedule.objects.filter(is_active=True)
+        logger.info(f'start: insert schedules of {yesterday.date()} to past_schedules')
+        
+        # 1.is_active=Trueなscheduleを全て取得する
+        schedules = Schedule.objects.filter(is_active=True)
 
-    # 2.exptional_schedulesとschedulesをjoinして、
-    # 上記条件＋exptional_schedulesの2つのdateのどちらかがyesterdayであるレコードを取得
-    exptional_schedules = ExceptionalSchedule.objects.filter(
-            schedule__is_active=True,
-        ).filter(
-        Q(original_date=yesterday.date()) | 
-        Q(modified_date=yesterday.date()) 
-        )
-    
-    # 3.各schedule毎に、繰り返し設定からyesterday期間（1日）のスケジュールを生成
-    for item in schedules:
-        date_list = get_reccureced_dates(
-            item, 
-            exptional_schedules, 
-            yesterday, 
-            yesterday
-        )
+        # 2.exptional_schedulesとschedulesをjoinして、
+        # 上記条件＋exptional_schedulesの2つのdateのどちらかがyesterdayであるレコードを取得
+        exptional_schedules = ExceptionalSchedule.objects.filter(
+                schedule__is_active=True,
+            ).filter(
+            Q(original_date=yesterday.date()) | 
+            Q(modified_date=yesterday.date()) 
+            )
+        
+        insert_data = []
+        
+        # 3.各schedule毎に、繰り返し設定からyesterday期間（1日）のスケジュールを生成
+        for item in schedules:
+            date_list = get_reccureced_dates(
+                item, 
+                exptional_schedules, 
+                yesterday, 
+                yesterday
+            )
 
-    # 4.対象のスケジュールがあれば、DBにinsertするデータを準備
-    # 5.past_schedulesにinsertする
+            # 4.対象のスケジュールが存在すれば、DBにinsertするデータを追加
+            if date_list:
+                data = PastSchedule(
+                        schedule_id = item.id,
+                        schedule_date = yesterday.date(),
+                        memo = item.memo,
+                        created_at = today,
+                        updated_at = today
+                )
+                insert_data.append(data)
+
+        # 5.insert_dataがあれば、past_schedulesにinsertする
+        if insert_data:
+            PastSchedule.objects.bulk_create(insert_data, batch_size=1000)
+            logger.info(f'result: schedules of {yesterday.date()}, {len(insert_data)} records inserted')
+        else:
+            logger.info(f'result: schedules of {yesterday.date()}, No data to insert')
+
+    # IntegrityError: DB制約に違反する操作を行った場合(一意性制約、NULL制約、外部キー制約など）
+    except IntegrityError as e:
+        logger.error(f'IntegrityError: {str(e)}')
+    # その他のエラーの場合
+    except Exception as e:
+        logger.error(f'error: {str(e)}')
 
 
+# APScheduler:毎日0:00にinsert_past_schedulesを実行する
 def start():
     scheduler = BackgroundScheduler()
-    # scheduler.add_job(insert_past_schedules, 'cron', hour=0, minute=1)
-    scheduler.add_job(insert_past_schedules, 'cron', hour=0, minute=37)
+    scheduler.add_job(insert_past_schedules, 'cron', hour=0, minute=0)
     scheduler.start()
