@@ -62,7 +62,7 @@
             </div>
             <div class="item-edit">
                 {% if is_editable %}
-                <a data-edit-id="{{ item.schedule_id }}" href="" >
+                <a data-edit-id="{{ item.schedule_id }}" href="{% url 'apps:exceptional_schedule_create' schedule_id=item.schedule_id year=current_date.year month=current_date.month day=current_date.day %}" >
                     <img src="{% static 'images/edit.svg' %}" alt="edit">
                 </a>
                 {% else %}

@@ -5,10 +5,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.db.models import Q
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
+from datetime import date
+from django.utils.timezone import now
+from django.urls import reverse
 
-from ..models import Schedule, Task
-from ..forms import ScheduleForm, ScheduleEditForm
+
+from ..models import Schedule, Task, ExceptionalSchedule
+from ..forms import ScheduleForm, ScheduleEditForm, ExceptionalScheduleForm
 
 
 
@@ -40,6 +44,8 @@ class ScheduleCreateView(LoginRequiredMixin, CreateView):
         form.instance.user = self.request.user
         return super().form_valid(form)
    
+
+
 #ユーザーごとの家事とデフォルトの家事のみ表示
 @login_required
 def load_tasks(request):
@@ -52,7 +58,9 @@ def load_tasks(request):
     )
     return JsonResponse(list(tasks.values('id', 'task_name')), safe=False)
 
-# スケジュール変更・削除
+
+
+# スケジュール変更
 # 繰り返しスケジュール変更
 class ScheduleEditAsNewView(UpdateView):
     model = Schedule
@@ -81,6 +89,48 @@ class ScheduleEditAsNewView(UpdateView):
         new_schedule.save()
 
         return super().form_valid(form)
+
+
+
+# 1日のみの予定変更
+class ExceptionalScheduleCreateView(CreateView):
+    model = ExceptionalSchedule
+    form_class = ExceptionalScheduleForm
+    template_name = 'dev/oneday_edit.html'
+    success_url = reverse_lazy('apps:calendar_redirect')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.schedule = get_object_or_404(Schedule, pk=kwargs['schedule_id'])
+        self.original_date = date(kwargs['year'], kwargs['month'], kwargs['day'])
+        return super().dispatch(request, *args, **kwargs)
+    
+    def get_initial(self):
+        return {
+            'original_date': self.original_date
+        }
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['schedule'] = self.schedule  # フォームにスケジュールを渡す
+        return kwargs
+
+    def form_valid(self, form):
+        form.instance.schedule = self.schedule  # 保存前にスケジュールをセット
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['schedule'] = self.schedule
+        return context
+    
+
+
+
+@login_required
+def redirect_to_current_calendar(request):
+    today = now()
+    return redirect('apps:calendar_month', year=today.year, month=today.month)
+# スケジュール削除
 # スケジュール実施・未実施
 
 # 登録しているスケジュール表示

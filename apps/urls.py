@@ -1,7 +1,7 @@
 from django.urls import path
 from .views.auth_views import SigninView, SignupView, SignoutView, hello_world
 from .views.calendar_views import calendar_month, calendar_day, schedules_list
-from .views.schedules_views import ScheduleCreateView, load_tasks, ScheduleEditAsNewView
+from .views.schedules_views import ScheduleCreateView, load_tasks, ScheduleEditAsNewView, ExceptionalScheduleCreateView, redirect_to_current_calendar
 
 
 
@@ -24,4 +24,8 @@ urlpatterns = [
     path('ajax/load-tasks/', load_tasks, name='ajax_load_tasks'),
     # スケジュール繰り返し設定変更
     path('schedule/<int:pk>/edit/', ScheduleEditAsNewView.as_view(), name='schedule_edit'),
+    # 1日のみの予定変更
+    path('schedule/<int:schedule_id>/exception/<int:year>/<int:month>/<int:day>/', ExceptionalScheduleCreateView.as_view(), name='exceptional_schedule_create'),
+    # 当月にリダイレクト
+    path('calendar/', redirect_to_current_calendar, name='calendar_redirect'),
 ]

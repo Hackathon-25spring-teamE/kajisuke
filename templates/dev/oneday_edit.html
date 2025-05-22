@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>この日のみの変更</h2>
+
+<form method="post" id="exception-form">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label>予定日</label>
+        <input type="text" value="{{ form.initial.original_date }}" readonly class="form-control">
+    </div>
+    <p>{{ form.initial.original_date }}</p>
+    <div class="form-group">
+        <label>変更日</label><br>
+        <input type="date" name="modified_date" id="id_modified_date" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label>カテゴリー</label>
+        <input type="text" value="{{ schedule.task.task_category.task_category_name }}" readonly class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label>家事</label>
+        <input type="text" value="{{ schedule.task.task_name }}" readonly class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label>メモ</label>
+        <input type="text" value="{{ schedule.memo }}" readonly class="form-control">
+    </div>
+
+
+
+    <button type="button" class="submit1" id="change-only-btn">この日のみ変更する</button>
+
+
+    <button type="button" class="submit2" id="delete-only-btn">この日のみ削除する</button>
+
+    <!-- モーダル -->
+    <div id="confirmation-modal" class="modal hidden">
+        <div class="modal-content">
+            <p id="modal-message"></p>
+            <button id="modal-confirm" class="submit1">実行</button>
+            <button type="button" id="modal-cancel" class="submit2">キャンセル</button>
+        </div>
+    </div>
+
+    <button type="button" class="submit2" onclick="window.location.href='{% url 'apps:schedule_edit' schedule.id %}'">
+        繰り返し設定を変更する
+    </button>
+
+
+</form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("exception-form");
+        const modifiedDate = document.getElementById("id_modified_date");
+        const modal = document.getElementById("confirmation-modal");
+        const modalMessage = document.getElementById("modal-message");
+        const modalConfirm = document.getElementById("modal-confirm");
+        const modalCancel = document.getElementById("modal-cancel");
+
+        // 今日の日付を yyyy-mm-dd 形式で取得
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const todayStr = `${yyyy}-${mm}-${dd}`;
+
+        // min属性に今日の日付をセット（今日以降しか選べない）
+        modifiedDate.min = todayStr;
+
+        // 予定日をテンプレートから渡す（yyyy-mm-ddの形式で）
+        const scheduledDate = '{{ form.initial.original_date|date:"Y-m-d"|default:"" }}';
+
+        // 予定日が今日以降ならデフォルト値にセット、そうでなければ今日をセット
+        if (scheduledDate >= todayStr) {
+            modifiedDate.value = scheduledDate;
+        } else {
+            modifiedDate.value = todayStr;
+        }
+
+        let currentAction = "";  // 'change' または 'delete'
+
+        document.getElementById("change-only-btn").addEventListener("click", () => {
+            if (modifiedDate.value) {
+                currentAction = "change";
+                modalMessage.textContent = "この予定をこの日のみ変更します。よろしいですか？";
+                modal.classList.remove("hidden");
+            } else {
+                alert("変更するには変更日を入力してください。");
+            }
+        });
+
+        document.getElementById("delete-only-btn").addEventListener("click", () => {
+            if (!modifiedDate.value) {
+                currentAction = "delete";
+                modalMessage.textContent = "この予定をこの日のみ削除してもよろしいですか？";
+                modal.classList.remove("hidden");
+            } else {
+                alert("削除する場合は変更日を空にしてください。");
+            }
+        });
+
+        modalConfirm.addEventListener("click", () => {
+            modal.classList.add("hidden");
+            form.submit();  // フォーム送信
+        });
+
+        modalCancel.addEventListener("click", () => {
+            event.preventDefault();
+            modal.classList.add("hidden");
+            modifiedDate.focus();
+        });
+    });
+</script>
+<style>
+    /* モーダルの基本スタイル */
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        /* 背景の半透明黒 */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+
+    /* 非表示用 */
+    .modal.hidden {
+        display: none;
+    }
+
+    /* モーダルの内容 */
+    .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 12px;
+        max-width: 300px;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+</style>
+
+</style>
+{% endblock %}
