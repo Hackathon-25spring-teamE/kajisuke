@@ -92,7 +92,7 @@ class ScheduleEditAsNewView(UpdateView):
 
 
 
-# 1日のみの予定変更
+# 1日のみの予定変更・削除
 class ExceptionalScheduleCreateView(CreateView):
     model = ExceptionalSchedule
     form_class = ExceptionalScheduleForm
@@ -116,13 +116,29 @@ class ExceptionalScheduleCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.schedule = self.schedule  # 保存前にスケジュールをセット
+        form.instance.original_date = self.original_date  # 明示的にセット
+
+        # すでに存在するか確認
+        exists = ExceptionalSchedule.objects.filter(
+            schedule=self.schedule,
+            original_date=self.original_date
+        ).exists()
+
+        if exists:
+            # 保存せずに成功URLにリダイレクト
+            return redirect(reverse('apps:calendar_redirect'))
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['schedule'] = self.schedule
+        # ★ この日付の例外スケジュールがすでに存在しているか確認
+        context['is_modified'] = ExceptionalSchedule.objects.filter(
+            schedule=self.schedule,
+            original_date=self.original_date
+        ).exists()
+
         return context
-    
 
 
 

@@ -52,7 +52,42 @@
 
 
 </form>
-
+{% if is_modified %}
+<div id="modified-modal" class="modal">
+    <div class="modal-content">
+        <p>この日の予定はすでに変更・削除されています。</p>
+        <button id="modified-ok-btn" class="submit1">OK</button>
+    </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("modified-modal").classList.remove("hidden");
+    // OKボタンでカレンダーにリダイレクト
+    document.getElementById("modified-ok-btn").addEventListener("click", () => {
+        window.location.href = "{% url 'apps:calendar_redirect' %}";
+    });
+});
+</script>
+<style>
+.modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 1000;
+}
+.modal.hidden {
+    display: none;
+}
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+</style>
+{% endif %}
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const form = document.getElementById("exception-form");
@@ -74,13 +109,6 @@
 
         // 予定日をテンプレートから渡す（yyyy-mm-ddの形式で）
         const scheduledDate = '{{ form.initial.original_date|date:"Y-m-d"|default:"" }}';
-
-        // 予定日が今日以降ならデフォルト値にセット、そうでなければ今日をセット
-        if (scheduledDate >= todayStr) {
-            modifiedDate.value = scheduledDate;
-        } else {
-            modifiedDate.value = todayStr;
-        }
 
         let currentAction = "";  // 'change' または 'delete'
 
