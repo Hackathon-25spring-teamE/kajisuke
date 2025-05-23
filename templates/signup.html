@@ -9,6 +9,7 @@
 
 {% block content %}
     <form class="signup-form" action="/signup" method="post" name="signup-form">
+        {% csrf_token %}
         <div class="form-group">
             <label for="name">ユーザー名</label>
             <input type="text" placeholder="名前" id="name" name="name">
