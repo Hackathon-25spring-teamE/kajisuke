@@ -154,7 +154,9 @@ AUTH_USER_MODEL = 'apps.CustomUser'
 CSRF_TRUSTED_ORIGINS = [
     'https://kajisuek.com',
 ]
-
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
