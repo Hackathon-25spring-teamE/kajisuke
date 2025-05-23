@@ -56,7 +56,7 @@ secret_keys = get_secret_key()
 
 SECRET_KEY = secret_keys["SECRET_KEY"]
 
-DEBUG = "False"
+DEBUG = False
 
 # 本番環境用
 ALLOWED_HOSTS = [
