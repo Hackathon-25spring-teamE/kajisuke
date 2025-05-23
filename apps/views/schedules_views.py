@@ -9,7 +9,8 @@ from django.shortcuts import get_object_or_404, redirect
 from datetime import date
 from django.utils.timezone import now
 from django.urls import reverse
-
+from django.contrib import messages
+from django.views import View
 
 from ..models import Schedule, Task, ExceptionalSchedule
 from ..forms import ScheduleForm, ScheduleEditForm, ExceptionalScheduleForm
@@ -141,12 +142,23 @@ class ExceptionalScheduleCreateView(CreateView):
         return context
 
 
-
+# カレンダーにリダイレクトする関数
 @login_required
 def redirect_to_current_calendar(request):
     today = now()
     return redirect('apps:calendar_month', year=today.year, month=today.month)
-# スケジュール削除
+
+
+
+# 繰り返しスケジュール削除
+class ScheduleSoftDeleteView(View):
+    def post(self, request, schedule_id, *args, **kwargs):
+        schedule = get_object_or_404(Schedule, pk=schedule_id)
+        schedule.is_active = False
+        schedule.save()
+        messages.success(request, "スケジュールを削除しました。")
+        return redirect(reverse('apps:calendar_redirect'))
+
 # スケジュール実施・未実施
 
 # 登録しているスケジュール表示

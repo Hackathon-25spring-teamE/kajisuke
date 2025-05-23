@@ -8,14 +8,13 @@
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script src="/static/js/schedule_form.js"></script>
+<script src="/static/js/schedule_form.js" defer></script>
 {% endblock %}
 
 {% block header_title %}{% endblock %}
 {% block content %}
 <span class="batsu"></span>
 <h2>スケジュール編集</h2>
-
 <form method="post" name="schedule-form">
     {% csrf_token %}
     {% if form.errors %}
@@ -30,23 +29,22 @@
         {% endfor %}
     </ul>
     {% endif %}
-
-    {{ form.start_date.label_tag }}{{ form.start_date }}<br>
-
+    <div>
+        <label for="id_start_date" class="form-label">開始日</label>
+        <input type="date" name="start_date" id="id_start_date" class="form-control"
+            value="{{ schedule.start_date|date:'Y-m-d' }}" min="{{ today|date:'Y-m-d' }}">
+    </div>
     <!-- カテゴリ（読み取り専用で表示し、hiddenで送信） -->
     <div>
         <input type="text" value="{{ form.task_category_label }}" disabled>
         {{ form.task_category.as_hidden }}
     </div>
-
     <!-- 家事（読み取り専用で表示し、hiddenで送信） -->
     <div>
         <input type="text" value="{{ form.task_label }}" disabled>
         {{ form.task.as_hidden }}
     </div>
-
     {{ form.memo }}<br>
-
     <!-- frequency をボタンで選択 -->
     <div id="frequency-buttons">
         <label>繰り返し設定</label><br>
@@ -119,9 +117,82 @@
         </div>
     </div>
     <br>
-    <button type="submit">登録</button>
+    <button type="submit" class="submit1">スケジュール設定を変更する</button>
 </form>
+<!-- 削除トリガーボタン -->
+<button type="button" id="open-delete-modal" class="submit2">繰り返しスケジュールを削除</button>
 
+<!-- 削除確認モーダル -->
+<div id="delete-modal" class="modal hidden">
+    <div class="modal-content">
+        <p>本当にこの繰り返しスケジュールを削除しますか？</p>
+        <form method="post" action="{% url 'apps:schedule_soft_delete' schedule.id %}">
+            {% csrf_token %}
+            <button type="submit" class="submit1">削除する</button>
+            <button type="button" id="cancel-delete" class="submit2">キャンセル</button>
+        </form>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const deleteModal = document.getElementById("delete-modal");
+        const openDeleteModalBtn = document.getElementById("open-delete-modal");
+        const cancelDeleteBtn = document.getElementById("cancel-delete");
+
+        if (openDeleteModalBtn) {
+            openDeleteModalBtn.addEventListener("click", function () {
+                deleteModal.classList.remove("hidden");
+            });
+        }
+
+        if (cancelDeleteBtn) {
+            cancelDeleteBtn.addEventListener("click", function () {
+                deleteModal.classList.add("hidden");
+            });
+        }
+        const startDateInput = document.getElementById("id_start_date");
+        if (startDateInput) {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, "0");
+            const dd = String(today.getDate()).padStart(2, "0");
+            const todayStr = `${yyyy}-${mm}-${dd}`;
+
+            startDateInput.min = todayStr;
+        }
+    });
+</script>
+<style>
+    /* モーダルの基本スタイル */
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        /* 背景の半透明黒 */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+
+    /* 非表示用 */
+    .modal.hidden {
+        display: none;
+    }
+
+    /* モーダルの内容 */
+    .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 12px;
+        max-width: 300px;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+</style>
 {% endblock %}
 
 {% block extra_js %}

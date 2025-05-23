@@ -39,7 +39,23 @@ $(document).ready(function () {
             }
         });
     }
+    // 日付に曜日をつける
+    function updateStartDateWeekday() {
+        const dateStr = $("#id_start_date").val();
+        if (!dateStr) {
+            $("#start-date-weekday").text("");
+            return;
+        }
+        const dateObj = new Date(dateStr);
+        if (isNaN(dateObj)) {
+            $("#start-date-weekday").text("");
+            return;
+        }
 
+        const dayNames = ["日", "月", "火", "水", "木", "金", "土"];
+        const weekdayName = dayNames[dateObj.getDay()];
+        $("#start-date-weekday").text(`(${weekdayName})`);
+    }
     // 開始日から曜日セット(毎週選択時使用)
     function setDayOfWeekFromStartDate() {
         const startDateStr = $("#id_start_date").val();
@@ -199,6 +215,7 @@ $(document).ready(function () {
 
     // 開始日変更時
     $("#id_start_date").change(function () {
+        updateStartDateWeekday();
         const freq = $("#id_frequency").val();
         if (freq === "WEEKLY") {
             $("#frequency-buttons button[data-value='WEEKLY']").addClass("selected");
@@ -225,4 +242,5 @@ $(document).ready(function () {
     if (initialFreq) {
         $(`#frequency-buttons button[data-value='${initialFreq}']`).trigger('click');
     }
+    updateStartDateWeekday();
 });
