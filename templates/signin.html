@@ -8,20 +8,32 @@
 {% endblock %}
 
 {% block content %}
-    <form class="login-form" action="/signin" method="post" name="signin-form">
-        <div class="form-group">
-            <label for="email">メールアドレス</label>
-            <input type="text" placeholder="E-mail" id="email" name="email">
-        </div>
-        <div class="form-group">
-            <label for="password">パスワード</label>
-            <input type="password" placeholder="Password" id="password" name="password">
-        </div>
-            <button class="submit1">ログイン</button>
-            <button type="button" class="submit2" onclick="location.href='{% url 'mock_signup' %}'">新規登録はこちら</button>   
-    </form>
-    <!-- 家事すけロゴ --> 
-    <div>
-        <img class="logo" src="{% static 'images/kajisuke.svg' %}" alt="Kaji suke">
+<form class="login-form" action="{% url 'apps:signin' %}" method="post" name="signin-form">
+    {% csrf_token %}
+    <!-- メールアドレス（実体は username フィールド） -->
+    <div class="form-group">
+        <label for="id_username">メールアドレス</label>
+        {{ form.username }}
+        {{ form.username.errors }}
     </div>
-        {% endblock %}
+    <!-- パスワードフィールド -->
+    <div class="form-group">
+        <label ffor="id_password">パスワード</label>
+        {{ form.password }}
+        {{ form.password.errors }}
+    </div>
+    {% if form.non_field_errors %}
+    <div class="form-errors">
+        {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+    <div>
+        <button type="submit" class="submit1">ログイン</button>
+        <button type="button" class="submit2" onclick="location.href='{% url 'apps:signup' %}'">新規登録はこちら</button>
+    </div>
+</form>
+<!-- 家事すけロゴ -->
+<div>
+    <img class="logo" src="{% static 'images/kajisuke.svg' %}" alt="Kaji suke">
+</div>
+{% endblock %}

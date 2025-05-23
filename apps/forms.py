@@ -31,6 +31,14 @@ class SigninForm(AuthenticationForm):
         self.request = request
         super().__init__(request=request, *args, **kwargs)
         self.fields['username'].label = "メールアドレス"
+
+        # プレースホルダーを追加
+        self.fields['username'].widget.attrs.update({
+            'placeholder': 'E-mail'
+        })
+        self.fields['password'].widget.attrs.update({
+            'placeholder': 'Password'
+        })
     
     #メールアドレスかパスワードが間違っていた場合のエラー
     def clean(self):

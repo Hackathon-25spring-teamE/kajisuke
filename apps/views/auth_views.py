@@ -53,7 +53,7 @@ class SignupView(CreateView):
 # サインイン
 class SigninView(BaseLoginView):
     form_class = SigninForm
-    template_name = "dev/signin.html"
+    template_name = "signin.html"
 
     def form_valid(self, form):
         # 明示的にログイン
@@ -61,7 +61,7 @@ class SigninView(BaseLoginView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('apps:hello_world')
+        return reverse_lazy('apps:calendar_redirect')
 
 
 # サインアウト
