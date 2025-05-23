@@ -154,7 +154,7 @@ DATABASES = {
 AUTH_USER_MODEL = 'apps.CustomUser'
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://kajisuek.com',
+    'https://kajisuke.com',
 ]
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = True
