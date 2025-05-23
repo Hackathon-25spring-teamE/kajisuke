@@ -61,6 +61,8 @@ DEBUG = "False"
 # 本番環境用
 ALLOWED_HOSTS = [
     "kajisuke.com",
+    "localhost",
+    "127.0.0.1",
 ]
 
 # Application definition
