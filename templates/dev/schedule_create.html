@@ -1,5 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block extra_css %}
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="/static/js/schedule_form.js" defer></script>
+{% endblock %}
+
 {% block content %}
 <h3>スケジュール登録</h3>
 <form method="post">
@@ -96,11 +103,4 @@
     <button type="submit">登録</button>
 </form>
 
-{% endblock %}
-
-{% block extra_js %}
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script src="/static/js/schedule_form.js"></script>
 {% endblock %}

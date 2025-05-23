@@ -1,4 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block title %}1日スケジュール編集 - Kajisuke{% endblock %}
+{% block description %}Kajisukeのスケジュール編集ページ{% endblock %}
+{% block extra_css %}
+<link href="{% static 'css/schedules/edit_oneday.css' %}" rel="stylesheet">
+
+<script src="/static/js/oneday_edit.js" defer></script>
+{% endblock %}
 {% block content %}
 <h2>この日のみの変更</h2>
 
@@ -59,6 +67,7 @@
         <button id="modified-ok-btn" class="submit1">OK</button>
     </div>
 </div>
+
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("modified-modal").classList.remove("hidden");
@@ -68,119 +77,7 @@
         });
     });
 </script>
-<style>
-    .modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-    }
 
-    .modal.hidden {
-        display: none;
-    }
-
-    .modal-content {
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        text-align: center;
-    }
-</style>
 {% endif %}
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const form = document.getElementById("exception-form");
-        const modifiedDate = document.getElementById("id_modified_date");
-        const modal = document.getElementById("confirmation-modal");
-        const modalMessage = document.getElementById("modal-message");
-        const modalConfirm = document.getElementById("modal-confirm");
-        const modalCancel = document.getElementById("modal-cancel");
 
-        // 今日の日付を yyyy-mm-dd 形式で取得
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, '0');
-        const dd = String(today.getDate()).padStart(2, '0');
-        const todayStr = `${yyyy}-${mm}-${dd}`;
-
-        // min属性に今日の日付をセット（今日以降しか選べない）
-        modifiedDate.min = todayStr;
-
-        // 予定日をテンプレートから渡す（yyyy-mm-ddの形式で）
-        const scheduledDate = '{{ form.initial.original_date|date:"Y-m-d"|default:"" }}';
-
-        let currentAction = "";  // 'change' または 'delete'
-
-        document.getElementById("change-only-btn").addEventListener("click", () => {
-            if (modifiedDate.value) {
-                currentAction = "change";
-                modalMessage.textContent = "この予定をこの日のみ変更します。よろしいですか？";
-                modal.classList.remove("hidden");
-            } else {
-                alert("変更するには変更日を入力してください。");
-            }
-        });
-
-        document.getElementById("delete-only-btn").addEventListener("click", () => {
-            if (!modifiedDate.value) {
-                currentAction = "delete";
-                modalMessage.textContent = "この予定をこの日のみ削除してもよろしいですか？";
-                modal.classList.remove("hidden");
-            } else {
-                alert("削除する場合は変更日を空にしてください。");
-            }
-        });
-
-        modalConfirm.addEventListener("click", () => {
-            modal.classList.add("hidden");
-            form.submit();  // フォーム送信
-        });
-
-        modalCancel.addEventListener("click", () => {
-            event.preventDefault();
-            modal.classList.add("hidden");
-            modifiedDate.focus();
-        });
-    });
-</script>
-<style>
-    /* モーダルの基本スタイル */
-    .modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        /* 背景の半透明黒 */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-    }
-
-    /* 非表示用 */
-    .modal.hidden {
-        display: none;
-    }
-
-    /* モーダルの内容 */
-    .modal-content {
-        background-color: white;
-        padding: 20px;
-        border-radius: 12px;
-        max-width: 300px;
-        text-align: center;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
-</style>
-
-</style>
 {% endblock %}
