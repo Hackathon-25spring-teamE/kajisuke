@@ -151,7 +151,9 @@ DATABASES = {
 #カスタムユーザーを使用
 AUTH_USER_MODEL = 'apps.CustomUser'
 
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://kajisuek.com',
+]
 
 
 # Password validation
