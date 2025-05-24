@@ -12,10 +12,10 @@ from .validators import validate_unique_email, validate_min_length_8, validate_h
 
 #サインアップ用フォーム
 class SignupForm(UserCreationForm):
-    user_name = forms.CharField(label="ユーザー名")
-    email = forms.EmailField(label="メールアドレス", validators=[validate_unique_email])
-    password1 = forms.CharField(label="パスワード", widget=forms.PasswordInput, validators=[validate_min_length_8, validate_has_digit, validate_has_uppercase])
-    password2 = forms.CharField(label="パスワード（確認用）", widget=forms.PasswordInput)
+    user_name = forms.CharField(label="ユーザー名", widget=forms.TextInput(attrs={'placeholder': 'name'}))
+    email = forms.EmailField(label="メールアドレス", validators=[validate_unique_email],widget=forms.EmailInput(attrs={'placeholder': 'E-mail'}))
+    password1 = forms.CharField(label="パスワード",  validators=[validate_min_length_8, validate_has_digit, validate_has_uppercase],widget=forms.PasswordInput(attrs={'placeholder': 'Password'}) )
+    password2 = forms.CharField(label="パスワード（確認用）", widget=forms.PasswordInput(attrs={'placeholder': 'Password(confirm)'}))
     
     class Meta:
         model = CustomUser

@@ -8,25 +8,36 @@
 {% endblock %}
 
 {% block content %}
-    <form class="signup-form" action="/signup" method="post" name="signup-form">
+    <form class="signup-form" method="post" name="signup-form" action="{% url 'apps:signup' %}">
+        {% csrf_token %}
         <div class="form-group">
-            <label for="name">ユーザー名</label>
-            <input type="text" placeholder="名前" id="name" name="name">
+            <label for="id_user_name">ユーザー名</label>
+            {{ form.user_name }}
+            {{ form.user_name.errors }}
         </div>
         <div class="form-group">
-            <label for="email">メールアドレス</label>
-            <input type="email" placeholder="E-mail" id="email" name="email">
+            <label for="id_email">メールアドレス</label>
+            {{ form.email }}
+            {{ form.email.errors }}
         </div>
         <div class="form-group">
-            <label for="password">パスワード</label>
-            <input type="password" placeholder="Password" id="password" name="password">
+            <label for="id_password1">パスワード</label>
+            {{ form.password1 }}
+            {{ form.password1.errors }}
         </div>
         <div class="form-group">
-            <label for="confirm-password">パスワード(確認用)</label>
-            <input type="password" placeholder="Password(confirm)" id="confirm-password" name="confirm-password">
+            <label for="id_password2">パスワード(確認用)</label>
+            {{ form.password2 }}
+            {{ form.password2.errors }}
         </div>
-            <button class="submit1">新規登録</button>
-            <button type="button" class="submit2" onclick="location.href='{% url 'mock_signin' %}'">ログインはこちら</button>
+        {% if form.non_field_errors %}
+        <div class="form-errors">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+        {{ form.non_field_errors }}
+            <button type="submit" class="submit1">新規登録</button>
+            <button type="button" class="submit2" onclick="location.href='{% url 'apps:signin' %}'">ログインはこちら</button>
     </form>
         <!-- 家事すけロゴ --> 
         <div>

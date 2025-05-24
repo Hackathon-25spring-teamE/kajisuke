@@ -32,8 +32,8 @@ def hello_world(request):
 # サインアップ
 class SignupView(CreateView):
     form_class = SignupForm
-    template_name = "dev/signup.html"
-    success_url = reverse_lazy("apps:hello_world")
+    template_name = "signup.html"
+    success_url = reverse_lazy("apps:calendar_redirect")
 
     def form_valid(self, form):
         # サインアップに成功したら、サインインする
