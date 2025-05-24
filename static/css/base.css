@@ -1,19 +1,12 @@
 /* 共通のカラーパレット */
-:root {
-    --primary-color: #5D2F1A;
-    /* メインカラー（ボタン・タイトルなど） */
-    --secondary-color: #D7C0A4;
-    /* サブカラー（アクセントカラー） */
-    --background-color: #F9F5EF;
-    /* 背景色 */
-    --text-color: #5D2F1A;
-    /* メインのテキストカラー */
-    --border-color: #D7C0A4;
-    /* 新規登録・ログイン画面の枠線の色 */
-    --border-color2: #D4D4D4;
-    /*枠線の色 */
-    --locked-input-bg: #EAEAEA;
-    /* 読み取り専用 */
+:root {--primary-color: #5D2F1A;  /* メインカラー（ボタン・タイトルなど） */
+    --secondary-color: #D7C0A4; /* サブカラー（アクセントカラー） */
+    --background-color: #F9F5EF; /* 背景色 */
+    --text-color: #5D2F1A; /* 茶色のテキストカラー */
+    --text-color2: #333333; /* 灰色のテキストカラー */
+    --border-color: #D7C0A4; /* 新規登録・ログイン画面の枠線の色 */
+    --border-color2: #D4D4D4; /*枠線の色 */
+    --locked-input-bg: #EAEAEA; /* 読み取り専用 */
     /* 家事カテゴリー毎のカラーパレット */
     --task-category-1: #C5D7FB;
     --task-category-2: #FFE380;

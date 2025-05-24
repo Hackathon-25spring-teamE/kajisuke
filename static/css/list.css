@@ -21,29 +21,14 @@ nav {
 }
 
 /* -------------------------------------------
-  日付表示部分
+  タイトル部分
 ------------------------------------------- */
-.calendar-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px; /* 各要素の間隔を調整 */
-    margin-bottom: 20px;
-}
 
-.calendar-nav-sub {
-    font-size: 15px;
-    font-weight: bold;
-    color: var(--secondary-color);
-}
-
-.calendar-nav-center {
+h2 {
     font-size: 24px;
     font-weight: bold;
-}
-
-.prev, .next {
-    width: 35px;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 /* -------------------------------------------
@@ -55,6 +40,7 @@ nav {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  margin-bottom: 50px;
 }
 
 .item {
@@ -69,11 +55,6 @@ nav {
   justify-content: space-between;
   width: 90%;
   margin: 6px 0;
-}
-
-.item-completed {
-  display: flex;
-  align-items: center;
 }
 
 .item-category {
@@ -102,23 +83,24 @@ nav {
   flex-direction: column;
   justify-content: center;
   gap: 4px;
-  width: 60%;
+  width: 70%;
 }
 
 .item-task-name {
   font-size: 20px;
+  font-weight: 600;
+  color: var(--text-color2);
+}
+
+.item-task-freq {
+  font-size: 12px;
   font-weight: 600;
 }
 
 .item-task-memo {
   font-size: 12px;
   font-weight: 400;
-}
-
-/* .item-edit {} */
-
-.item-edit-uneditable {
-  opacity: 0.6;
+  color: var(--text-color2);
 }
 
 /* -------------------------------------------

@@ -23,9 +23,7 @@
     </div>
 </nav>
 
-<div class="calendar-nav">  
-    <span class="calendar-nav-center">スケジュール一覧</span>
-</div>
+<h2>スケジュール一覧</h2>
 
 <div class="list-container">
     {% for item in schedules_list %}
@@ -39,7 +37,7 @@
             </div>
             <div class="item-task">
                 <p class="item-task-name">{{ item.task_name }}</p>
-                <p class="item-task-memo">{{ item.frequency_or_date }}</p>
+                <p class="item-task-freq">{{ item.frequency_or_date }}</p>
                 {% if item.memo %}
                 <p class="item-task-memo">{{ item.memo }}</p>
                 {% endif %}

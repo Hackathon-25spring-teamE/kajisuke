@@ -50,7 +50,7 @@ def schedules_list(request):
                 if item.interval == 1:
                     interval = "毎週"
                 else:
-                    interval = f"{item.interval}週毎"
+                    interval = f"{item.interval}週間毎"
                 rule = weekday_dict.get(item.day_of_week)
 
             elif item.frequency == "MONTHLY":

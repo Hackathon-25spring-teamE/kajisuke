@@ -55,6 +55,8 @@ nav {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  margin-bottom: 50px;
+
 }
 
 .item {
@@ -108,14 +110,14 @@ nav {
 .item-task-name {
   font-size: 20px;
   font-weight: 600;
+  color: var(--text-color2);
 }
 
 .item-task-memo {
   font-size: 12px;
   font-weight: 400;
+  color: var(--text-color2);
 }
-
-/* .item-edit {} */
 
 .item-edit-uneditable {
   opacity: 0.6;
