@@ -72,7 +72,7 @@ def schedules_list(request):
 class ScheduleCreateView(LoginRequiredMixin, CreateView):
     model = Schedule
     form_class = ScheduleForm
-    template_name = 'dev/schedule_create.html'
+    template_name = 'schedules/create.html'
     success_url = reverse_lazy('apps:hello_world')  # スケジュール一覧などに遷移
 
     def get_form_kwargs(self):

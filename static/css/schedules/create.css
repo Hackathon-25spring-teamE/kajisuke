@@ -122,11 +122,7 @@ select{
     margin-bottom: 58px;
 }
 
-.repeat-options input[type="radio"] {
-    display: none; /* デフォルトのラジオボタンを非表示 */
-}
-
-.repeat-options label {
+.frequency-buttons{
     width: 20%; /* 5つのボタンが均等に並ぶように */
     padding: 10px;
     background-color: #FFFFFF; /* デフォルトの背景色 */
@@ -135,12 +131,18 @@ select{
     cursor: pointer;
 }
 
-/* 選択されている場合のスタイル */
-.repeat-options input[type="radio"]:checked + label {
+.frequency-buttons.selected {
     background-color: var(--primary-color);
     color: white;
 }
 
+.margin20{
+  margin: 0px 0px 20px;
+}
+
+.margin10{
+  margin: 0px 0px 10px;
+}
 /* -------------------------------------------
   ボタン（スケジュール登録用）
 ------------------------------------------- */
