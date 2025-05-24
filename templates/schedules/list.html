@@ -13,8 +13,10 @@
 {% block content %}
 <nav>
     <div class="nav-left">
-        <img src="{% static 'images/icon-calendar.svg' %}" alt="calendar-icon">
-        <img src="{% static 'images/icon-list.svg' %}" alt="list-icon">
+        <a href="{% url 'apps:calendar_redirect' %}">
+            <img src="{% static 'images/icon-calendar.svg' %}" alt="calendar-icon">
+        </a>
+        <img class="disable" src="{% static 'images/icon-list.svg' %}" alt="list-icon">
     </div>
     <div class="nav-right">
         <a href="{% url 'apps:signout' %}">
@@ -43,7 +45,8 @@
                 {% endif %}
             </div>
             <div class="item-edit">
-                <a data-edit-id="{{ item.schedule_id }}" href="" >
+                <a
+                    href="{% url 'apps:schedule_edit' schedule_id=item.schedule_id %}">
                     <img src="{% static 'images/edit.svg' %}" alt="edit">
                 </a>
             </div>

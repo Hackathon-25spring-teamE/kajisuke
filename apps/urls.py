@@ -1,11 +1,7 @@
 from django.urls import path
 from .views.auth_views import SigninView, SignupView, SignoutView, hello_world
-from .views.schedules_views import ScheduleCreateView, load_tasks, ScheduleEditAsNewView, ExceptionalScheduleCreateView, redirect_to_current_calendar, ScheduleSoftDeleteView
-from .views.calendar_views import calendar_month, calendar_day, schedules_of_month
-from .views.schedules_list_views import schedules_list
-
-
-
+from .views.schedules_views import schedules_list, ScheduleCreateView, load_tasks, ScheduleEditAsNewView, ExceptionalScheduleCreateView, ScheduleSoftDeleteView
+from .views.calendar_views import calendar_month, calendar_day, schedules_of_month, redirect_to_current_calendar
 
 app_name = "apps"
 

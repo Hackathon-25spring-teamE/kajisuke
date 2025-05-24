@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.utils import timezone
 from django.db.models import Q, Prefetch
@@ -227,6 +227,14 @@ def calendar_day(request, year, month, day):
         "schedules_list": schedules_list,
     }
     return render(request, 'calendars/day.html', context)
+
+
+
+# 今月のカレンダーにリダイレクトする
+@login_required
+def redirect_to_current_calendar(request):
+    today = timezone.now()
+    return redirect('apps:calendar_month', year=today.year, month=today.month)
 
 
 

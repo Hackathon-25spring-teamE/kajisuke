@@ -33,15 +33,3 @@ input[type="password"] {
 .submit2 {
   margin-top: 14px;
 }
-
-/* -------------------------------------------
-  家事すけロゴ（ログインページ専用）
-------------------------------------------- */
-.logo {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: auto;
-  z-index: -1;
-}

@@ -1,5 +1,6 @@
 /* 共通のカラーパレット */
-:root {--primary-color: #5D2F1A;  /* メインカラー（ボタン・タイトルなど） */
+:root {
+    --primary-color: #5D2F1A;  /* メインカラー（ボタン・タイトルなど） */
     --secondary-color: #D7C0A4; /* サブカラー（アクセントカラー） */
     --background-color: #F9F5EF; /* 背景色 */
     --text-color: #5D2F1A; /* 茶色のテキストカラー */
@@ -7,6 +8,7 @@
     --border-color: #D7C0A4; /* 新規登録・ログイン画面の枠線の色 */
     --border-color2: #D4D4D4; /*枠線の色 */
     --locked-input-bg: #EAEAEA; /* 読み取り専用 */
+
     /* 家事カテゴリー毎のカラーパレット */
     --task-category-1: #C5D7FB;
     --task-category-2: #FFE380;
@@ -121,4 +123,28 @@ img {
     box-sizing: border-box;
     height: 40px;
     margin-bottom: 30px;
+}
+
+/* -------------------------------------------
+  スケジュール追加プラスボタン
+------------------------------------------- */
+img.add-schedule {
+    position: fixed;
+  /*基準を画面の右下に*/
+    bottom: 25px;
+    right: 25px;
+    width: 55px;
+    z-index: 999;
+}
+
+/* -------------------------------------------
+  家事すけロゴ
+------------------------------------------- */
+.logo {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  z-index: -1;
 }

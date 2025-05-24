@@ -23,12 +23,16 @@
 {% block content %}
 <nav>
     <div class="nav-left">
-        <img class="logo disable" src="{% static 'images/icon-calendar.svg' %}" alt="calendar-icon">
-        <img class="logo" src="{% static 'images/icon-list.svg' %}" alt="list-icon">
+        <a href="{% url 'apps:calendar_redirect' %}">
+            <img src="{% static 'images/icon-calendar.svg' %}" alt="calendar-icon">
+        </a>
+        <a href="{% url 'apps:schedules_list' %}">
+            <img src="{% static 'images/icon-list.svg' %}" alt="list-icon">
+        </a>
     </div>
     <div class="nav-right">
         <a href="{% url 'apps:signout' %}">
-            <img class="logo" src="{% static 'images/icon-signout.svg' %}" alt="signout-icon">
+            <img src="{% static 'images/icon-signout.svg' %}" alt="signout-icon">
         </a>   
     </div>
 </nav>

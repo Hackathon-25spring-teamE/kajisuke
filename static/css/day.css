@@ -132,27 +132,3 @@ nav {
 .category-4 { background-color: var(--task-category-4); }
 .category-5 { background-color: var(--task-category-5); }
 .category-6 { background-color: var(--task-category-6); }
-
-/* -------------------------------------------
-  スケジュール追加プラスボタン
-------------------------------------------- */
-img.add-schedule {
-    position: fixed;
-  /*基準を画面の右下に*/
-    bottom: 25px;
-    right: 25px;
-    width: 55px;
-    z-index: 999;
-}
-
-/* -------------------------------------------
-  家事すけロゴ（ログインページ専用）
-------------------------------------------- */
-.logo {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: auto;
-  z-index: -1;
-}
