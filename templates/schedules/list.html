@@ -1,1 +1,66 @@
-<h2>登録しているスケジュール表示</h2>
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}スケジュール一覧 - Kajisuke{% endblock %}
+{% block description %}Kajisukeのスケジュール一覧画面{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/list.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block header_title %}{% endblock %}  <!-- ここで空にする -->
+
+{% block content %}
+<nav>
+    <div class="nav-left">
+        <img src="{% static 'images/icon-calendar.svg' %}" alt="calendar-icon">
+        <img src="{% static 'images/icon-list.svg' %}" alt="list-icon">
+    </div>
+    <div class="nav-right">
+        <a href="{% url 'apps:signout' %}">
+            <img src="{% static 'images/icon-signout.svg' %}" alt="signout-icon">
+        </a>   
+    </div>
+</nav>
+
+<div class="calendar-nav">  
+    <span class="calendar-nav-center">スケジュール一覧</span>
+</div>
+
+<div class="list-container">
+    {% for item in schedules_list %}
+    <div class="item category-{{ item.category_id }}">
+        <div class="item-container">
+            <div class="item-category">
+                <div class="item-category-container">
+                    <p>{{ item.category_name }}</p>
+                    <img src="{% get_static_prefix %}images/category_icons/category_{{ item.category_id }}.png"  class="category-icon">
+                </div>
+            </div>
+            <div class="item-task">
+                <p class="item-task-name">{{ item.task_name }}</p>
+                <p class="item-task-memo">{{ item.frequency_or_date }}</p>
+                {% if item.memo %}
+                <p class="item-task-memo">{{ item.memo }}</p>
+                {% endif %}
+            </div>
+            <div class="item-edit">
+                <a data-edit-id="{{ item.schedule_id }}" href="" >
+                    <img src="{% static 'images/edit.svg' %}" alt="edit">
+                </a>
+            </div>
+        </div>   
+    </div>
+    {% endfor %}
+</div>
+
+<!-- スケジュール追加プラスボタン --> 
+<div>
+    <img class="add-schedule" src="{% static 'images/icon-add.svg' %}" alt="add-schedule">
+</div>
+
+<!-- 家事すけロゴ --> 
+<div>
+    <img class="logo" src="{% static 'images/kajisuke.svg' %}" alt="Kaji suke">
+</div>
+{% endblock %}

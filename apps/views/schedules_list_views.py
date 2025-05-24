@@ -12,6 +12,10 @@ from ..utils.calendar_utils import get_reccureced_dates, get_japanese_holidays, 
 # 登録しているスケジュール一覧
 @login_required
 def schedules_list(request):
+    # 今日の日付をdateで取得する
+    tz = ZoneInfo("Asia/Tokyo")
+    today = timezone.now().astimezone(tz).date()
+
     # schedulesから対象ユーザーのis_active=trueとなっているレコードを全て取得する
     schedules = Schedule.objects.filter(
             user=request.user, 
@@ -25,28 +29,53 @@ def schedules_list(request):
     for item in schedules:
         frequency_or_date = ""
 
-        # frequency == "NONE"の場合→start_dateを表示
+        # 一覧に表示する繰り返し予定を作成
         if item.frequency == "NONE":
-            frequency_or_date = f"{item.start_date.year}年{item.start_date.month}月{item.start_date.day}日"
-
-        elif item.frequency == "DAILY":
-            if item.interval == 1:
-                interval = "毎日"
+            # 日付が今日よりも前なら、一覧に表示しない
+            if item.start_date < today:
+                continue
+            # 繰り返し設定なしのため、start_dateを表示
             else:
-                interval = f"{item.interval}日毎"
-            rule = ""
+                frequency_or_date = f"{item.start_date.year}年{item.start_date.month}月{item.start_date.day}日"
+        
+        else:
+            if item.frequency == "DAILY":
+                if item.interval == 1:
+                    interval = "毎日"
+                else:
+                    interval = f"{item.interval}日毎"
+                rule = ""
 
-        elif item.frequency == "WEEKLY":
-            if item.interval == 1:
-                interval = "毎週"
+            elif item.frequency == "WEEKLY":
+                if item.interval == 1:
+                    interval = "毎週"
+                else:
+                    interval = f"{item.interval}週毎"
+                rule = weekday_dict.get(item.day_of_week)
+
+            elif item.frequency == "MONTHLY":
+                if item.interval == 1:
+                    interval = "毎月"
+                else:
+                    interval = f"{item.interval}ヶ月毎"
+                if item.nth_weekday and item.day_of_week:
+                    rule = f"第{item.nth_weekday}{weekday_dict.get(item.day_of_week)}"
+                else:
+                    rule = f"{item.start_date.day}日"
+
+            elif item.frequency == "YEARLY":
+                if item.interval == 1:
+                    interval = "毎年"
+                else:
+                    interval = f"{item.interval}年毎"
+                if item.nth_weekday and item.day_of_week:
+                    rule = f"{item.start_date.month}月第{item.nth_weekday}{weekday_dict.get(item.day_of_week)}"
+                else:
+                    rule = f"{item.start_date.month}月{item.start_date.day}日" 
             else:
-                interval = f"{item.interval}週毎"
-            rule = weekday_dict.get(item.day_of_week)
+                interval, rule = ""
 
-
-
-
-        frequency_or_date = f"{interval} {rule}"
+            frequency_or_date = f"{interval} {rule}"
 
         schedule = {
             "schedule_id": item.id, 
@@ -58,6 +87,11 @@ def schedules_list(request):
             "memo": item.memo,
         }
         schedules_list.append(schedule)
+
+    context = {     
+        "schedules_list": schedules_list,
+    }
+    return render(request, 'schedules/list.html', context)
 
 
 # 曜日を英語文字列から日本語の曜日に変換するための辞書
