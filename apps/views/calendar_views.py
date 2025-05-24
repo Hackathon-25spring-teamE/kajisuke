@@ -34,7 +34,7 @@ def calendar_month(request, year, month):
 
 # 指定された期間のスケジュール一覧をJSONとして返す
 @login_required
-def schedules_list(request):
+def schedules_of_month(request):
     # ユーザーのTZでのtodayをdatetimeで取得する
     user_tz = ZoneInfo(request.GET["timeZone"])
     user_today = timezone.now().astimezone(user_tz).replace(tzinfo=None).replace(hour=0, minute=0, second=0, microsecond=0)
@@ -87,7 +87,7 @@ def schedules_list(request):
         ).filter(
         Q(original_date__gte=user_today.date(), original_date__lte=calendar_end.date()) |  # original_dateが期間内
         Q(modified_date__gte=user_today.date(), modified_date__lte=calendar_end.date())    # modified_dateが期間内
-        )
+        ).order_by('id') 
 
         # 2-2. 各schedulesで、繰り返し設定からtodayからcalendar_end_dateまでの期間の日付リストを作成する
         for future_item in future_schedules:
@@ -183,7 +183,7 @@ def calendar_day(request, year, month, day):
         ).filter(
         Q(original_date=current_date.date()) | 
         Q(modified_date=current_date.date()) 
-        )
+        ).order_by('id') 
 
         # 2-2.completed_schedulesから対象ユーザーの実施日がcurrent_dateのレコードを取得
         completed_schedules = CompletedSchedule.objects.filter(
