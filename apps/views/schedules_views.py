@@ -119,29 +119,43 @@ class ExceptionalScheduleCreateView(LoginRequiredMixin, CreateView):
         return kwargs
 
     def form_valid(self, form):
-        form.instance.schedule = self.schedule  # 保存前にスケジュールをセット
-        form.instance.original_date = self.original_date  # 明示的にセット
+        self.schedule.refresh_from_db()  # 念のため最新状態を取得
 
-        # すでに存在するか確認
+        # frequency = 'NONE'（繰り返しなし）の場合は、Scheduleのstart_dateを書き換える
+        if self.schedule.frequency == 'NONE':
+            modified_date = form.cleaned_data.get('modified_date')
+            if modified_date and modified_date != self.schedule.start_date:
+                self.schedule.start_date = modified_date
+                self.schedule.save(update_fields=["start_date"])
+            # 繰り返しでない予定は例外登録不要なのでリダイレクトだけ
+            return redirect(reverse('apps:calendar_redirect'))
+
+        # すでに例外が存在する場合は何もしない
         exists = ExceptionalSchedule.objects.filter(
             schedule=self.schedule,
             original_date=self.original_date
         ).exists()
-        
+        if exists:
+            redirect_url = reverse('apps:calendar_day', kwargs={
+                'year': self.original_date.year,
+                'month': self.original_date.month,
+                'day': self.original_date.day,
+            })
+            return redirect(f"{redirect_url}?already_modified=true")
+
+        # 通常の繰り返し予定 → 例外スケジュールを作成
+        form.instance.schedule = self.schedule
+        form.instance.original_date = self.original_date
+        response = super().form_valid(form)
+
+        # 登録後に日毎ページに戻る
         redirect_url = reverse('apps:calendar_day', kwargs={
             'year': self.original_date.year,
             'month': self.original_date.month,
             'day': self.original_date.day,
         })
-
-        if exists:
-            # 「すでに変更済み」フラグをクエリに含める
-            return redirect(f"{redirect_url}?already_modified=true")
-
-        response = super().form_valid(form)
-
-        # 登録後も必ず日毎ページへ戻る（クエリなし）
         return redirect(redirect_url)
+        
                 
 
     def get_context_data(self, **kwargs):
