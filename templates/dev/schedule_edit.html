@@ -1,15 +1,23 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block title %}繰り返しスケジュール編集 - Kajisuke{% endblock %}
+{% block description %}Kajisukeのスケジュール編集ページ{% endblock %}
 {% block extra_css %}
+<link href="{% static 'css/schedules/edit_schedules.css' %}" rel="stylesheet">
 <!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 <script src="/static/js/schedule_form.js" defer></script>
+<script src="/static/js/schedule_edit.js" defer></script>
 {% endblock %}
 
+{% block header_title %}{% endblock %}
 {% block content %}
-<h3>スケジュール登録</h3>
-<form method="post">
+<span class="batsu"></span>
+<h2>スケジュール編集</h2>
+<form method="post" name="schedule-form">
     {% csrf_token %}
     {% if form.errors %}
     <ul class="errorlist">
@@ -23,14 +31,25 @@
         {% endfor %}
     </ul>
     {% endif %}
-    <!-- task_category と task の選択 -->
-    {{ form.start_date.label_tag }}{{ form.start_date }}<br>
-    {{ form.task_category }}<br>
-    {{ form.task }}<br>
+    <div>
+        <label for="id_start_date" class="form-label">開始日</label>
+        <input type="date" name="start_date" id="id_start_date" class="form-control"
+            value="{{ schedule.start_date|date:'Y-m-d' }}" min="{{ today|date:'Y-m-d' }}">
+    </div>
+    <!-- カテゴリ（読み取り専用で表示し、hiddenで送信） -->
+    <div>
+        <input type="text" value="{{ form.task_category_label }}" disabled>
+        {{ form.task_category.as_hidden }}
+    </div>
+    <!-- 家事（読み取り専用で表示し、hiddenで送信） -->
+    <div>
+        <input type="text" value="{{ form.task_label }}" disabled>
+        {{ form.task.as_hidden }}
+    </div>
     {{ form.memo }}<br>
     <!-- frequency をボタンで選択 -->
     <div id="frequency-buttons">
-        <label>繰り返し設定:</label><br>
+        <label>繰り返し設定</label><br>
         <button type="button" data-value="NONE">なし</button>
         <button type="button" data-value="DAILY">毎日</button>
         <button type="button" data-value="WEEKLY">毎週</button>
@@ -42,7 +61,7 @@
     <!-- frequency に応じて表示する項目 -->
     <div id="frequency-extra-fields">
         <div id="interval-field">
-            <label>間隔: <input type="number" name="interval" id="id_interval" min="1"></label>
+            <label><input type="number" name="interval" id="id_interval" min="1"></label>
             <span class="field-help" id="interval-help"></span>
         </div>
         <div id="day-of-week-field">
@@ -100,7 +119,33 @@
         </div>
     </div>
     <br>
-    <button type="submit">登録</button>
+    <!-- スケジュール設定を変更するボタン -->
+    <button type="button" class="submit1" id="open-edit-modal">スケジュール設定を変更する</button>
+   <!-- スケジュール設定変更確認用モーダル -->
+<div id="edit-confirmation-modal" class="modal hidden">
+    <div class="modal-content">
+        <p>繰り返し設定を変更しますか？</p>
+        <button type="submit" class="submit1">はい</button>
+        <button type="button" id="edit-modal-cancel" class="submit2">キャンセル</button>
+    </div>
+</div>
 </form>
+
+
+
+<!-- 削除トリガーボタン -->
+<button type="button" id="open-delete-modal" class="submit2">繰り返しスケジュールを削除</button>
+
+<!-- 削除確認モーダル -->
+<div id="delete-modal" class="modal hidden">
+    <div class="modal-content">
+        <p>本当にこの繰り返しスケジュールを削除しますか？</p>
+        <form method="post" action="{% url 'apps:schedule_soft_delete' schedule.id %}">
+            {% csrf_token %}
+            <button type="submit" class="submit1">削除する</button>
+            <button type="button" id="cancel-delete" class="submit2">キャンセル</button>
+        </form>
+    </div>
+</div>
 
 {% endblock %}

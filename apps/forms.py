@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.utils import timezone
 from django.utils.timezone import now
 
-from .models import CustomUser, Schedule, Task, TaskCategory
+from .models import CustomUser, Schedule, Task, TaskCategory, ExceptionalSchedule
 from .validators import validate_unique_email, validate_min_length_8, validate_has_digit, validate_has_uppercase
 
 
@@ -53,6 +53,7 @@ class SigninForm(AuthenticationForm):
     
     def get_user(self):
         return getattr(self, 'user_cache', None)
+
 
 
 # スケジュール新規登録用のフォーム
@@ -191,3 +192,63 @@ class ScheduleForm(forms.ModelForm):
         else:
             self.fields['task'].queryset = Task.objects.none()
             self.fields['task'].empty_label = '家事'
+
+
+
+# スケジュール繰り返し設定編集用のフォーム
+class ScheduleEditForm(ScheduleForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # 既存データがあれば編集モードとみなす
+        if self.instance.pk:
+            self.fields['task_category'].disabled = True
+            self.fields['task'].disabled = True
+
+            self.fields['task_category'].initial = self.instance.task.task_category
+            self.fields['task'].initial = self.instance.task
+
+            # 表示用のラベル
+            self.task_category_label = str(self.instance.task.task_category)
+            self.task_label = str(self.instance.task)
+
+
+
+# 1日のみの予定を編集用のフォーム
+class ExceptionalScheduleForm(forms.ModelForm):
+    class Meta:
+        model = ExceptionalSchedule
+        fields = ['original_date', 'modified_date']
+        labels = {
+            'original_date': '予定日',
+            'modified_date': '変更日',
+        }
+        widgets = {
+            'original_date': forms.DateInput(attrs={'type': 'date'}),
+            'modified_date': forms.DateInput(attrs={'type': 'date'}),
+        }
+    
+    #変更日を今日以降に制限する
+    def clean_modified_date(self):
+        modified_date = self.cleaned_data.get('modified_date')
+        if modified_date and modified_date < timezone.now().date():
+            raise forms.ValidationError("開始日は今日以降の日付を選択してください。")
+        return modified_date
+    
+    def __init__(self, *args, **kwargs):
+        schedule = kwargs.pop('schedule', None)
+        super().__init__(*args, **kwargs)
+        # original_date は表示専用
+        self.fields['original_date'].disabled = True
+
+        if schedule:
+            self.instance.schedule = schedule  # 関連付け
+
+        #  当日の日付を初期値に設定（ただし既に指定されていないときだけ上書きしないように）
+        if not self.initial.get('modified_date') and not self.data.get('modified_date'):
+            self.initial['modified_date'] = now().date()
+
+        #カスタムウェジェット
+        #今日より前の日付は選べないように制限
+        today_str = timezone.now().date().strftime('%Y-%m-%d')
+        self.fields['modified_date'].widget = forms.DateInput(attrs={'type': 'date', 'min': today_str})

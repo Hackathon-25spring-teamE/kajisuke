@@ -8,7 +8,7 @@
 <link href="{% static 'css/day.css' %}" rel="stylesheet">
 {% endblock %}
 
-{% block header_title %}{% endblock %}  <!-- ここで空にする -->
+{% block header_title %}{% endblock %} <!-- ここで空にする -->
 
 {% block content %}
 <nav>
@@ -21,11 +21,11 @@
     <div class="nav-right">
         <a href="{% url 'apps:signout' %}">
             <img src="{% static 'images/icon-signout.svg' %}" alt="signout-icon">
-        </a>   
+        </a>
     </div>
 </nav>
 
-<div class="calendar-nav">  
+<div class="calendar-nav">
     <a href="{% url 'apps:calendar_day' year=prev_date.year month=prev_date.month day=prev_date.day %}">
         <img class="prev" src="{% static 'images/icon-prev.svg' %}" alt="前の日">
     </a>
@@ -43,15 +43,18 @@
         <div class="item-container">
             <div class="item-completed">
                 {% if item.completed %}
-                <img data-checked-id="{{ item.schedule_id }}" src="../../../static/images/checked.svg" class="completed-check">
+                <img data-checked-id="{{ item.schedule_id }}" src="../../../static/images/checked.svg"
+                    class="completed-check">
                 {% else %}
-                <img data-checked-id="{{ item.schedule_id }}" src="../../../static/images/unchecked.svg" class="completed-check">
+                <img data-checked-id="{{ item.schedule_id }}" src="../../../static/images/unchecked.svg"
+                    class="completed-check">
                 {% endif %}
             </div>
             <div class="item-category">
                 <div class="item-category-container">
                     <p>{{ item.category_name }}</p>
-                    <img src="{% get_static_prefix %}images/category_icons/category_{{ item.category_id }}.png"  class="category-icon">
+                    <img src="{% get_static_prefix %}images/category_icons/category_{{ item.category_id }}.png"
+                        class="category-icon">
                 </div>
             </div>
             <div class="item-task">
@@ -62,24 +65,25 @@
             </div>
             <div class="item-edit">
                 {% if is_editable %}
-                <a data-edit-id="{{ item.schedule_id }}" href="" >
+                <a
+                    href="{% url 'apps:exceptional_schedule_create' schedule_id=item.schedule_id year=current_date.year month=current_date.month day=current_date.day %}">
                     <img src="{% static 'images/edit.svg' %}" alt="edit">
                 </a>
                 {% else %}
                 <img class="item-edit-uneditable" src="{% static 'images/edit.svg' %}" alt="edit">
                 {% endif %}
             </div>
-        </div>   
+        </div>
     </div>
     {% endfor %}
 </div>
 
-<!-- スケジュール追加プラスボタン --> 
+<!-- スケジュール追加プラスボタン -->
 <div>
     <img class="add-schedule" src="{% static 'images/icon-add.svg' %}" alt="add-schedule">
 </div>
 
-<!-- 家事すけロゴ --> 
+<!-- 家事すけロゴ -->
 <div>
     <img class="logo" src="{% static 'images/kajisuke.svg' %}" alt="Kaji suke">
 </div>
