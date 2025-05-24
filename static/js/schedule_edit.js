@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (confirmEditBtn) {
         confirmEditBtn.addEventListener("click", function () {
-            window.location.href = editUrl;
+            editModal.classList.add("hidden");
         });
     }
 });

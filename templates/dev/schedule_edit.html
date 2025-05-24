@@ -121,24 +121,17 @@
     <br>
     <!-- スケジュール設定を変更するボタン -->
     <button type="button" class="submit1" id="open-edit-modal">スケジュール設定を変更する</button>
-    <!-- スケジュール設定変更確認用モーダル -->
-    <div id="edit-confirmation-modal" class="modal hidden">
-        <div class="modal-content">
-            <p>繰り返し設定を変更しますか？</p>
-            <button type="submit" class="submit1">はい</button>
-            <button id="edit-modal-cancel" class="submit2">キャンセル</button>
-        </div>
-    </div>
-</form>
-
-<!-- スケジュール設定変更確認用モーダル -->
+   <!-- スケジュール設定変更確認用モーダル -->
 <div id="edit-confirmation-modal" class="modal hidden">
     <div class="modal-content">
         <p>繰り返し設定を変更しますか？</p>
         <button type="submit" class="submit1">はい</button>
-        <button id="edit-modal-cancel" class="submit2">キャンセル</button>
+        <button type="button" id="edit-modal-cancel" class="submit2">キャンセル</button>
     </div>
 </div>
+</form>
+
+
 
 <!-- 削除トリガーボタン -->
 <button type="button" id="open-delete-modal" class="submit2">繰り返しスケジュールを削除</button>
@@ -154,5 +147,5 @@
         </form>
     </div>
 </div>
-<!-- <script>const editUrl = "{% url 'apps:schedule_edit' schedule.id %}";</script> -->
+
 {% endblock %}
