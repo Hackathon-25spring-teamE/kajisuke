@@ -80,19 +80,12 @@ class ScheduleEditAsNewView(LoginRequiredMixin, UpdateView):
         return kwargs
 
     def form_valid(self, form):
-        old_schedule = self.get_object()
-        old_schedule.is_active = False
-        old_schedule.save()
-
-        new_schedule = form.save(commit=False)
-        new_schedule.pk = None  # 新規インスタンスとして保存
-        new_schedule.user = self.request.user
-        new_schedule.task = old_schedule.task  # 編集不可のためフォームから送られてこない
-        new_schedule.is_active = True
-        new_schedule.save()
-
+       # 上書き保存するだけ
+        schedule = form.save(commit=False)
+        schedule.user = self.request.user
+        schedule.save()
         return super().form_valid(form)
-
+        
 
 
 # 1日のみの予定変更・削除
