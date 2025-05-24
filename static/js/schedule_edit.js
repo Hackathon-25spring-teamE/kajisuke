@@ -1,3 +1,4 @@
+console.log("schedule_edit.js 読み込み成功！");
 document.addEventListener("DOMContentLoaded", function () {
     const deleteModal = document.getElementById("delete-modal");
     const openDeleteModalBtn = document.getElementById("open-delete-modal");
@@ -28,8 +29,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // 変更ボタンを押した時のモーダル
     const openEditModalBtn = document.getElementById("open-edit-modal");
     const editModal = document.getElementById("edit-confirmation-modal");
-    const confirmEditBtn = document.getElementById("confirm-edit");
-    const cancelEditBtn = document.getElementById("cancel-edit");
+    const confirmEditBtn = document.getElementById("edit-modal-confirm");
+    const cancelEditBtn = document.getElementById("edit-modal-cancel");
 
     if (openEditModalBtn) {
         openEditModalBtn.addEventListener("click", function () {

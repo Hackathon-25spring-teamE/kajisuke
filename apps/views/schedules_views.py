@@ -11,6 +11,7 @@ from django.utils.timezone import now
 from django.urls import reverse
 from django.contrib import messages
 from django.views import View
+from django.shortcuts import redirect
 
 from ..models import Schedule, Task, ExceptionalSchedule
 from ..forms import ScheduleForm, ScheduleEditForm, ExceptionalScheduleForm
@@ -63,11 +64,12 @@ def load_tasks(request):
 
 # スケジュール変更
 # 繰り返しスケジュール変更
-class ScheduleEditAsNewView(UpdateView):
+class ScheduleEditAsNewView(LoginRequiredMixin, UpdateView):
     model = Schedule
     form_class = ScheduleEditForm
     template_name = 'dev/schedule_edit.html'
-    success_url = reverse_lazy('apps:hello_world')
+    pk_url_kwarg = 'schedule_id'
+    success_url = reverse_lazy('apps:calendar_redirect')
 
 
     def get_form_kwargs(self):
@@ -94,10 +96,11 @@ class ScheduleEditAsNewView(UpdateView):
 
 
 # 1日のみの予定変更・削除
-class ExceptionalScheduleCreateView(CreateView):
+class ExceptionalScheduleCreateView(LoginRequiredMixin, CreateView):
     model = ExceptionalSchedule
     form_class = ExceptionalScheduleForm
     template_name = 'dev/oneday_edit.html'
+    pk_url_kwarg = 'schedule_id'
     success_url = reverse_lazy('apps:calendar_redirect')
 
     def dispatch(self, request, *args, **kwargs):
@@ -124,11 +127,22 @@ class ExceptionalScheduleCreateView(CreateView):
             schedule=self.schedule,
             original_date=self.original_date
         ).exists()
+        
+        redirect_url = reverse('apps:calendar_day', kwargs={
+            'year': self.original_date.year,
+            'month': self.original_date.month,
+            'day': self.original_date.day,
+        })
 
         if exists:
-            # 保存せずに成功URLにリダイレクト
-            return redirect(reverse('apps:calendar_redirect'))
-        return super().form_valid(form)
+            # 「すでに変更済み」フラグをクエリに含める
+            return redirect(f"{redirect_url}?already_modified=true")
+
+        response = super().form_valid(form)
+
+        # 登録後も必ず日毎ページへ戻る（クエリなし）
+        return redirect(redirect_url)
+                
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -151,7 +165,7 @@ def redirect_to_current_calendar(request):
 
 
 # 繰り返しスケジュール削除
-class ScheduleSoftDeleteView(View):
+class ScheduleSoftDeleteView(LoginRequiredMixin, View):
     def post(self, request, schedule_id, *args, **kwargs):
         schedule = get_object_or_404(Schedule, pk=schedule_id)
         schedule.is_active = False

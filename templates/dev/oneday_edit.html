@@ -77,7 +77,11 @@
         });
     });
 </script>
-
+<script>
+    window.scheduledDate = "{{ form.initial.original_date }}";
+    window.isModified = {{ is_modified|yesno:"true,false" }};
+    window.calendarRedirectUrl = "{% url 'apps:daily_schedule' year=form.initial.original_date.year month=form.initial.original_date.month day=form.initial.original_date.day %}";
+</script>
 {% endif %}
 
 {% endblock %}

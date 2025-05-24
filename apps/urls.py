@@ -19,15 +19,15 @@ urlpatterns = [
     path('calendars/<int:year>/<int:month>/<int:day>', calendar_day, name='calendar_day'),
     path('calendars/<int:year>/<int:month>', calendar_month, name='calendar_month'),
     path('api/schedules', schedules_list, name='schedules_list'),
-    #スケジュール登録
+    #　スケジュール登録
     path('schedules/create', ScheduleCreateView.as_view(), name="schedules_create"),
     path('ajax/load-tasks/', load_tasks, name='ajax_load_tasks'),
     # スケジュール繰り返し設定変更
-    path('schedule/<int:pk>/edit/', ScheduleEditAsNewView.as_view(), name='schedule_edit'),
+    path('schedules/<int:schedule_id>/edit/', ScheduleEditAsNewView.as_view(), name='schedule_edit'),
     # 1日のみの予定変更
-    path('schedule/<int:schedule_id>/exception/<int:year>/<int:month>/<int:day>/', ExceptionalScheduleCreateView.as_view(), name='exceptional_schedule_create'),
+    path('schedules/<int:schedule_id>/exception/<int:year>/<int:month>/<int:day>/', ExceptionalScheduleCreateView.as_view(), name='exceptional_schedule_create'),
     # 当月にリダイレクト
-    path('calendar/', redirect_to_current_calendar, name='calendar_redirect'),
+    path('calendars/', redirect_to_current_calendar, name='calendar_redirect'),
     # スケジュール繰り返し設定削除
-    path('schedule/<int:schedule_id>/delete/', ScheduleSoftDeleteView.as_view(), name='schedule_soft_delete'),
+    path('schedules/<int:schedule_id>/delete/', ScheduleSoftDeleteView.as_view(), name='schedule_soft_delete'),
 ]
