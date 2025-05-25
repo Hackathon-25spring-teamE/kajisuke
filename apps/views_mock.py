@@ -39,3 +39,7 @@ def mock_edit_oneday(request):
 # 登録しているスケジュール表示
 def mock_schedule_list(request):
     return render(request, 'schedules/list.html')
+
+# アカウント表示
+def mock_myaccount(request):
+    return render(request, 'myaccount.html')
