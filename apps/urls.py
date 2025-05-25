@@ -34,5 +34,5 @@ urlpatterns = [
     # スケジュール繰り返し設定削除
     path('schedules/<int:schedule_id>/delete/', ScheduleSoftDeleteView.as_view(), name='schedule_soft_delete'),
     # 実施・未実施の変更
-    path('schedules/<int:schedule_id>/complete/<int:year>/<int:month>/<int:day>/', complete_schedule, name='complete_schedule'),
+    path('api/schedules/<int:schedule_id>/complete/<int:year>/<int:month>/<int:day>/', complete_schedule, name='complete_schedule'),
 ]

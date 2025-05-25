@@ -15,6 +15,8 @@
     // Djangoのstaticテンプレートを使って静的ファイルパスをJavaScriptに渡す
     const uncheckedImageSrc = "{% static 'images/unchecked.svg' %}";
     const checkedImageSrc = "{% static 'images/checked.svg' %}";
+    // テンプレートのCSRFトークンを取得
+    const csrfToken = "{{ csrf_token }}";
 </script>
 {% endblock %}
 
@@ -57,10 +59,10 @@
         <div class="item-container">
             <div class="item-completed">
                 {% if item.completed %}
-                <img data-schedule-id="{{ item.schedule_id }}" src="{% static 'images/checked.svg' %}"
+                <img data-completed-id="{{ item.schedule_id }}" src="{% static 'images/checked.svg' %}"
                     class="check-icon">
                 {% else %}
-                <img data-schedule-id="{{ item.schedule_id }}" src="{% static 'images/unchecked.svg' %}"
+                <img data-completed-id="{{ item.schedule_id }}" src="{% static 'images/unchecked.svg' %}"
                     class="check-icon">
                 {% endif %}
             </div>
@@ -72,7 +74,11 @@
                 </div>
             </div>
             <div class="item-task">
-                <p class="item-task-name">{{ item.task_name }}</p>
+                {% if item.completed %}
+                <p data-task-id="{{ item.schedule_id }}" class="item-task-name strikethrough">{{ item.task_name }}</p>
+                {% else %}
+                <p data-task-id="{{ item.schedule_id }}" class="item-task-name">{{ item.task_name }}</p>
+                {% endif %}
                 {% if item.memo %}
                 <p class="item-task-memo">{{ item.memo }}</p>
                 {% endif %}

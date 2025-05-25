@@ -132,6 +132,10 @@ nav {
   opacity: 0.6;
 }
 
+.strikethrough {
+  text-decoration: line-through;
+}
+
 /* -------------------------------------------
   category_idによる色分け
 ------------------------------------------- */
