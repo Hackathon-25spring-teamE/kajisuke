@@ -15,7 +15,7 @@
 
 <a href="javascript:history.back()" class="batsu"></a>
 
-<h2>この日のみの変更</h2>
+<h2>この日付のみ変更</h2>
 
 <form method="post" id="exception-form">
     {% csrf_token %}
@@ -47,22 +47,22 @@
 
 
 
-    <button type="button" class="submit1" id="change-only-btn">この日のみ変更する</button>
+    <button type="button" class="submit1" id="change-only-btn">この日付のみ変更する</button>
 
 
-    <button type="button" class="submit2" id="delete-only-btn">この日のみ削除する</button>
+    <button type="button" class="submit2" id="delete-only-btn">この日付のみ削除する</button>
 
     <!-- モーダル -->
     <div id="confirmation-modal" class="modal hidden">
         <div class="modal-content">
             <p id="modal-message"></p>
-            <button id="modal-confirm" class="submit1">実行</button>
-            <button type="button" id="modal-cancel" class="submit2">キャンセル</button>
+            <button id="modal-confirm" class="submit1">はい</button>
+            <button type="button" id="modal-cancel" class="submit2">いいえ</button>
         </div>
     </div>
 
     <button type="button" class="submit2" onclick="window.location.href='{% url 'apps:schedule_edit' schedule.id  %}'">
-        繰り返し設定を変更する
+        スケジュール設定の変更はこちら
     </button>
 
 
