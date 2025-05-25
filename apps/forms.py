@@ -83,8 +83,8 @@ JAPANESE_DAY_OF_WEEK_CHOICES = [
 ]
 
 class ScheduleForm(forms.ModelForm):
-    task_category = forms.ModelChoiceField(queryset=TaskCategory.objects.all(),required=True,label="カテゴリー")
-    task = forms.ModelChoiceField(queryset=Task.objects.none(), required=True,label="家事") # 初期状態は空
+    task_category = forms.ModelChoiceField(queryset=TaskCategory.objects.all(),required=True,label="--カテゴリー--")
+    task = forms.ModelChoiceField(queryset=Task.objects.none(), required=True,label="--家事--") # 初期状態は空
     frequency = forms.ChoiceField(choices=FREQUENCY_CHOICES,label="繰り返し設定",widget=forms.HiddenInput() ) # 見た目には表示しない（ボタンに置き換えるため）
     day_of_week = forms.ChoiceField(choices=JAPANESE_DAY_OF_WEEK_CHOICES, required=False)
 
@@ -102,7 +102,7 @@ class ScheduleForm(forms.ModelForm):
     }
         widgets = {
             'memo': forms.Textarea(attrs={
-                'placeholder': 'メモ',
+                'placeholder': '--メモ--',
                 'rows': 3  # 高さの調整（任意）
             }),
         }
@@ -184,7 +184,7 @@ class ScheduleForm(forms.ModelForm):
 
         if user:
             self.fields['task_category'].queryset = TaskCategory.objects.all()
-            self.fields['task_category'].empty_label = 'カテゴリ'
+            self.fields['task_category'].empty_label = '--カテゴリー--'
 
             if task_category_id:
                 tasks = Task.objects.filter(
@@ -193,13 +193,13 @@ class ScheduleForm(forms.ModelForm):
                     is_active=True,
                 )
                 self.fields['task'].queryset = tasks
-                self.fields['task'].empty_label = '家事'
+                self.fields['task'].empty_label = '--家事--'
             else:
                 self.fields['task'].queryset = Task.objects.none()
-                self.fields['task'].empty_label = '家事'
+                self.fields['task'].empty_label = '--家事--'
         else:
             self.fields['task'].queryset = Task.objects.none()
-            self.fields['task'].empty_label = '家事'
+            self.fields['task'].empty_label = '--家事--'
 
 
 
