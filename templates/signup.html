@@ -13,22 +13,22 @@
         <div class="form-group">
             <label for="id_user_name">ユーザー名</label>
             {{ form.user_name }}
-            {{ form.user_name.errors }}
+            <div style="color: crimson;">{{ form.user_name.errors }}</div>
         </div>
         <div class="form-group">
             <label for="id_email">メールアドレス</label>
             {{ form.email }}
-            {{ form.email.errors }}
+            <div style="color: crimson;">{{ form.email.errors }}</div>
         </div>
         <div class="form-group">
             <label for="id_password1">パスワード</label>
             {{ form.password1 }}
-            {{ form.password1.errors }}
+            <div style="color: crimson;">{{ form.password1.errors }}</div>
         </div>
         <div class="form-group">
             <label for="id_password2">パスワード(確認用)</label>
             {{ form.password2 }}
-            {{ form.password2.errors }}
+            <div style="color: crimson;">{{ form.password2.errors }}</div>
         </div>
         {% if form.non_field_errors %}
         <div class="form-errors">
