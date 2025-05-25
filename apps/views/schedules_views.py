@@ -117,7 +117,7 @@ def load_tasks(request):
 class ScheduleEditAsNewView(LoginRequiredMixin, UpdateView):
     model = Schedule
     form_class = ScheduleEditForm
-    template_name = 'dev/schedule_edit.html'
+    template_name = 'schedules/edit_schedules.html'
     pk_url_kwarg = 'schedule_id'
     success_url = reverse_lazy('apps:calendar_redirect')
 
