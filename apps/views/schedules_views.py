@@ -142,8 +142,7 @@ class ScheduleEditAsNewView(LoginRequiredMixin, UpdateView):
 class ExceptionalScheduleCreateView(LoginRequiredMixin, CreateView):
     model = ExceptionalSchedule
     form_class = ExceptionalScheduleForm
-    template_name = 'dev/oneday_edit.html'
-    pk_url_kwarg = 'schedule_id'
+    template_name = 'schedules/edit_oneday.html'
     success_url = reverse_lazy('apps:calendar_redirect')
 
     def dispatch(self, request, *args, **kwargs):
