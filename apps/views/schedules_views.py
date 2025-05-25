@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
+from django.utils.dateparse import parse_date
 from django.db.models import Q, Case, When, Value, IntegerField
 from django.shortcuts import get_object_or_404, redirect, render
 from datetime import date
@@ -75,6 +75,16 @@ class ScheduleCreateView(LoginRequiredMixin, CreateView):
     template_name = 'schedules/create.html'
     success_url = reverse_lazy('apps:calendar_redirect')  # スケジュール一覧などに遷移
 
+    def get_initial(self):
+        """URLパラメータから開始日を初期値として設定"""
+        initial = super().get_initial()
+        date_str = self.request.GET.get('date')
+        if date_str:
+            parsed_date = parse_date(date_str)
+            if parsed_date:
+                initial['start_date'] = parsed_date
+        return initial
+    
     def get_form_kwargs(self):
         """フォームにログインユーザーを渡す"""
         kwargs = super().get_form_kwargs()

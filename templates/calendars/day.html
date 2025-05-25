@@ -100,7 +100,7 @@
 
 <!-- スケジュール追加プラスボタン -->
 <div>
-    <a href="{% url 'apps:schedules_create' %}">
+    <a href="{% url 'apps:schedules_create' %}?date={{ current_date|date:'Y-m-d' }}">
     <img class="add-schedule" src="{% static 'images/icon-add.svg' %}" alt="add-schedule">
     </a>
 </div>
