@@ -7,7 +7,7 @@ from datetime import datetime, date
 from zoneinfo import ZoneInfo
 from dateutil.relativedelta import relativedelta
 from ..models import PastSchedule, Schedule, ExceptionalSchedule, CompletedSchedule
-from ..utils.calendar_utils import get_reccureced_dates, get_japanese_holidays, wareki
+from ..utils.calendar_utils import get_recurrenced_and_exceptional_dates, get_japanese_holidays, wareki
 
 
 
@@ -91,7 +91,7 @@ def schedules_of_month(request):
 
         # 2-2. 各schedulesで、繰り返し設定からtodayからcalendar_end_dateまでの期間の日付リストを作成する
         for future_item in future_schedules:
-            date_list = get_reccureced_dates(
+            date_list = get_recurrenced_and_exceptional_dates(
                 future_item, 
                 exptional_schedules, 
                 user_today, 
@@ -193,7 +193,7 @@ def calendar_day(request, year, month, day):
 
         # 2-3-1.各スケジュール毎に繰り返し設定からcurrent_date期間（1日）のスケジュールを生成
         for future_item in future_schedules:
-            date_list = get_reccureced_dates(
+            date_list = get_recurrenced_and_exceptional_dates(
                 future_item, 
                 exptional_schedules, 
                 current_date, 

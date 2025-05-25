@@ -42,7 +42,7 @@ def get_japanese_holidays(year, month):
 
 
 # DBクエリで取得したscheduleとexceptional_schedulesから、対象期間（datetime型）の日付リスト（date型）を生成
-def get_reccureced_dates(schedule_obj, except_obj, start_date, end_date):
+def get_recurrenced_and_exceptional_dates(schedule_obj, except_obj, start_date, end_date):
     date_list = []
     # frequencyがNONEの時→schedule_obj.start_dateがstart_dateとend_dateの間であれば日付リストに追加
     if schedule_obj.frequency == "NONE":
