@@ -229,8 +229,17 @@ class ScheduleSoftDeleteView(LoginRequiredMixin, View):
 @login_required
 def complete_schedule(request, schedule_id, year, month, day):
     completed_date = date(year, month, day)
+    # 対象ユーザーとschedule_idでscheduleを取得→存在しなければエラーを返す
     try:
-        # completed_schedulesから対象条件のレコードを取得
+        schedule = Schedule.objects.get(
+            id=schedule_id,
+            user=request.user,
+        )
+    except Schedule.DoesNotExist:
+        return JsonResponse({'error': 'Invalid request'}, status=400)
+
+    # completed_schedulesから対象条件のレコードを取得
+    try:
         completed_record = CompletedSchedule.objects.get(
             schedule_id=schedule_id, 
             schedule_date=completed_date,
@@ -258,4 +267,5 @@ def complete_schedule(request, schedule_id, year, month, day):
             completed_record.delete()
         return JsonResponse({'status': 'not_completed'}, status=200)
     
+    # 上記以外はエラー
     return JsonResponse({'error': 'Invalid request'}, status=400)

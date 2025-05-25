@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     //     right: 'next'
     //     },
     headerToolbar: false,
-    events: '/api/schedules',   // スケジュールリストのリクエスト
+    events: '/api/schedules/',   // スケジュールリストのリクエスト
     timeZone: "Asia/Tokyo",
     locale: "jp",
     displayEventTime: false,  // 時間表示を消す設定
