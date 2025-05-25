@@ -34,7 +34,7 @@ body {
     background-color: var(--locked-input-bg)!important;
     color: var(--text-color);
     margin: 0;
-    padding: 15px 0px; 
+    padding: 25px 0px; 
     height: 90%;
     min-height: 90vh;
     width: 100%;
@@ -49,7 +49,7 @@ body {
     min-height: 680px;  
     width: 90vw;
     border-radius: 15px;
-    padding-top: 20px; 
+    padding-top: 30px; 
 }
 
 /* コンテンツのコンテナ */
@@ -126,7 +126,16 @@ img {
     background-color: #FFFFFF;
     box-sizing: border-box;
     height: 40px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+}
+
+/* interval */
+.interval{
+    width: 100px;
+    height: 1.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    text-align: center;
 }
 
 /*---------------------------
@@ -141,8 +150,8 @@ img {
 ------------------------------------------- */
 .batsu {
   position: absolute;
-  top: 25px; /* 画面最上部から16px - h2との距離2pxを考慮 */
-  right: 30px; /* 画面右端から20pxの位置 */
+  top: 5vh; /* 画面最上部から16px - h2との距離2pxを考慮 */
+  right: 8vw; /* 画面右端から20pxの位置 */
   width: 24px;
   height: 24px;
 }
@@ -164,4 +173,18 @@ img {
 
 .batsu::after {
   transform: translate(-50%, -50%) rotate(-45deg);
+}
+/*------------------------------------
+inputタグの増減矢印
+------------------------------------*/
+/* Chrome, Safari, Edge */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: auto;
+    margin: 0;
+}
+
+/* Firefoxで矢印を表示させる */
+input[type="number"] {
+    -moz-appearance: number-input;
 }
