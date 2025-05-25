@@ -4,17 +4,68 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.db.models import Q
-from django.shortcuts import get_object_or_404, redirect
+from django.db.models import Q, Case, When, Value, IntegerField
+from django.shortcuts import get_object_or_404, redirect, render
 from datetime import date
 from django.utils.timezone import now
 from django.urls import reverse
 from django.contrib import messages
 from django.views import View
 from django.shortcuts import redirect
+from zoneinfo import ZoneInfo
+
 
 from ..models import Schedule, Task, ExceptionalSchedule
 from ..forms import ScheduleForm, ScheduleEditForm, ExceptionalScheduleForm
+from ..utils.schedule_utils import get_frequency_or_date
+
+
+# 登録しているスケジュール一覧を表示
+@login_required
+def schedules_list(request):
+    # 今日の日付をdateで取得する
+    tz = ZoneInfo("Asia/Tokyo")
+    today = now().astimezone(tz).date()
+
+    # schedulesから対象ユーザーのis_active=trueとなっているレコードを全て取得する
+    # frequency→intervalで並び替えて取得
+    schedules = Schedule.objects.filter(
+            user=request.user, 
+            is_active=True,
+        ).select_related(
+            'task__task_category'
+        ).annotate(
+            frequency_order=Case(
+                When(frequency='NONE', then=Value(0)),
+                When(frequency='DAILY', then=Value(1)),
+                When(frequency='WEEKLY', then=Value(2)),
+                When(frequency='MONTHLY', then=Value(3)),
+                When(frequency='YEARLY', then=Value(4)),
+                default=Value(999),  # 万が一のため
+                output_field=IntegerField()
+            )
+        ).order_by('frequency_order', 'interval')
+    
+    schedules_list = []
+
+    for item in schedules:
+        frequency_or_date = get_frequency_or_date(item, today)
+        if frequency_or_date:
+            schedule = {
+                "schedule_id": item.id, 
+                "task_id": item.task.id, 
+                "task_name": item.task.task_name, 
+                "category_id": item.task.task_category.id, 
+                "category_name": item.task.task_category.task_category_name,
+                "frequency_or_date": frequency_or_date,
+                "memo": item.memo,
+            }
+            schedules_list.append(schedule)
+
+    context = {     
+        "schedules_list": schedules_list,
+    }
+    return render(request, 'schedules/list.html', context)
 
 
 
@@ -161,13 +212,6 @@ class ExceptionalScheduleCreateView(LoginRequiredMixin, CreateView):
         ).exists()
 
         return context
-
-
-# カレンダーにリダイレクトする関数
-@login_required
-def redirect_to_current_calendar(request):
-    today = now()
-    return redirect('apps:calendar_month', year=today.year, month=today.month)
 
 
 
