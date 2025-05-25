@@ -2,6 +2,10 @@ from django.urls import path
 from .views.auth_views import SigninView, SignupView, SignoutView, hello_world
 from .views.schedules_views import schedules_list, ScheduleCreateView, load_tasks, ScheduleEditAsNewView, ExceptionalScheduleCreateView, ScheduleSoftDeleteView
 from .views.calendar_views import calendar_month, calendar_day, schedules_of_month, redirect_to_current_calendar
+from .views.schedules_complete_views import complete_schedule
+
+
+
 
 app_name = "apps"
 
@@ -29,4 +33,6 @@ urlpatterns = [
     path('calendars/', redirect_to_current_calendar, name='calendar_redirect'),
     # スケジュール繰り返し設定削除
     path('schedules/<int:schedule_id>/delete/', ScheduleSoftDeleteView.as_view(), name='schedule_soft_delete'),
+    # 実施・未実施の変更
+    path('schedules/<int:schedule_id>/complete/<int:year>/<int:month>/<int:day>/', complete_schedule, name='complete_schedule'),
 ]

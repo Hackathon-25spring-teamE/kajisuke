@@ -6,6 +6,16 @@
 
 {% block extra_css %}
 <link href="{% static 'css/day.css' %}" rel="stylesheet">
+<script src="{% static 'js/schedule_complete.js' %}" defer></script>
+
+<script defer>
+    const currentYear = "{{ current_date.year }}";
+    const currentMonth = "{{ current_date.month }}";
+    const currentDay = "{{ current_date.day }}";
+    // Djangoのstaticテンプレートを使って静的ファイルパスをJavaScriptに渡す
+    const uncheckedImageSrc = "{% static 'images/unchecked.svg' %}";
+    const checkedImageSrc = "{% static 'images/checked.svg' %}";
+</script>
 {% endblock %}
 
 {% block header_title %}{% endblock %} <!-- ここで空にする -->
@@ -47,11 +57,11 @@
         <div class="item-container">
             <div class="item-completed">
                 {% if item.completed %}
-                <img data-checked-id="{{ item.schedule_id }}" src="../../../static/images/checked.svg"
-                    class="completed-check">
+                <img data-schedule-id="{{ item.schedule_id }}" src="{% static 'images/checked.svg' %}"
+                    class="check-icon">
                 {% else %}
-                <img data-checked-id="{{ item.schedule_id }}" src="../../../static/images/unchecked.svg"
-                    class="completed-check">
+                <img data-schedule-id="{{ item.schedule_id }}" src="{% static 'images/unchecked.svg' %}"
+                    class="check-icon">
                 {% endif %}
             </div>
             <div class="item-category">
