@@ -35,6 +35,12 @@ class SignupView(CreateView):
     template_name = "signup.html"
     success_url = reverse_lazy("apps:calendar_redirect")
 
+    def dispatch(self, request, *args, **kwargs):
+        # すでにログインしていたらカレンダーにリダイレクト
+        if request.user.is_authenticated:
+            return redirect('apps:calendar_redirect')
+        return super().dispatch(request, *args, **kwargs)
+    
     def form_valid(self, form):
         # サインアップに成功したら、サインインする
         response = super().form_valid(form)
@@ -54,6 +60,8 @@ class SignupView(CreateView):
 class SigninView(BaseLoginView):
     form_class = SigninForm
     template_name = "signin.html"
+    redirect_authenticated_user = True
+    
 
     def form_valid(self, form):
         # 明示的にログイン
