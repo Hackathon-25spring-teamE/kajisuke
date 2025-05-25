@@ -1,4 +1,13 @@
 /* -------------------------------------------
+  上部固定表示
+------------------------------------------- */
+.fixed-bar {
+    position: sticky;
+    top: 0;
+    background-color: var(--background-color);
+}
+
+/* -------------------------------------------
   ナビゲーションアイコン
 ------------------------------------------- */
 nav {
@@ -28,7 +37,7 @@ nav {
     justify-content: space-between;
     align-items: center;
     gap: 15px; /* 各要素の間隔を調整 */
-    margin-bottom: 20px;
+    padding-bottom: 20px;
 }
 
 .calendar-nav-sub {

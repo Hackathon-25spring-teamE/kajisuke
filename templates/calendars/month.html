@@ -21,33 +21,36 @@
 {% block header_title %}{% endblock %}  <!-- ここで空にする -->
 
 {% block content %}
-<nav>
-    <div class="nav-left">
-        <a href="{% url 'apps:calendar_redirect' %}">
-            <img src="{% static 'images/icon-calendar.svg' %}" alt="calendar-icon">
+<div class="fixed-bar">
+    <nav>
+        <div class="nav-left">
+            <a href="{% url 'apps:calendar_redirect' %}">
+                <img src="{% static 'images/icon-calendar.svg' %}" alt="calendar-icon">
+            </a>
+            <a href="{% url 'apps:schedules_list' %}">
+                <img src="{% static 'images/icon-list.svg' %}" alt="list-icon">
+            </a>
+        </div>
+        <div class="nav-right">
+            <a href="{% url 'apps:signout' %}">
+                <img src="{% static 'images/icon-signout.svg' %}" alt="signout-icon">
+            </a>   
+        </div>
+    </nav>
+        
+    <div class="calendar-nav">
+        <a href="{% url 'apps:calendar_month' year=prev_month.year month=prev_month.month %}">
+            <img class="prev" src="{% static 'images/icon-prev.svg' %}" alt="前の月">
         </a>
-        <a href="{% url 'apps:schedules_list' %}">
-            <img src="{% static 'images/icon-list.svg' %}" alt="list-icon">
+        <span class="calendar-nav-sub">{{ current_month|date:"Y" }}</span>
+        <span class="calendar-nav-center">{{ current_month|date:"n月" }}</span>
+        <span class="calendar-nav-sub">{{ wareki_year }}</span>
+        <a href="{% url 'apps:calendar_month' year=next_month.year month=next_month.month %}">
+            <img class="next" src="{% static 'images/icon-next.svg' %}" alt="次の月">
         </a>
     </div>
-    <div class="nav-right">
-        <a href="{% url 'apps:signout' %}">
-            <img src="{% static 'images/icon-signout.svg' %}" alt="signout-icon">
-        </a>   
-    </div>
-</nav>
-    
-<div class="calendar-nav">
-    <a href="{% url 'apps:calendar_month' year=prev_month.year month=prev_month.month %}">
-        <img class="prev" src="{% static 'images/icon-prev.svg' %}" alt="前の月">
-    </a>
-    <span class="calendar-nav-sub">{{ current_month|date:"Y" }}</span>
-    <span class="calendar-nav-center">{{ current_month|date:"n月" }}</span>
-    <span class="calendar-nav-sub">{{ wareki_year }}</span>
-    <a href="{% url 'apps:calendar_month' year=next_month.year month=next_month.month %}">
-        <img class="next" src="{% static 'images/icon-next.svg' %}" alt="次の月">
-    </a>
 </div>
+
 <div id="calendar"></div>
 
 <!-- スケジュール追加プラスボタン --> 

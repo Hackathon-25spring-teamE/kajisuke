@@ -11,21 +11,23 @@
 {% block header_title %}{% endblock %}  <!-- ここで空にする -->
 
 {% block content %}
-<nav>
-    <div class="nav-left">
-        <a href="{% url 'apps:calendar_redirect' %}">
-            <img src="{% static 'images/icon-calendar.svg' %}" alt="calendar-icon">
-        </a>
-        <img class="disable" src="{% static 'images/icon-list.svg' %}" alt="list-icon">
-    </div>
-    <div class="nav-right">
-        <a href="{% url 'apps:signout' %}">
-            <img src="{% static 'images/icon-signout.svg' %}" alt="signout-icon">
-        </a>   
-    </div>
-</nav>
+<div class="fixed-bar">
+    <nav>
+        <div class="nav-left">
+            <a href="{% url 'apps:calendar_redirect' %}">
+                <img src="{% static 'images/icon-calendar.svg' %}" alt="calendar-icon">
+            </a>
+            <img class="disable" src="{% static 'images/icon-list.svg' %}" alt="list-icon">
+        </div>
+        <div class="nav-right">
+            <a href="{% url 'apps:signout' %}">
+                <img src="{% static 'images/icon-signout.svg' %}" alt="signout-icon">
+            </a>   
+        </div>
+    </nav>
 
-<h2>スケジュール一覧</h2>
+    <h2>スケジュール一覧</h2>
+</div>
 
 <div class="list-container">
     {% for item in schedules_list %}
