@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
         image.addEventListener('click', function() {
             const scheduleId = image.getAttribute('data-completed-id');
             const isChecked = !image.src.includes('unchecked.svg');
-            const url = `/api/schedules/${scheduleId}/complete/${currentYear}/${currentMonth.toString().padStart(2, '0')}/${currentDay.toString().padStart(2, '0')}/`;
+            const url = `/api/schedules/${scheduleId}/complete/${currentYear}/${currentMonth}/${currentDay}/`;
             // 対応するtaskを取得
             const taskNameElement = document.querySelector(`p[data-task-id='${scheduleId}']`);
 
