@@ -138,6 +138,21 @@ class ScheduleEditAsNewView(LoginRequiredMixin, UpdateView):
         kwargs['user'] = self.request.user
         kwargs['task_category_id'] = schedule.task.task_category_id if schedule.task else None
         return kwargs
+    
+    def get_initial(self):
+        schedule = self.get_object()
+        initial = super().get_initial()
+        initial.update({
+            'start_date': schedule.start_date,
+            'task': schedule.task,
+            'task_category': schedule.task.task_category if schedule.task else None,
+            'memo': schedule.memo,
+            'frequency': schedule.frequency,
+            'interval': schedule.interval,
+            'day_of_week': schedule.day_of_week,
+            'nth_weekday': schedule.nth_weekday,
+        })
+        return initial
 
     def form_valid(self, form):
        # 上書き保存するだけ

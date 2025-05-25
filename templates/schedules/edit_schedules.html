@@ -51,7 +51,7 @@
         {{ form.task.as_hidden }}
     </div>
     <div>
-        <textarea name="memo" id="id_memo" class="memo" >{{ form.memo.value }}</textarea>
+        <textarea name="memo" id="id_memo" class="memo" >{{ form.memo.value|default_if_none:'' }}</textarea>
     </div>
     
     <!-- Hidden フィールドで値を渡す -->

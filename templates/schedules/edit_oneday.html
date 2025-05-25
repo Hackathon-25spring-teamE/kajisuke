@@ -42,7 +42,7 @@
 
     <div class="form-group">
         
-        <textarea  readonly class="background-color memo">{{ schedule.memo }}</textarea>
+        <textarea  readonly class="background-color memo">{{ schedule.memo|default_if_none:'' }}</textarea>
     </div>
 
 
