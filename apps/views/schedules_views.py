@@ -119,7 +119,7 @@ class ScheduleEditAsNewView(LoginRequiredMixin, UpdateView):
     form_class = ScheduleEditForm
     template_name = 'schedules/edit_schedules.html'
     pk_url_kwarg = 'schedule_id'
-    success_url = reverse_lazy('apps:calendar_redirect')
+    success_url = reverse_lazy('apps:schedules_list')
 
 
     def get_form_kwargs(self):
