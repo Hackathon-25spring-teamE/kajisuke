@@ -43,11 +43,10 @@ body {
 }
 
 .framework{
-   background-color: var(--background-color)!important;
-   height: 97%;
-   width: 95vw;
-
-   border-radius: 10px;
+    background-color: var(--background-color)!important;
+    height: 97%;
+    width: 95vw;
+    border-radius: 15px;
 }
 
 /* コンテンツのコンテナ */
