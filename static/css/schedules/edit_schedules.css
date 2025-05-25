@@ -7,7 +7,7 @@ h2 {
   font-size: 24px;
   font-weight: bold;
   color: var(--main-color);
-  margin-top: 40px;
+  margin-top: 20px;
   margin-bottom: 27px;
   text-align: center;
 }
@@ -88,7 +88,7 @@ select:disabled {
   display: flex; /* 横並びにする */
   width: 100%; /* コンテナ幅いっぱいにする */
   margin-top: 3px;
-  margin-bottom: 58px;
+  margin-bottom: 20px;
 }
 
 .frequency-buttons{
