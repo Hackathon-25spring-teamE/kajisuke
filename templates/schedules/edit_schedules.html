@@ -18,7 +18,7 @@
 
 <a href="javascript:history.back()" class="batsu"></a>
 
-<h2>スケジュール編集</h2>
+<h2>スケジュール設定編集</h2>
 
 <form method="post" name="edit-schedules-form">
     {% csrf_token %}
@@ -138,7 +138,7 @@
     <div class="modal-content">
         <p>繰り返し設定を変更しますか？</p>
         <button type="submit" class="submit1">はい</button>
-        <button type="button" id="edit-modal-cancel" class="submit2">キャンセル</button>
+        <button type="button" id="edit-modal-cancel" class="submit2">いいえ</button>
     </div>
 </div>
 </form>
@@ -146,7 +146,7 @@
 
 
 <!-- 削除トリガーボタン -->
-<button type="button" id="open-delete-modal" class="submit2">繰り返しスケジュールを削除</button>
+<button type="button" id="open-delete-modal" class="submit2">スケジュール設定を削除する</button>
 
 <!-- 削除確認モーダル -->
 <div id="delete-modal" class="modal hidden">
@@ -154,8 +154,8 @@
         <p>本当にこの繰り返しスケジュールを削除しますか？</p>
         <form method="post" action="{% url 'apps:schedule_soft_delete' schedule.id %}">
             {% csrf_token %}
-            <button type="submit" class="submit1">削除する</button>
-            <button type="button" id="cancel-delete" class="submit2">キャンセル</button>
+            <button type="submit" class="submit1">はい</button>
+            <button type="button" id="cancel-delete" class="submit2">いいえ</button>
         </form>
     </div>
 </div>
