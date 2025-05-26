@@ -38,7 +38,7 @@
     <div class="form-group-date">
         <label for="id_start_date" class="form-label">開始日</label>
         <input type="date" name="start_date" id="id_start_date" 
-            value="{{ schedule.start_date|date:'Y-m-d' }}" min="{{ today|date:'Y-m-d' }}">
+            value="{{ form.start_date.value|date:'Y-m-d' }}" min="{{ today|date:'Y-m-d' }}">
     </div>
     <!-- カテゴリ（読み取り専用で表示し、hiddenで送信） -->
     <div class="form-group">

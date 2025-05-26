@@ -220,6 +220,10 @@ class ScheduleEditForm(ScheduleForm):
             self.task_category_label = str(self.instance.task.task_category)
             self.task_label = str(self.instance.task)
 
+        # start_date に初期値がなければ instance.start_date を使う
+        if not self.fields['start_date'].initial:
+            self.fields['start_date'].initial = self.instance.start_date
+
 
 
 # 1日のみの予定を編集用のフォーム

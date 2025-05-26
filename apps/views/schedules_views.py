@@ -16,7 +16,7 @@ from zoneinfo import ZoneInfo
 
 from ..models import Schedule, Task, ExceptionalSchedule, CompletedSchedule
 from ..forms import ScheduleForm, ScheduleEditForm, ExceptionalScheduleForm
-from ..utils.schedule_utils import get_frequency_or_date
+from ..utils.schedule_utils import get_frequency_or_date, get_most_recent_reccurenced_date
 
 
 # 登録しているスケジュール一覧を表示
@@ -153,6 +153,13 @@ class ScheduleEditAsNewView(LoginRequiredMixin, UpdateView):
             'nth_weekday': schedule.nth_weekday,
         })
         return initial
+    
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        schedule = self.get_object()
+        today = date.today()
+        form.initial['start_date'] = get_most_recent_reccurenced_date(schedule, today)
+        return form
 
     def form_valid(self, form):
        # 上書き保存するだけ
