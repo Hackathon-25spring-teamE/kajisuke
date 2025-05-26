@@ -7,7 +7,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         scheduler = BlockingScheduler()
-        scheduler.add_job(insert_past_schedules, 'cron', hour=0, minute=27)
+        scheduler.add_job(insert_past_schedules, 'cron', hour=1, minute=7)
         self.stdout.write('Scheduler started.')
         try:
             scheduler.start()

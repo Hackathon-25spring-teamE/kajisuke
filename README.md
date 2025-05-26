@@ -129,3 +129,12 @@ poetry run python manage.py createsuperuser
 
 - [http://localhost:8000/admin](http://localhost:8000/admin)で管理画面が表示されます
 - superuser作成時に入力したemail, passwordでログインして下さい
+
+
+### APSchedulerの起動
+
+- 下記のカスタムコマンドで、設定されているAPSchedulerのスケジュールが起動・待機します
+- entrypoint.shにバックグラウンド実行で記載しているため、通常はコンテナ起動時に自動で動きます
+```bash
+poetry run python manage.py runapscheduler
+```
