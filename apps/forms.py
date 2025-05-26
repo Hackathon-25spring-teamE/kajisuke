@@ -142,7 +142,7 @@ class ScheduleForm(forms.ModelForm):
             monthly_option = self.data.get("monthly_option")
             if monthly_option == "by_date":
                 cleaned_data["day_of_week"] = None
-                cleaned_data["nth_weekday"] = None
+                cleaned_data["day_of_week"] = None
 
         return cleaned_data
 
@@ -156,10 +156,12 @@ class ScheduleForm(forms.ModelForm):
         self.user = user
         super().__init__(*args, **kwargs)
 
-        # frequencyが「なし」以外のときは interval の初期値を1に
-        frequency = self.data.get('frequency') or self.initial.get('frequency')
-        if frequency and frequency != 'NONE':  # ← 'none' はFREQUENCY_CHOICESの値に合わせてください
-            self.fields['interval'].initial = 1
+        
+        if not self.data:
+            frequency = self.initial.get('frequency') or (self.instance and self.instance.frequency)
+            interval = self.initial.get('interval') or (self.instance and self.instance.interval)
+            if frequency and frequency != 'NONE' and interval is None:
+                self.fields['interval'].initial = 1
 
         #  当日の日付を初期値に設定（ただし既に指定されていないときだけ上書きしないように）
         if not self.initial.get('start_date') and not self.data.get('start_date'):
@@ -223,6 +225,23 @@ class ScheduleEditForm(ScheduleForm):
         # start_date に初期値がなければ instance.start_date を使う
         if not self.fields['start_date'].initial:
             self.fields['start_date'].initial = self.instance.start_date
+
+
+
+        # start_date に初期値がなければ instance.start_date を使う
+        if not self.fields['start_date'].initial:
+            self.fields['start_date'].initial = self.instance.start_date
+            self.fields['day_of_week'].initial = self.instance.day_of_week
+            self.fields['nth_weekday'].initial = self.instance.nth_weekday
+            self.fields['frequency'].initial = self.instance.frequency
+            self.fields['interval'].initial = self.instance.interval
+            self.fields['memo'].initial = self.instance.memo
+            self.fields['start_date'].initial = self.instance.start_date
+
+        # intervalフィールドのinputにCSSクラスを追加
+        self.fields['interval'].widget.attrs.update({'class': 'interval'})
+
+
 
 
 
