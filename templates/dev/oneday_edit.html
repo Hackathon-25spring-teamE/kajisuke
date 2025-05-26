@@ -1,5 +1,6 @@
-{% extends 'base.html' %}
+{% extends 'schedules/mordal_base.html' %} 
 {% load static %}
+
 {% block title %}1日スケジュール編集 - Kajisuke{% endblock %}
 {% block description %}Kajisukeのスケジュール編集ページ{% endblock %}
 {% block extra_css %}
@@ -7,35 +8,41 @@
 
 <script src="/static/js/oneday_edit.js" defer></script>
 {% endblock %}
+
+{% block header_title %}{% endblock %}  <!-- ここで空にする -->
+
 {% block content %}
+
+<a href="javascript:history.back()" class="batsu"></a>
+
 <h2>この日のみの変更</h2>
 
 <form method="post" id="exception-form">
     {% csrf_token %}
 
-    <div class="form-group">
+    <div class="form-group-date">
         <label>予定日</label>
-        <input type="text" value="{{ form.initial.original_date }}" readonly class="form-control">
+        <input type="text" value="{{ form.initial.original_date }}" readonly class="background-color">
+    </div>
+
+    <div class="form-group-date">
+        <label>変更日</label>
+        <input type="date" name="modified_date" id="id_modified_date">
     </div>
 
     <div class="form-group">
-        <label>変更日</label><br>
-        <input type="date" name="modified_date" id="id_modified_date" class="form-control">
+        
+        <input type="text" value="{{ schedule.task.task_category.task_category_name }}" readonly class="background-color">
     </div>
 
     <div class="form-group">
-        <label>カテゴリー</label>
-        <input type="text" value="{{ schedule.task.task_category.task_category_name }}" readonly class="form-control">
+        
+        <input type="text" value="{{ schedule.task.task_name }}" readonly class="background-color">
     </div>
 
     <div class="form-group">
-        <label>家事</label>
-        <input type="text" value="{{ schedule.task.task_name }}" readonly class="form-control">
-    </div>
-
-    <div class="form-group">
-        <label>メモ</label>
-        <input type="text" value="{{ schedule.memo }}" readonly class="form-control">
+        
+        <textarea  readonly class="background-color memo">{{ schedule.memo }}</textarea>
     </div>
 
 

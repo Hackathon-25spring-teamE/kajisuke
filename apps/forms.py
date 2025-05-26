@@ -12,10 +12,10 @@ from .validators import validate_unique_email, validate_min_length_8, validate_h
 
 #サインアップ用フォーム
 class SignupForm(UserCreationForm):
-    user_name = forms.CharField(label="ユーザー名")
-    email = forms.EmailField(label="メールアドレス", validators=[validate_unique_email])
-    password1 = forms.CharField(label="パスワード", widget=forms.PasswordInput, validators=[validate_min_length_8, validate_has_digit, validate_has_uppercase])
-    password2 = forms.CharField(label="パスワード（確認用）", widget=forms.PasswordInput)
+    user_name = forms.CharField(label="ユーザー名", widget=forms.TextInput(attrs={'placeholder': 'name'}))
+    email = forms.EmailField(label="メールアドレス", validators=[validate_unique_email],widget=forms.EmailInput(attrs={'placeholder': 'E-mail'}))
+    password1 = forms.CharField(label="パスワード",  validators=[validate_min_length_8, validate_has_digit, validate_has_uppercase],widget=forms.PasswordInput(attrs={'placeholder': 'Password'}) )
+    password2 = forms.CharField(label="パスワード（確認用）", widget=forms.PasswordInput(attrs={'placeholder': 'Password(confirm)'}))
     
     class Meta:
         model = CustomUser
@@ -31,6 +31,14 @@ class SigninForm(AuthenticationForm):
         self.request = request
         super().__init__(request=request, *args, **kwargs)
         self.fields['username'].label = "メールアドレス"
+
+        # プレースホルダーを追加
+        self.fields['username'].widget.attrs.update({
+            'placeholder': 'E-mail'
+        })
+        self.fields['password'].widget.attrs.update({
+            'placeholder': 'Password'
+        })
     
     #メールアドレスかパスワードが間違っていた場合のエラー
     def clean(self):
@@ -75,8 +83,8 @@ JAPANESE_DAY_OF_WEEK_CHOICES = [
 ]
 
 class ScheduleForm(forms.ModelForm):
-    task_category = forms.ModelChoiceField(queryset=TaskCategory.objects.all(),required=True,label="カテゴリー")
-    task = forms.ModelChoiceField(queryset=Task.objects.none(), required=True,label="家事") # 初期状態は空
+    task_category = forms.ModelChoiceField(queryset=TaskCategory.objects.all(),required=True,label="--カテゴリー--")
+    task = forms.ModelChoiceField(queryset=Task.objects.none(), required=True,label="--家事--") # 初期状態は空
     frequency = forms.ChoiceField(choices=FREQUENCY_CHOICES,label="繰り返し設定",widget=forms.HiddenInput() ) # 見た目には表示しない（ボタンに置き換えるため）
     day_of_week = forms.ChoiceField(choices=JAPANESE_DAY_OF_WEEK_CHOICES, required=False)
 
@@ -94,7 +102,7 @@ class ScheduleForm(forms.ModelForm):
     }
         widgets = {
             'memo': forms.Textarea(attrs={
-                'placeholder': 'メモ',
+                'placeholder': '--メモ--',
                 'rows': 3  # 高さの調整（任意）
             }),
         }
@@ -176,7 +184,7 @@ class ScheduleForm(forms.ModelForm):
 
         if user:
             self.fields['task_category'].queryset = TaskCategory.objects.all()
-            self.fields['task_category'].empty_label = 'カテゴリ'
+            self.fields['task_category'].empty_label = '--カテゴリー--'
 
             if task_category_id:
                 tasks = Task.objects.filter(
@@ -185,13 +193,13 @@ class ScheduleForm(forms.ModelForm):
                     is_active=True,
                 )
                 self.fields['task'].queryset = tasks
-                self.fields['task'].empty_label = '家事'
+                self.fields['task'].empty_label = '--家事--'
             else:
                 self.fields['task'].queryset = Task.objects.none()
-                self.fields['task'].empty_label = '家事'
+                self.fields['task'].empty_label = '--家事--'
         else:
             self.fields['task'].queryset = Task.objects.none()
-            self.fields['task'].empty_label = '家事'
+            self.fields['task'].empty_label = '--家事--'
 
 
 
@@ -211,6 +219,10 @@ class ScheduleEditForm(ScheduleForm):
             # 表示用のラベル
             self.task_category_label = str(self.instance.task.task_category)
             self.task_label = str(self.instance.task)
+
+        # start_date に初期値がなければ instance.start_date を使う
+        if not self.fields['start_date'].initial:
+            self.fields['start_date'].initial = self.instance.start_date
 
 
 

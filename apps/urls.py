@@ -20,7 +20,7 @@ app_name = "apps"
 
 urlpatterns = [
     # テスト用ページ
-    path('', hello_world, name="hello_world"),
+    path('', redirect_to_current_calendar, name="calendar_redirect"),
     # 認証機能
     path('signup/', SignupView.as_view(), name='signup'),
     path('signin/', SigninView.as_view(), name='signin'),

@@ -1,66 +1,163 @@
-{% extends "base.html" %}
+{% extends 'schedules/mordal_base.html' %}
 {% load static %}
 
-{% block title %}スケジュール作成 - Kajisuke{% endblock %}
-{% block description %}Kajisukeのスケジュール変更・削除{% endblock %}
+{% block title %}繰り返しスケジュール編集 - Kajisuke{% endblock %}
+{% block description %}Kajisukeのスケジュール編集ページ{% endblock %}
 {% block extra_css %}
 <link href="{% static 'css/schedules/edit_schedules.css' %}" rel="stylesheet">
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="/static/js/schedule_form.js" defer></script>
+<script src="/static/js/schedule_edit.js" defer></script>
 {% endblock %}
 
 {% block header_title %}{% endblock %}  <!-- ここで空にする -->
 
 {% block content %}
 
-        <span class="batsu"></span>
+<a href="javascript:history.back()" class="batsu"></a>
 
-    <h2>スケジュール設定変更</h2>
+<h2>スケジュール設定編集</h2>
+
+<form method="post" name="edit-schedules-form">
+    {% csrf_token %}
+    {% if form.errors %}
+    <ul class="errorlist">
+        {% for field in form %}
+        {% for error in field.errors %}
+        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+        {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <div class="form-group-date">
+        <label for="id_start_date" class="form-label">開始日</label>
+        <input type="date" name="start_date" id="id_start_date" 
+            value="{{ form.start_date.value|date:'Y-m-d' }}" min="{{ today|date:'Y-m-d' }}">
+    </div>
+    <!-- カテゴリ（読み取り専用で表示し、hiddenで送信） -->
+    <div class="form-group">
+        <input type="text" value="{{ form.task_category_label }}" disabled>
+        {{ form.task_category.as_hidden }}
+    </div>
+    <!-- 家事（読み取り専用で表示し、hiddenで送信） -->
+    <div class="form-group">
+        <input type="text" value="{{ form.task_label }}" disabled>
+        {{ form.task.as_hidden }}
+    </div>
+    <div>
+        <textarea name="memo" id="id_memo" class="memo" >{{ form.memo.value|default_if_none:'' }}</textarea>
+    </div>
     
-    <form action="/schedule" method="post" name="edit-schedules-form">
-        
-        <!-- 開始日 -->
-        <div class="form-group-date">
-            <label for="start-date">開始日</label>
-            <input type="date" id="start-date" name="start-date" value="{{ schedule.start_date|default:'' }}">
+    <!-- Hidden フィールドで値を渡す -->
+    {{ form.frequency }}
+    <!-- frequency をボタンで選択 -->
+    <div id="frequency-buttons">
+        <label>繰り返し設定</label>
+        <div class="repeat-options">
+            <button type="button" class="frequency-buttons" data-value="NONE">なし</button>
+            <button type="button" class="frequency-buttons" data-value="DAILY">毎日</button>
+            <button type="button" class="frequency-buttons" data-value="WEEKLY">毎週</button>
+            <button type="button" class="frequency-buttons" data-value="MONTHLY">毎月</button>
+            <button type="button" class="frequency-buttons" data-value="YEARLY">毎年</button>
         </div>
-
-        <!-- カテゴリー -->
-        <div class="form-group">
-            <select id="category" name="category" disabled>
-                <option value="{{ schedule.category }}" selected>登録済カテゴリーを表示する{{ schedule.category }}</option>
-            </select>
+    </div>
+    
+    <!-- frequency に応じて表示する項目 -->
+    <div id="frequency-extra-fields">
+        <div id="interval-field" class="margin10">
+            <input type="number" name="interval" id="id_interval" min="1" class="interval">
+            <span class="field-help" id="interval-help"></span>
         </div>
-
-        <!-- 家事 -->
-        <div class="form-group">
-            <select id="task" name="task" disabled>
-                <option value="{{ schedule.category.task }}"selected>登録済家事を表示する{{ schedule.category.task }}</option>
-            </select>
-        </div> 
-
-        <!-- メモ欄 -->
-        <div>
-            <textarea class="memo" rows="2" name="memo">{{ schedule.memo|default:'メモが未入力です' }}</textarea>
+        <div id="day-of-week-field">
+            <label class="day-label" data-day="MO"><input type="radio" name="day_of_week" value="MO" id="day-MO">
+                月曜日</label>
+            <label class="day-label" data-day="TU"><input type="radio" name="day_of_week" value="TU" id="day-TU">
+                火曜日</label>
+            <label class="day-label" data-day="WE"><input type="radio" name="day_of_week" value="WE" id="day-WE">
+                水曜日</label>
+            <label class="day-label" data-day="TH"><input type="radio" name="day_of_week" value="TH" id="day-TH">
+                木曜日</label>
+            <label class="day-label" data-day="FI"><input type="radio" name="day_of_week" value="FI" id="day-FI">
+                金曜日</label>
+            <label class="day-label" data-day="SA"><input type="radio" name="day_of_week" value="SA" id="day-SA">
+                土曜日</label>
+            <label class="day-label" data-day="SU"><input type="radio" name="day_of_week" value="SU" id="day-SU">
+                日曜日</label>
+            <span class="field-help" id="day-of-week-help"></span>
         </div>
-
-        <!-- 繰り返し設定 -->
-        <div id="repeat-form">
-            <label>繰り返し設定</label>
-                <div class="repeat-options">
-                    <input type="radio" name="frequency" value="NONE" id="NONE" checked>
-                        <label for="NONE">なし</label>
-                    <input type="radio" name="frequency" value="DAILY" id="DAILY">
-                        <label for="DAILY">毎日</label>
-                    <input type="radio" name="frequency" value="WEEKLY" id="WEEKLY">
-                        <label for="WEEKLY">毎週</label>
-                    <input type="radio" name="frequency" value="MONTHLY" id="MONTHLY">
-                        <label for="MONTHLY">毎月</label>
-                    <input type="radio" name="frequency" value="YEARLY" id="YEARLY">
-                        <label for="YEARLY">毎年</label>
+        <div id="nth-weekday-field">
+            <!-- 毎月オプション -->
+            <div class="monthly-options">
+                <div class="margin10">
+                    <label>
+                        <input type="radio" name="monthly_option" value="by_date" checked>
+                        <span id="monthly-date-info" class="field-help"></span>
+                    </label>
                 </div>
 
-    <!-- スケジュール登録ボタン -->
-    <button class="submit1">スケジュール設定を変更する</button>
-    <button class="submit2">スケジュール設定を削除する</button>
+                <label>
+                    <input type="radio" name="monthly_option" value="by_weekday">
+                    <span id="monthly-weekday-info" class="field-help"></span>
+                </label>
+
+                <div id="monthly-nth-weekday-selects">
+                    {{ form.nth_weekday }}<br>
+                </div>
+                <span class="field-help" id="nth-weekday-help"></span>
+            </div>
+
+            <!-- 毎年オプション -->
+            <div class="yearly-options">
+                <div class="margin10">
+                    <label>
+                        <input type="radio" name="yearly_option" value="by_date" checked>
+                        <span id="yearly-date-info" class="field-help"></span>
+                    </label>
+                </div>
+
+                <label>
+                    <input type="radio" name="yearly_option" value="by_weekday">
+                    <span id="yearly-weekday-info" class="field-help"></span>
+                </label>
+
+                <div id="yearly-nth-weekday-selects">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- スケジュール設定を変更するボタン -->
+    <button type="button" class="submit1" id="open-edit-modal">スケジュール設定を変更する</button>
+   <!-- スケジュール設定変更確認用モーダル -->
+<div id="edit-confirmation-modal" class="modal hidden">
+    <div class="modal-content">
+        <p>繰り返し設定を変更しますか？</p>
+        <button type="submit" class="submit1">はい</button>
+        <button type="button" id="edit-modal-cancel" class="submit2">いいえ</button>
+    </div>
+</div>
 </form>
+
+
+
+<!-- 削除トリガーボタン -->
+<button type="button" id="open-delete-modal" class="submit2">スケジュール設定を削除する</button>
+
+<!-- 削除確認モーダル -->
+<div id="delete-modal" class="modal hidden">
+    <div class="modal-content">
+        <p>本当にこの繰り返しスケジュールを削除しますか？</p>
+        <form method="post" action="{% url 'apps:schedule_soft_delete' schedule.id %}">
+            {% csrf_token %}
+            <button type="submit" class="submit1">はい</button>
+            <button type="button" id="cancel-delete" class="submit2">いいえ</button>
+        </form>
+    </div>
+</div>
 
 {% endblock %}

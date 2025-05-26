@@ -1,32 +1,4 @@
-/* -------------------------------------------
-　　右上閉じるボタン
-------------------------------------------- */
-.batsu {
-  position: absolute;
-  top: 14px; /* 画面最上部から16px - h2との距離2pxを考慮 */
-  right: 20px; /* 画面右端から20pxの位置 */
-  width: 24px;
-  height: 24px;
-}
 
-.batsu::before,
-.batsu::after { /* 共通設定 */
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 4px; /* 棒の幅（太さ） */
-  height: 30px; /* 棒の高さ */
-  background: #5D2F1A;
-}
-
-.batsu::before {
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.batsu::after {
-  transform: translate(-50%, -50%) rotate(-45deg);
-}
 
 /* -------------------------------------------
 　　タイトル表示（スケジュール登録）
@@ -35,7 +7,7 @@ h2 {
   font-size: 24px;
   font-weight: bold;
   color: var(--main-color);
-  margin-top: 40px;
+  margin-top: 30px;
   margin-bottom: 27px;
   text-align: center;
 }
@@ -116,14 +88,10 @@ select:disabled {
   display: flex; /* 横並びにする */
   width: 100%; /* コンテナ幅いっぱいにする */
   margin-top: 3px;
-  margin-bottom: 58px;
+  margin-bottom: 20px;
 }
 
-.repeat-options input[type="radio"] {
-  display: none; /* デフォルトのラジオボタンを非表示 */
-}
-
-.repeat-options label {
+.frequency-buttons{
   width: 20%; /* 5つのボタンが均等に並ぶように */
   padding: 10px;
   background-color: #FFFFFF; /* デフォルトの背景色 */
@@ -132,10 +100,17 @@ select:disabled {
   cursor: pointer;
 }
 
-/* 選択されている場合のスタイル */
-.repeat-options input[type="radio"]:checked+label {
-  background-color: var(--primary-color);
-  color: white;
+.frequency-buttons.selected {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.margin20{
+  margin: 0px 0px 20px;
+}
+
+.margin10{
+  margin: 0px 0px 10px;
 }
 
 /* -------------------------------------------
