@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 from dateutil.relativedelta import relativedelta
 from apscheduler.schedulers.background import BackgroundScheduler
 from .models import PastSchedule, Schedule, ExceptionalSchedule
-from .utils.calendar_utils import get_reccureced_dates
+from .utils.calendar_utils import get_recurrenced_and_exceptional_dates
 
 
 # loggerの設定
@@ -40,7 +40,7 @@ def insert_past_schedules():
         
         # 3.各schedule毎に、繰り返し設定からyesterday期間（1日）のスケジュールを生成
         for item in schedules:
-            date_list = get_reccureced_dates(
+            date_list = get_recurrenced_and_exceptional_dates(
                 item, 
                 exptional_schedules, 
                 yesterday, 

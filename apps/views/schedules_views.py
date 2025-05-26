@@ -14,8 +14,7 @@ from django.views import View
 from django.shortcuts import redirect
 from zoneinfo import ZoneInfo
 
-
-from ..models import Schedule, Task, ExceptionalSchedule
+from ..models import Schedule, Task, ExceptionalSchedule, CompletedSchedule
 from ..forms import ScheduleForm, ScheduleEditForm, ExceptionalScheduleForm
 from ..utils.schedule_utils import get_frequency_or_date
 
@@ -224,8 +223,49 @@ class ScheduleSoftDeleteView(LoginRequiredMixin, View):
         messages.success(request, "スケジュールを削除しました。")
         return redirect(reverse('apps:calendar_redirect'))
 
-# スケジュール実施・未実施
 
-# 登録しているスケジュール表示
 
-# 昨日のスケジュールをpast_schedulesへ登録（バッチ処理）
+# スケジュールの実施・未実施の変更
+@login_required
+def complete_schedule(request, schedule_id, year, month, day):
+    completed_date = date(year, month, day)
+    # 対象ユーザーとschedule_idでscheduleを取得→存在しなければエラーを返す
+    try:
+        schedule = Schedule.objects.get(
+            id=schedule_id,
+            user=request.user,
+        )
+    except Schedule.DoesNotExist:
+        return JsonResponse({'error': 'Invalid request'}, status=400)
+
+    # completed_schedulesから対象条件のレコードを取得
+    try:
+        completed_record = CompletedSchedule.objects.get(
+            schedule_id=schedule_id, 
+            schedule_date=completed_date,
+        )
+    except CompletedSchedule.DoesNotExist:
+        completed_record = None
+
+    # POSTであれば、completed_schedulesにレコードを追加
+    if request.method == 'POST':
+        if completed_record is None:
+            try:
+                completed_schedule = CompletedSchedule(
+                    schedule_id=schedule_id,
+                    schedule_date=completed_date, 
+                )
+                completed_schedule.save()
+            except:
+                return JsonResponse({'error': 'failed to complete'}, status=400)
+        
+        return JsonResponse({'status': 'completed'}, status=200)
+    
+    # DELETEであれば、completed_schedulesのレコードを削除          
+    elif request.method == 'DELETE':
+        if completed_record:
+            completed_record.delete()
+        return JsonResponse({'status': 'not_completed'}, status=200)
+    
+    # 上記以外はエラー
+    return JsonResponse({'error': 'Invalid request'}, status=400)

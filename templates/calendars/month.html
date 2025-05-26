@@ -12,8 +12,8 @@
 
 <!-- month.js用にカレンダーの現在の年月、その月の祝日を定義 -->
 <script defer>
-    const current_year = "{{ current_month.year }}";
-    const current_month = "{{ current_month.month }}";
+    const currentYear = "{{ current_month.year }}";
+    const currentMonth = "{{ current_month.month }}";
     const holidays = {{ holidays|safe }};
 </script>
 {% endblock %}
