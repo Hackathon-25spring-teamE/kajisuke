@@ -5,14 +5,12 @@
     position: sticky;
     top: 0;
     background-color: var(--background-color);
-    z-index: 10;
 }
 
 /* -------------------------------------------
   ナビゲーションアイコン
 ------------------------------------------- */
 nav {
-    width: 90%;
     display: flex;
     justify-content: space-between; /* 左右の要素を分ける */
     align-items: center; /* アイコンを中央揃え */
@@ -39,8 +37,6 @@ h2 {
     font-size: 24px;
     font-weight: 900;
     color: var(--text-color);
-    margin-top: 67px;
-    margin-bottom: 40px;
     text-align: center;
 }
 
@@ -48,8 +44,6 @@ h2 {
 　　プロフイール
 ------------------------------------------- */
 .profile-container {
-    max-width: 420px;
-    padding: 20px;
     display: block; /* ブロック要素として設定 */
     padding: 23px 0px 23px 30px;
     background-color:var(--secondary-color);
@@ -63,10 +57,9 @@ p{
     line-height: 2.5;
     margin-top: 0px;
     margin-bottom: 10px;
-    
 }
 
-.myacount{
-    color: #000000;
+/*.myacount{
+    color:var(--textcolor2);
     font-weight: 500;
-}
+}*/
