@@ -28,12 +28,6 @@ services:
       - uwsgi_sock:/app/uwsgi.sock
     depends_on:
       - web
-    logging:
-      driver: awslogs
-      options:
-        awslogs-group: my-nginx-logs
-        awslogs-region: ap-northeast-1
-        awslogs-stream-prefix: nginx
 
 volumes:
   static_volume:
