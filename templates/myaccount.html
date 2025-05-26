@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}マイアカウント - Kajisuke{% endblock %}
+{% block description %}Kajisukeのマイアカウントページ{% endblock %}
+{% block extra_css %}
+<link href="{% static 'css/myaccount.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block header_title %}{% endblock %}  <!-- ここで空にする -->
+
+{% block content %}
+<div class="fixed-bar">
+    <nav>
+        <div class="nav-left">
+            <a href="{% url 'apps:calendar_redirect' %}">
+                <img src="{% static 'images/icon-calendar.svg' %}" alt="calendar-icon">
+            </a>
+            <a href="{% url 'apps:schedules_list' %}">
+                <img src="{% static 'images/icon-list.svg' %}" alt="list-icon">
+            </a>
+        </div>
+        <div class="nav-right">
+            <a href="{% url 'apps:signout' %}">
+                <img src="{% static 'images/icon-signout.svg' %}" alt="signout-icon">
+            </a>   
+        </div>
+    </nav>
+</div>
+
+    <h2>マイアカウント</h2> 
+        <div class="profile-container">
+            <p><strong>ユーザー名</strong></p><p class="myaccount">ここなっつ</p>
+            <p><strong>メールアドレス</strong></p><p class="myaccount">coconatsu@example.com</p>
+        </div>
+
+    <!-- 家事すけロゴ --> 
+    <div>
+        <img class="logo" src="{% static 'images/kajisuke.svg' %}" alt="Kaji suke">
+    </div>
+
+{% endblock %}
