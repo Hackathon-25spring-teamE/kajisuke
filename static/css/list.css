@@ -10,7 +10,7 @@
 /* -------------------------------------------
   ナビゲーションアイコン
 ------------------------------------------- */
-nav {
+nav {   
     display: flex;
     justify-content: space-between; /* 左右の要素を分ける */
     align-items: center; /* アイコンを中央揃え */
@@ -29,30 +29,19 @@ nav {
     align-items: center;
 }
 
+.disable {
+  opacity: 0.6;
+}
+
 /* -------------------------------------------
-  日付表示部分
+  タイトル部分
 ------------------------------------------- */
-.calendar-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px; /* 各要素の間隔を調整 */
-    padding-bottom: 20px;
-}
 
-.calendar-nav-sub {
-    font-size: 15px;
-    font-weight: bold;
-    color: var(--secondary-color);
-}
-
-.calendar-nav-center {
+h2 {
     font-size: 24px;
     font-weight: bold;
-}
-
-.prev, .next {
-    width: 35px;
+    padding-bottom: 20px;
+    text-align: center;
 }
 
 /* -------------------------------------------
@@ -64,8 +53,7 @@ nav {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin-bottom: 50px;
-
+  margin-bottom: 100px;
 }
 
 .item {
@@ -80,11 +68,6 @@ nav {
   justify-content: space-between;
   width: 90%;
   margin: 6px 0;
-}
-
-.item-completed {
-  display: flex;
-  align-items: center;
 }
 
 .item-category {
@@ -113,7 +96,7 @@ nav {
   flex-direction: column;
   justify-content: center;
   gap: 4px;
-  width: 60%;
+  width: 70%;
 }
 
 .item-task-name {
@@ -122,14 +105,15 @@ nav {
   color: var(--text-color2);
 }
 
+.item-task-freq {
+  font-size: 12px;
+  font-weight: 600;
+}
+
 .item-task-memo {
   font-size: 12px;
   font-weight: 400;
   color: var(--text-color2);
-}
-
-.item-edit-uneditable {
-  opacity: 0.6;
 }
 
 /* -------------------------------------------

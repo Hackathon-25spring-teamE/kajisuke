@@ -34,7 +34,7 @@ def insert_past_schedules():
             ).filter(
             Q(original_date=yesterday.date()) | 
             Q(modified_date=yesterday.date()) 
-            )
+            ).order_by('id') 
         
         insert_data = []
         
