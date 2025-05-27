@@ -41,7 +41,7 @@ body {
 /* コンテンツのコンテナ */
 .container {
     width: 90%;
-    max-width: 400px; /* スマホ向けの最大幅を制限 */
+    max-width: 450px; /* スマホ向けの最大幅を制限 */
     margin: 0 auto;
     text-align: center;
 }
