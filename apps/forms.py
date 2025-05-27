@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 from django.db.models import Q
 from django.utils import timezone
 from django.utils.timezone import now
+from django.utils.dateparse import parse_date
 
 from .models import CustomUser, Schedule, Task, TaskCategory, ExceptionalSchedule
 from .validators import validate_unique_email, validate_min_length_8, validate_has_digit, validate_has_uppercase
@@ -146,7 +147,8 @@ class ScheduleForm(forms.ModelForm):
 
         return cleaned_data
 
-    def __init__(self, *args, user=None, task_category_id=None, **kwargs):
+    def __init__(self, *args, user=None, task_category_id=None, request=None, **kwargs):
+        self.request = request
         # userが文字列ならCustomUserを取得
         if isinstance(user, str):
             try:
@@ -156,16 +158,22 @@ class ScheduleForm(forms.ModelForm):
         self.user = user
         super().__init__(*args, **kwargs)
 
-        
+        #  開始日: リンクからの ?date= を使う処理 ---
+        today = now().date()
+        if not self.data.get('start_date'):  # POSTによるユーザー入力がなければ
+            date_str = request.GET.get('date') if request else None
+            parsed_date = parse_date(date_str) if date_str else None
+            if parsed_date and parsed_date >= today:
+                self.initial.setdefault('start_date', parsed_date)
+            else:
+                self.initial.setdefault('start_date', today)
+
+        # 繰り返し頻度が設定されているが間隔が未指定の場合は初期値1をセット 
         if not self.data:
             frequency = self.initial.get('frequency') or (self.instance and self.instance.frequency)
             interval = self.initial.get('interval') or (self.instance and self.instance.interval)
             if frequency and frequency != 'NONE' and interval is None:
                 self.fields['interval'].initial = 1
-
-        #  当日の日付を初期値に設定（ただし既に指定されていないときだけ上書きしないように）
-        if not self.initial.get('start_date') and not self.data.get('start_date'):
-            self.initial['start_date'] = now().date()
 
         #カスタムウェジェット
         #今日より前の日付は選べないように制限
@@ -183,7 +191,7 @@ class ScheduleForm(forms.ModelForm):
         except (TypeError, ValueError):
             task_category_id = None
 
-
+        # ユーザー独自の家事とデフォルトをフィルタリング
         if user:
             self.fields['task_category'].queryset = TaskCategory.objects.all()
             self.fields['task_category'].empty_label = '--カテゴリー--'

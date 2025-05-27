@@ -86,7 +86,7 @@ class ScheduleCreateView(LoginRequiredMixin, CreateView):
         return initial
     
     def get_form_kwargs(self):
-        """フォームにログインユーザーを渡す"""
+        """フォームにログインユーザー・カテゴリ。リクエストを渡す"""
         kwargs = super().get_form_kwargs()
 
         user = self.request.user
@@ -95,6 +95,7 @@ class ScheduleCreateView(LoginRequiredMixin, CreateView):
             user = user._wrapped
 
         kwargs['user'] = user
+        kwargs['request'] = self.request
         task_category_id = self.request.POST.get('task_category') or self.request.GET.get('task_category')
         kwargs['task_category_id'] = task_category_id
         return kwargs
