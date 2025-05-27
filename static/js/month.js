@@ -3,14 +3,14 @@ document.addEventListener('DOMContentLoaded', function() {
   const calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: 'dayGridMonth',
     // month.htmlで定義した年月を初期表示に設定
-    initialDate: `${current_year}-${current_month.toString().padStart(2, '0')}-01`, 
+    initialDate: `${currentYear}-${currentMonth.toString().padStart(2, '0')}-01`, 
     // headerToolbar: {
     //     left: 'prev',
     //     center: 'title',
     //     right: 'next'
     //     },
     headerToolbar: false,
-    events: '/api/schedules',   // スケジュールリストのリクエスト
+    events: '/api/schedules/',   // スケジュールリストのリクエスト
     timeZone: "Asia/Tokyo",
     locale: "jp",
     displayEventTime: false,  // 時間表示を消す設定

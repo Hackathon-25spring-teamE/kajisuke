@@ -1,15 +1,25 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block title %}スケジュール作成 - Kajisuke{% endblock %}
+{% block description %}Kajisukeのスケジュール作成ページ{% endblock %}
 {% block extra_css %}
+<link href="{% static 'css/schedules/create.css' %}" rel="stylesheet">
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
 
 <script src="/static/js/schedule_form.js" defer></script>
 {% endblock %}
 
+{% block header_title %}{% endblock %}  <!-- ここで空にする -->
+
 {% block content %}
-<h3>スケジュール登録</h3>
-<form method="post">
+
+<a href="javascript:history.back()" class="batsu"></a>
+
+<h2>スケジュール登録</h2>
+
+<form action="{% url 'apps:schedules_create' %}" method="post">
     {% csrf_token %}
     {% if form.errors %}
     <ul class="errorlist">
@@ -23,25 +33,45 @@
         {% endfor %}
     </ul>
     {% endif %}
-    <!-- task_category と task の選択 -->
-    {{ form.start_date.label_tag }}{{ form.start_date }}<br>
-    {{ form.task_category }}<br>
-    {{ form.task }}<br>
-    {{ form.memo }}<br>
-    <!-- frequency をボタンで選択 -->
-    <div id="frequency-buttons">
-        <label>繰り返し設定:</label><br>
-        <button type="button" data-value="NONE">なし</button>
-        <button type="button" data-value="DAILY">毎日</button>
-        <button type="button" data-value="WEEKLY">毎週</button>
-        <button type="button" data-value="MONTHLY">毎月</button>
-        <button type="button" data-value="YEARLY">毎年</button>
+    <!-- 開始日 -->
+    <div class="form-group-date">
+        <label for="id_start_date">開始日</label>
+        {{ form.start_date }}
     </div>
+    
+    <!-- カテゴリー -->
+    <div class="form-group">
+        {{ form.task_category }}
+    </div>
+    
+    <!-- 家事 -->
+    <div class="form-group">
+    {{ form.task }}
+    </div>
+
+    <!-- メモ欄 -->
+    <div>
+        <textarea class="memo" rows="2" name="memo" id="id_memo" placeholder="メモ欄"></textarea>
+    </div>
+
+    <!-- 繰り返し設定 -->
     <!-- Hidden フィールドで値を渡す -->
     {{ form.frequency }}
+    <!-- frequency をボタンで選択 -->
+    <div id="frequency-buttons">
+        <label>繰り返し設定</label>
+        <div class="repeat-options">
+            <button type="button" class="frequency-buttons" data-value="NONE">なし</button>
+            <button type="button" class="frequency-buttons" data-value="DAILY">毎日</button>
+            <button type="button" class="frequency-buttons" data-value="WEEKLY">毎週</button>
+            <button type="button" class="frequency-buttons" data-value="MONTHLY">毎月</button>
+            <button type="button" class="frequency-buttons" data-value="YEARLY">毎年</button>
+        </div>
+    </div>
+    
     <!-- frequency に応じて表示する項目 -->
     <div id="frequency-extra-fields">
-        <div id="interval-field">
+        <div id="interval-field" class="margin10">
             <label>間隔: <input type="number" name="interval" id="id_interval" min="1"></label>
             <span class="field-help" id="interval-help"></span>
         </div>
@@ -64,29 +94,33 @@
         </div>
         <div id="nth-weekday-field">
             <!-- 毎月オプション -->
-            <div class="monthly-options repeat-options">
-                <label>
-                    <input type="radio" name="monthly_option" value="by_date" checked>
-                    <span id="monthly-date-info" class="field-help"></span>
-                </label><br>
+            <div class="monthly-options">
+                <div class="margin10">
+                    <label>
+                        <input type="radio" name="monthly_option" value="by_date" checked>
+                        <span id="monthly-date-info" class="field-help"></span>
+                    </label>
+                </div>
 
                 <label>
                     <input type="radio" name="monthly_option" value="by_weekday">
                     <span id="monthly-weekday-info" class="field-help"></span>
                 </label>
 
-                <div id="monthly-nth-weekday-selects">
+                <div id="monthly-nth-weekday-selects" >
                     {{ form.nth_weekday }}<br>
                 </div>
                 <span class="field-help" id="nth-weekday-help"></span>
             </div>
 
             <!-- 毎年オプション -->
-            <div class="yearly-options repeat-options">
-                <label>
-                    <input type="radio" name="yearly_option" value="by_date" checked>
-                    <span id="yearly-date-info" class="field-help"></span>
-                </label><br>
+            <div class="yearly-options">
+                <div class="margin10">
+                    <label>
+                        <input type="radio" name="yearly_option" value="by_date" checked>
+                        <span id="yearly-date-info" class="field-help"></span>
+                    </label>
+                </div>
 
                 <label>
                     <input type="radio" name="yearly_option" value="by_weekday">
@@ -96,11 +130,10 @@
                 <div id="yearly-nth-weekday-selects">
                 </div>
             </div>
-
         </div>
-    </div>
-    <br>
-    <button type="submit">登録</button>
+    </div><br>
+    <!-- スケジュール登録ボタン -->
+    <button type="submit" class="submit1">スケジュールを登録する</button>
 </form>
 
 {% endblock %}

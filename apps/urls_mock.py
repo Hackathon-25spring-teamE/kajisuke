@@ -13,4 +13,5 @@ urlpatterns = [
     path('schedules/id', mock_edit_schedule, name="mock_edit_schedule"),
     path('schedules/', mock_schedule_list, name="mock_schedule_list"),
     path('', mock_hello_world, name="mock_hello_world"),
+    path('myaccount/', mock_myaccount, name="mock_myaccount"),
 ]

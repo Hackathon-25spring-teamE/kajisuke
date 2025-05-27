@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
+from django.utils.dateparse import parse_date
 from django.db.models import Q, Case, When, Value, IntegerField
 from django.shortcuts import get_object_or_404, redirect, render
 from datetime import date
@@ -14,10 +14,9 @@ from django.views import View
 from django.shortcuts import redirect
 from zoneinfo import ZoneInfo
 
-
-from ..models import Schedule, Task, ExceptionalSchedule
+from ..models import Schedule, Task, ExceptionalSchedule, CompletedSchedule
 from ..forms import ScheduleForm, ScheduleEditForm, ExceptionalScheduleForm
-from ..utils.schedule_utils import get_frequency_or_date
+from ..utils.schedule_utils import get_frequency_or_date, get_most_recent_reccurenced_date
 
 
 # 登録しているスケジュール一覧を表示
@@ -73,9 +72,19 @@ def schedules_list(request):
 class ScheduleCreateView(LoginRequiredMixin, CreateView):
     model = Schedule
     form_class = ScheduleForm
-    template_name = 'dev/schedule_create.html'
-    success_url = reverse_lazy('apps:hello_world')  # スケジュール一覧などに遷移
+    template_name = 'schedules/create.html'
+    success_url = reverse_lazy('apps:calendar_redirect')  # スケジュール一覧などに遷移
 
+    def get_initial(self):
+        """URLパラメータから開始日を初期値として設定"""
+        initial = super().get_initial()
+        date_str = self.request.GET.get('date')
+        if date_str:
+            parsed_date = parse_date(date_str)
+            if parsed_date:
+                initial['start_date'] = parsed_date
+        return initial
+    
     def get_form_kwargs(self):
         """フォームにログインユーザーを渡す"""
         kwargs = super().get_form_kwargs()
@@ -118,9 +127,9 @@ def load_tasks(request):
 class ScheduleEditAsNewView(LoginRequiredMixin, UpdateView):
     model = Schedule
     form_class = ScheduleEditForm
-    template_name = 'dev/schedule_edit.html'
+    template_name = 'schedules/edit_schedules.html'
     pk_url_kwarg = 'schedule_id'
-    success_url = reverse_lazy('apps:calendar_redirect')
+    success_url = reverse_lazy('apps:schedules_list')
 
 
     def get_form_kwargs(self):
@@ -129,6 +138,28 @@ class ScheduleEditAsNewView(LoginRequiredMixin, UpdateView):
         kwargs['user'] = self.request.user
         kwargs['task_category_id'] = schedule.task.task_category_id if schedule.task else None
         return kwargs
+    
+    def get_initial(self):
+        schedule = self.get_object()
+        initial = super().get_initial()
+        initial.update({
+            'start_date': schedule.start_date,
+            'task': schedule.task,
+            'task_category': schedule.task.task_category if schedule.task else None,
+            'memo': schedule.memo,
+            'frequency': schedule.frequency,
+            'interval': schedule.interval,
+            'day_of_week': schedule.day_of_week,
+            'nth_weekday': schedule.nth_weekday,
+        })
+        return initial
+    
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        schedule = self.get_object()
+        today = date.today()
+        form.initial['start_date'] = get_most_recent_reccurenced_date(schedule, today)
+        return form
 
     def form_valid(self, form):
        # 上書き保存するだけ
@@ -143,8 +174,7 @@ class ScheduleEditAsNewView(LoginRequiredMixin, UpdateView):
 class ExceptionalScheduleCreateView(LoginRequiredMixin, CreateView):
     model = ExceptionalSchedule
     form_class = ExceptionalScheduleForm
-    template_name = 'dev/oneday_edit.html'
-    pk_url_kwarg = 'schedule_id'
+    template_name = 'schedules/edit_oneday.html'
     success_url = reverse_lazy('apps:calendar_redirect')
 
     def dispatch(self, request, *args, **kwargs):
@@ -224,8 +254,49 @@ class ScheduleSoftDeleteView(LoginRequiredMixin, View):
         messages.success(request, "スケジュールを削除しました。")
         return redirect(reverse('apps:calendar_redirect'))
 
-# スケジュール実施・未実施
 
-# 登録しているスケジュール表示
 
-# 昨日のスケジュールをpast_schedulesへ登録（バッチ処理）
+# スケジュールの実施・未実施の変更
+@login_required
+def complete_schedule(request, schedule_id, year, month, day):
+    completed_date = date(year, month, day)
+    # 対象ユーザーとschedule_idでscheduleを取得→存在しなければエラーを返す
+    try:
+        schedule = Schedule.objects.get(
+            id=schedule_id,
+            user=request.user,
+        )
+    except Schedule.DoesNotExist:
+        return JsonResponse({'error': 'Invalid request'}, status=400)
+
+    # completed_schedulesから対象条件のレコードを取得
+    try:
+        completed_record = CompletedSchedule.objects.get(
+            schedule_id=schedule_id, 
+            schedule_date=completed_date,
+        )
+    except CompletedSchedule.DoesNotExist:
+        completed_record = None
+
+    # POSTであれば、completed_schedulesにレコードを追加
+    if request.method == 'POST':
+        if completed_record is None:
+            try:
+                completed_schedule = CompletedSchedule(
+                    schedule_id=schedule_id,
+                    schedule_date=completed_date, 
+                )
+                completed_schedule.save()
+            except:
+                return JsonResponse({'error': 'failed to complete'}, status=400)
+        
+        return JsonResponse({'status': 'completed'}, status=200)
+    
+    # DELETEであれば、completed_schedulesのレコードを削除          
+    elif request.method == 'DELETE':
+        if completed_record:
+            completed_record.delete()
+        return JsonResponse({'status': 'not_completed'}, status=200)
+    
+    # 上記以外はエラー
+    return JsonResponse({'error': 'Invalid request'}, status=400)

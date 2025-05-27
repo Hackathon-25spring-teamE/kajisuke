@@ -1,14 +1,12 @@
 /* 共通のカラーパレット */
 :root {
-    --primary-color: #5D2F1A;  /* メインカラー（ボタン・タイトルなど） */
+    --primary-color: #5D2F1A; /* メインカラー（ボタン・タイトルなど） */
     --secondary-color: #D7C0A4; /* サブカラー（アクセントカラー） */
     --background-color: #F9F5EF; /* 背景色 */
-    --text-color: #5D2F1A; /* 茶色のテキストカラー */
-    --text-color2: #333333; /* 灰色のテキストカラー */
+    --text-color: #5D2F1A; /* メインのテキストカラー */
     --border-color: #D7C0A4; /* 新規登録・ログイン画面の枠線の色 */
     --border-color2: #D4D4D4; /*枠線の色 */
     --locked-input-bg: #EAEAEA; /* 読み取り専用 */
-
     /* 家事カテゴリー毎のカラーパレット */
     --task-category-1: #C5D7FB;
     --task-category-2: #FFE380;
@@ -27,19 +25,38 @@
 /* ページ全体のデザイン */
 html {
     font-size: 100%;
+    height: 100%;
 }
 
 body {
     font-family: var(--font-main);
     font-size: var(--font-size-default);
-    background-color: var(--background-color);
+    background-color: var(--locked-input-bg)!important;
     color: var(--text-color);
     margin: 0;
-    padding: 0;
+    padding: 25px 0px; 
+    height: 90%;
+    min-height: 90vh;
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.framework{
+    position: relative;
+    background-color: var(--background-color)!important;
+    height: 100%;;
+    min-height: 680px;  
+    width: 90vw;
+    max-width: 450px;
+    border-radius: 15px;
+    padding-top: 20px; 
 }
 
 /* コンテンツのコンテナ */
 .container {
+    height: 100%;
     width: 90%;
     max-width: 400px; /* スマホ向けの最大幅を制限 */
     margin: 0 auto;
@@ -102,14 +119,6 @@ img {
     height: auto;
 }
 
-/* フッター */
-/*.footer {
-    text-align: center;
-    position: fixed;
-    bottom: 15px;
-    left: 0;
-    width: 100%;} */
-
 /* フォーム入力エリア */
 .form-control {
     width: 100%;
@@ -119,29 +128,66 @@ img {
     background-color: #FFFFFF;
     box-sizing: border-box;
     height: 40px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+}
+
+/* interval */
+.interval{
+    width: 100px;
+    height: 1.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    text-align: center;
+}
+
+/*---------------------------
+　　モーダル風のデザインに使用
+---------------------------*/
+.background-color{
+  background-color : var(--locked-input-bg) !important;
 }
 
 /* -------------------------------------------
-  スケジュール追加プラスボタン
+　　右上閉じるボタン
 ------------------------------------------- */
-img.add-schedule {
-    position: fixed;
-  /*基準を画面の右下に*/
-    bottom: 25px;
-    right: 25px;
-    width: 55px;
-    z-index: 999;
+.batsu {
+  position: absolute; 
+  top: 25px; /*画面最上部から16px - h2との距離2pxを考慮 */
+  right: 5px; /*画面右端から20pxの位置 */ 
+  width: 24px;
+  height: 24px;
 }
 
-/* -------------------------------------------
-  家事すけロゴ
-------------------------------------------- */
-.logo {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: auto;
-  z-index: -1;
+.batsu::before,
+.batsu::after { /* 共通設定 */
+  content: "";
+  position: absolute;
+  /* left: 50%; */
+  width: 4px; /* 棒の幅（太さ） */
+  height: 30px; /* 棒の高さ */
+  background: #5D2F1A;
+}
+
+.batsu::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.batsu::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+
+/*------------------------------------
+inputタグの増減矢印
+------------------------------------*/
+/* Chrome, Safari, Edge */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: auto;
+    margin: 0;
+}
+
+/* Firefoxで矢印を表示させる */
+input[type="number"] {
+    -moz-appearance: number-input;
 }
