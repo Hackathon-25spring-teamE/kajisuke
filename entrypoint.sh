@@ -17,7 +17,7 @@ done
 echo "MySQL is ready."
 
 # Djangoマイグレーション & 静的ファイル
-python manage.py migrate
+python manage.py migrate --noinput
 python manage.py collectstatic --noinput
 
 # uWSGI起動（プロセスを置き換える）

@@ -4,7 +4,6 @@ from django.db import IntegrityError
 from django.db.models import Q
 from zoneinfo import ZoneInfo
 from dateutil.relativedelta import relativedelta
-from apscheduler.schedulers.background import BackgroundScheduler
 from .models import PastSchedule, Schedule, ExceptionalSchedule
 from .utils.calendar_utils import get_recurrenced_and_exceptional_dates
 
@@ -72,9 +71,3 @@ def insert_past_schedules():
     except Exception as e:
         logger.error(f'error: {str(e)}')
 
-
-# APScheduler:毎日0:00にinsert_past_schedulesを実行する
-def start():
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(insert_past_schedules, 'cron', hour=0, minute=0)
-    scheduler.start()
