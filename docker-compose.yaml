@@ -38,6 +38,7 @@ services:
       - "80:80"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
+      - static_volume:/app/static
       - uwsgi_sock:/app/uwsgi.sock
       - /var/log/kajisuke-nginx:/var/log/nginx
     depends_on:
