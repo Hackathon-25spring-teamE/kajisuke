@@ -1,15 +1,15 @@
+import json
+from django.core.management import call_command
 from django.db import migrations
 
 
 def load_initial_data(apps, schema_editor):
-    MyModel = apps.get_model("apps", "MyModel")
-    if not MyModel.objects.filter(name="default").exists():
-        MyModel.objects.create(name="default")
+    call_command("loaddata", "initial_data.json")
 
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("apps", "0003_initial"),
+        ("apps", "0003_remove_schedule_day_of_month"),
     ]
 
     operations = [
