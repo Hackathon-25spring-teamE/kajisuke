@@ -21,9 +21,39 @@ $("#id_task_category").change(function () {
 
 
 $(document).ready(function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const dateParam = urlParams.get("date");
+
+    if (dateParam) {
+        console.log("URLのdateパラメータ:", dateParam);
+        const $input = $("#id_start_date");
+
+        const inputDate = new Date(dateParam + 'T00:00:00'); // 日付文字列を Date に変換
+        const today = new Date();
+        const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+        let setDate;
+        if (inputDate < todayDateOnly) {
+            setDate = todayDateOnly;
+        } else {
+            setDate = inputDate;
+        }
+
+        // ここで dateStr を定義
+        const y = setDate.getFullYear();
+        const m = String(setDate.getMonth() + 1).padStart(2, '0');
+        const d = String(setDate.getDate()).padStart(2, '0');
+        const dateStr = `${y}-${m}-${d}`;
+
+        // ここで使う
+        console.log("設定する日付:", dateStr);
+        $input.val(dateStr);
+        $input.trigger("change");
+    }
+
     // 初期は全フィールド非表示
     $("#interval-field, #day-of-week-field, #nth-weekday-field").hide();
-
+    
     // 曜日コードマップ（日曜=0〜土曜=6 → Djangoの曜日コード）
     const jsDayToDjangoCode = ["SU", "MO", "TU", "WE", "TH", "FI", "SA"];
 
@@ -244,3 +274,4 @@ $(document).ready(function () {
     }
     updateStartDateWeekday();
 });
+

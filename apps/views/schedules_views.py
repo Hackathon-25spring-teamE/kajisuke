@@ -86,7 +86,7 @@ class ScheduleCreateView(LoginRequiredMixin, CreateView):
         return initial
     
     def get_form_kwargs(self):
-        """フォームにログインユーザーを渡す"""
+        """フォームにログインユーザー・カテゴリ。リクエストを渡す"""
         kwargs = super().get_form_kwargs()
 
         user = self.request.user
@@ -95,6 +95,7 @@ class ScheduleCreateView(LoginRequiredMixin, CreateView):
             user = user._wrapped
 
         kwargs['user'] = user
+        kwargs['request'] = self.request
         task_category_id = self.request.POST.get('task_category') or self.request.GET.get('task_category')
         kwargs['task_category_id'] = task_category_id
         return kwargs
@@ -160,6 +161,16 @@ class ScheduleEditAsNewView(LoginRequiredMixin, UpdateView):
         today = date.today()
         form.initial['start_date'] = get_most_recent_reccurenced_date(schedule, today)
         return form
+
+    
+    
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        schedule = self.get_object()
+        today = date.today()
+        form.initial['start_date'] = get_most_recent_reccurenced_date(schedule, today)
+        return form
+
 
     def form_valid(self, form):
        # 上書き保存するだけ
