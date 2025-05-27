@@ -21,7 +21,5 @@ from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # フロントエンド開発用（アプリが完成したら削除する）
-    path('mock/', include('apps.urls_mock')), 
     path('', include('apps.urls')),
 ]
