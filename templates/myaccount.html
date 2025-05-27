@@ -30,8 +30,13 @@
 
     <h2>マイアカウント</h2> 
         <div class="profile-container">
-            <p><strong>ユーザー名</strong></p><p class="myaccount">ここなっつ</p>
-            <p><strong>メールアドレス</strong></p><p class="myaccount">coconatsu@example.com</p>
+            <div class="margin">
+                <p><strong>ユーザー名</strong></p><p class="myaccount">{{ user.user_name }}</p>
+            </div>
+            <div class="margin">
+                <p><strong>メールアドレス</strong></p><p class="myaccount">{{ user.email }}</p>
+            </div>
+            
         </div>
 
     <!-- 家事すけロゴ --> 
