@@ -45,5 +45,6 @@ urlpatterns = [
     path('schedules/<int:schedule_id>/delete/', ScheduleSoftDeleteView.as_view(), name='schedule_soft_delete'),
     # 実施・未実施の変更
     path('api/schedules/<int:schedule_id>/complete/<int:year>/<int:month>/<int:day>/', complete_schedule, name='complete_schedule'),
+    # アカウントページ
     path('account/', MyPageView.as_view(), name='account_mypage'),
 ]
