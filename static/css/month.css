@@ -66,6 +66,7 @@ nav {
 /* base.css調整 */
 .container {
     width: 100% !important;
+    width: 450px; /* スマホ向けの最大幅を制限 */
 }
 
 #calendar {

@@ -41,7 +41,7 @@ body {
 /* コンテンツのコンテナ */
 .container {
     width: 90%;
-    max-width: 400px; /* スマホ向けの最大幅を制限 */
+    max-width: 450px; /* スマホ向けの最大幅を制限 */
     margin: 0 auto;
     text-align: center;
 }
@@ -144,4 +144,11 @@ img.add-schedule {
   transform: translateX(-50%);
   width: auto;
   z-index: -1;
+}
+
+/*---------------------------------------------
+  マイページで使用
+----------------------------------------------*/
+.margin-top{
+    margin-top: 30vh;
 }
