@@ -1,5 +1,5 @@
 from django.urls import path
-from .views.auth_views import SigninView, SignupView, SignoutView, hello_world
+from .views.auth_views import SigninView, SignupView, SignoutView
 from .views.calendar_views import (
     calendar_month, 
     calendar_day, 

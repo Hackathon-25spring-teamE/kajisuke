@@ -1,5 +1,4 @@
 from django.shortcuts import render ,redirect
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.views.generic import CreateView
 from django.contrib.auth.views import LoginView as BaseLoginView, LogoutView as BaseLogoutView
@@ -16,18 +15,6 @@ from ..forms import SignupForm, SigninForm
 
 
 # Create your views here.
-
-# テスト用表示
-def hello_world(request):
-    context = {
-        "message1": "Hello, world.",
-        "message2": "KAJISUKEapp is here!",
-        'today': timezone.now().date(),
-    }
-    # フロントページができたら、以下の形に書き換える（contextは直接渡す）
-    # return render(request, '<フロントページのhtml>', context)
-    return render(request, 'dev/dev.html', {'context': context})
-
 
 # サインアップ
 class SignupView(CreateView):
