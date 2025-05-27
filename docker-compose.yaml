@@ -15,7 +15,21 @@ services:
       interval: 10s
       retries: 5
       start_period: 30s
-    
+
+  scheduler:
+    container_name: kajisuke-scheduler
+    build:
+      context: .
+    command: python manage.py runapscheduler
+    restart: on-failure
+    depends_on:
+      - web
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f runapscheduler || exit 1"]
+      interval: 30s
+      retries: 3
+      start_period: 20s
+
   nginx:
     image: nginx:latest
     container_name: kajisuke-nginx
@@ -24,7 +38,6 @@ services:
       - "80:80"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
-      - static_volume:/app/static
       - uwsgi_sock:/app/uwsgi.sock
       - /var/log/kajisuke-nginx:/var/log/nginx
     depends_on:
