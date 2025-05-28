@@ -1,5 +1,5 @@
 from django.urls import path
-from .views.auth_views import SigninView, SignupView, SignoutView, hello_world
+from .views.auth_views import SigninView, SignupView, SignoutView
 from .views.calendar_views import (
     calendar_month, 
     calendar_day, 
@@ -15,6 +15,7 @@ from .views.schedules_views import (
     ScheduleSoftDeleteView, 
     complete_schedule
     )
+from .views.account_views import MyPageView
 
 app_name = "apps"
 
@@ -44,4 +45,6 @@ urlpatterns = [
     path('schedules/<int:schedule_id>/delete/', ScheduleSoftDeleteView.as_view(), name='schedule_soft_delete'),
     # 実施・未実施の変更
     path('api/schedules/<int:schedule_id>/complete/<int:year>/<int:month>/<int:day>/', complete_schedule, name='complete_schedule'),
+    # アカウントページ
+    path('account/', MyPageView.as_view(), name='account_mypage'),
 ]
