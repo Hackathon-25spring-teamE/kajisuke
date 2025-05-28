@@ -88,7 +88,7 @@ class ScheduleForm(forms.ModelForm):
     task = forms.ModelChoiceField(queryset=Task.objects.none(), required=True,label="--家事--") # 初期状態は空
     frequency = forms.ChoiceField(choices=FREQUENCY_CHOICES,label="繰り返し設定",widget=forms.HiddenInput() ) # 見た目には表示しない（ボタンに置き換えるため）
     day_of_week = forms.ChoiceField(choices=JAPANESE_DAY_OF_WEEK_CHOICES, required=False)
-    nth_weekday = forms.IntegerField(widget=forms.HiddenInput())
+    nth_weekday = forms.IntegerField(required=False, widget=forms.HiddenInput())
     class Meta:
         model = Schedule
         fields = ['start_date', 'task_category', 'task', 'memo', 'frequency', 'interval', 'day_of_week', 'nth_weekday']
@@ -159,6 +159,15 @@ class ScheduleForm(forms.ModelForm):
 
         if (frequency == "MONTHLY" and monthly_option == "by_date") or \
         (frequency == "YEARLY" and yearly_option == "by_date"):
+            instance.nth_weekday = None
+
+        # WEEKLY の場合は nth_weekday をクリア
+        if frequency == "WEEKLY":
+            instance.nth_weekday = None
+
+        # DAILY または NONE の場合は day_of_week と nth_weekday をクリア
+        if frequency in ["DAILY", "NONE"]:
+            instance.day_of_week = None
             instance.nth_weekday = None
 
         if commit:
