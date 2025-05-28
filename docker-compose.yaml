@@ -19,8 +19,8 @@ services:
       driver: "awslogs"
       options:
         awslogs-group: "/ec2/kajisuke"
-        awslogs-region: ap-northeast-1
-        awslogs-stream-prefix: "kajisuke-web"
+        awslogs-region: "ap-northeast-1"
+        awslogs-stream: "kajisuke-web/${hostname}"
 
   batch:
     container_name: kajisuke-batch
@@ -41,8 +41,8 @@ services:
       driver: "awslogs"
       options:
         awslogs-group: "/ec2/kajisuke"
-        awslogs-region: ap-northeast-1
-        awslogs-stream-prefix: "kajisuke-batch"
+        awslogs-region: "ap-northeast-1"
+        awslogs-stream: "kajisuke-batch/${hostname}"
 
   nginx:
     image: nginx:latest
