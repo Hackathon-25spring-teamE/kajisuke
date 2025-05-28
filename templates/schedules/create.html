@@ -45,6 +45,7 @@
     <!-- 繰り返し設定 -->
     <!-- Hidden フィールドで値を渡す -->
     {{ form.frequency }}
+    {{ form.nth_weekday }}
     <!-- frequency をボタンで選択 -->
     <div id="frequency-buttons">
         <label>繰り返し設定</label>
@@ -108,7 +109,6 @@
                 </label>
 
                 <div id="monthly-nth-weekday-selects" >
-                    {{ form.nth_weekday }}<br>
                 </div>
                 <span class="field-help" id="nth-weekday-help"></span>
             </div>
