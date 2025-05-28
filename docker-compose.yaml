@@ -20,7 +20,7 @@ services:
       options:
         awslogs-group: "/ec2/kajisuke"
         awslogs-region: "ap-northeast-1"
-        awslogs-stream: "kajisuke-web/${hostname}"
+        awslogs-stream: "kajisuke-web-01"
 
   batch:
     container_name: kajisuke-batch
@@ -42,7 +42,7 @@ services:
       options:
         awslogs-group: "/ec2/kajisuke"
         awslogs-region: "ap-northeast-1"
-        awslogs-stream: "kajisuke-batch/${hostname}"
+        awslogs-stream: "kajisuke-batch-01"
 
   nginx:
     image: nginx:latest
