@@ -21,7 +21,7 @@ class Command(BaseCommand):
             try:
                 logger.info("[Batch Job] Starting schedule archiving batch.")
                 insert_past_schedules()
-                logger.info("[Batch Job] Schedule archiving batch completed successfully.")
+                logger.info("[Batch Job] SUCCESS: insert_past_schedules completed.")
             except Exception as e:
                 logger.exception("[Batch Job] Exception occurred during schedule archiving: %s", str(e))
 
