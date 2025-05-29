@@ -1,11 +1,19 @@
 import os
 import logging
+import requests
 from django.core.management.base import BaseCommand
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apps.batch import insert_past_schedules
 
 logger = logging.getLogger(__name__)
+
+def get_instance_id():
+    try:
+        response = requests.get("http://169.254.169.254/latest/meta-data/instance-id", timeout=1)
+        return response.text
+    except Exception:
+        return "unknown-instance"
 
 class Command(BaseCommand):
     help = 'Run APScheduler using BlockingScheduler'
@@ -19,6 +27,8 @@ class Command(BaseCommand):
 
         def batch_wrapper():
             try:
+                instance_id = get_instance_id()
+                logger.info(f"[Batch Job] Running on EC2 instance: {instance_id}")
                 logger.info("[Batch Job] Starting schedule archiving batch.")
                 insert_past_schedules()
                 logger.info("[Batch Job] SUCCESS: insert_past_schedules completed.")
@@ -33,7 +43,7 @@ class Command(BaseCommand):
             name="Daily Schedule Archiver",
             replace_existing=True,
         )
-        
+
         logger.info("[Batch Scheduler] Scheduler started.")
 
         try:
