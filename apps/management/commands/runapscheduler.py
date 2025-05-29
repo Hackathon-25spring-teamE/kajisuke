@@ -33,7 +33,8 @@ class Command(BaseCommand):
                 insert_past_schedules()
                 logger.info("[Batch Job] SUCCESS: insert_past_schedules completed.")
             except Exception as e:
-                logger.exception("[Batch Job] Exception occurred during schedule archiving: %s", str(e))
+                instance_id = get_instance_id()
+                logger.exception(f"[Batch Job] Exception on instance {instance_id}: {str(e)}")
 
         scheduler = BlockingScheduler()
         scheduler.add_job(
