@@ -58,6 +58,14 @@ textarea {
   resize: none; /* テキストエリアのリサイズを禁止 */
 }
 
+select {
+  background-color: #FFFFFF;
+}
+
+input[type="date"] {
+  color: var(--text-color2);
+}
+
 /* テーブルセルのボーダー統合 */
 th, td {
   border-collapse: collapse; /* 枠のズレを防止 */
