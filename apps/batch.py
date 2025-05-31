@@ -60,9 +60,9 @@ def insert_past_schedules():
         # 5.insert_dataがあれば、past_schedulesにinsertする
         if insert_data:
             PastSchedule.objects.bulk_create(insert_data, batch_size=1000)
-            logger.info(f'result: schedules of {yesterday.date()}, {len(insert_data)} records inserted')
+            logger.info(f'[Batch Logic] SUCCESS: schedules of {yesterday.date()}, {len(insert_data)} records inserted')
         else:
-            logger.info(f'result: schedules of {yesterday.date()}, No data to insert')
+            logger.info(f'[Batch Logic] SUCCESS: schedules of {yesterday.date()}, No data to insert')
 
     # IntegrityError: DB制約に違反する操作を行った場合(一意性制約、NULL制約、外部キー制約など）
     except IntegrityError as e:

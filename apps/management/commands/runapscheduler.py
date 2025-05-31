@@ -31,7 +31,7 @@ class Command(BaseCommand):
                 logger.info(f"[Batch Job] Running on EC2 instance: {instance_id}")
                 logger.info("[Batch Job] Starting schedule archiving batch.")
                 insert_past_schedules()
-                logger.info("[Batch Job] SUCCESS: insert_past_schedules completed.")
+                logger.info("[Batch Job] insert_past_schedules completed.")
             except Exception as e:
                 instance_id = get_instance_id()
                 logger.exception(f"[Batch Job] Exception on instance {instance_id}: {str(e)}")
