@@ -1,17 +1,22 @@
 import logging
 from django.utils import timezone
-from django.db import IntegrityError
+from django.db import IntegrityError, OperationalError
 from django.db.models import Q
 from zoneinfo import ZoneInfo
 from dateutil.relativedelta import relativedelta
+from tenacity import retry, stop_after_attempt, wait_fixed, retry_if_exception_type
 from .models import PastSchedule, Schedule, ExceptionalSchedule
 from .utils.calendar_utils import get_recurrenced_and_exceptional_dates
-
 
 # loggerの設定
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+@retry(
+    stop=stop_after_attempt(3),  # 最大3回までリトライ
+    wait=wait_fixed(2),  # 2秒待ってから再試行
+    retry=retry_if_exception_type(OperationalError)  # OperationalErrorのときのみリトライ
+)
 
 # 昨日のスケジュールをpast_schedulesテーブルへinsertする
 def insert_past_schedules():
@@ -64,6 +69,9 @@ def insert_past_schedules():
         else:
             logger.info(f'[Batch Logic] SUCCESS: schedules of {yesterday.date()}, No data to insert')
 
+    except OperationalError as e:
+        logger.warning(f'Retrying due to OperationalError: {str(e)}')
+        raise
     # IntegrityError: DB制約に違反する操作を行った場合(一意性制約、NULL制約、外部キー制約など）
     except IntegrityError as e:
         logger.error(f'IntegrityError: {str(e)}')
