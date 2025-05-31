@@ -20,7 +20,7 @@ from .views.account_views import MyPageView
 app_name = "apps"
 
 urlpatterns = [
-    # テスト用ページ
+    # ホーム表示
     path('', redirect_to_current_calendar, name="calendar_redirect"),
     # 認証機能
     path('signup/', SignupView.as_view(), name='signup'),

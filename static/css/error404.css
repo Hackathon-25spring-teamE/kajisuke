@@ -1,0 +1,49 @@
+/* -------------------------------------------
+  上部固定表示
+------------------------------------------- */
+.fixed-bar {
+    position: sticky;
+    top: 0;
+    background-color: var(--background-color);
+}
+
+/* -------------------------------------------
+  ナビゲーションアイコン
+------------------------------------------- */
+nav {
+    display: flex;
+    justify-content: space-between; /* 左右の要素を分ける */
+    align-items: center; /* アイコンを中央揃え */
+    /*max-width: calc(100% - 48px); /* カレンダー幅より24px内側 */
+    margin: 0 auto;
+    padding: 20px 0px;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* 左側アイコンの間隔を調整 */
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+}
+
+/* -------------------------------------------
+　　タイトル表示
+------------------------------------------- */
+h2 {
+    font-size: 24px;
+    font-weight: 900;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+/* -------------------------------------------
+　　エラー文
+------------------------------------------- */
+.error-container {
+    width: 90%;
+    margin: 80px auto;
+}

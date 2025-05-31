@@ -33,7 +33,8 @@ DEBUG = os.environ.get("DEBUG") == "True"
 
 
 # ALLOWED_HOSTSを.envから取得
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","").split(" ")
+# ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","").split(" ")
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
