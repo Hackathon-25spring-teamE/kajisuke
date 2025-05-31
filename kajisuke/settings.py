@@ -140,6 +140,8 @@ DATABASES = {
         'PASSWORD': db_credentials['password'],
         'HOST': db_credentials['host'],
         'PORT': db_credentials['port'],
+        # RDSの接続の再利用時間
+        "CONN_MAX_AGE": 60,
         "OPTIONS": {
             # STRICT_TRANS_TABLES：InsertやUpdateをした値がテーブルの指定に従っていない場合に、SQLの実行を中止する
             "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
