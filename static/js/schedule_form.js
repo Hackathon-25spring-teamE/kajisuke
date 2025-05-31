@@ -1,4 +1,3 @@
-console.log("schedule_form.js 読み込み成功！");
 // Ajaxでカテゴリーに応じたタスクを表示処理 
 $("#id_task_category").change(function () {
     const url = "/ajax/load-tasks/";

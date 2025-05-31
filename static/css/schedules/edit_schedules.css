@@ -98,6 +98,8 @@ select:disabled {
   border: 1px solid var(--border-color);
   text-align: center;
   cursor: pointer;
+  color: var(--text-color);
+
 }
 
 .frequency-buttons.selected {

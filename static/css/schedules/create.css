@@ -100,10 +100,12 @@ select{
     border: 1px solid var(--border-color);
     text-align: center;
     cursor: pointer;
+    color: var(--text-color);
 }
 
 .frequency-buttons.selected {
     background-color: var(--primary-color);
+    border: 1px solid var(--primary-color);
     color: white;
 }
 

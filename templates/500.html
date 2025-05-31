@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}サーバーエラー - Kajisuke{% endblock %}
+{% block description %}Kajisukeの500エラーページ{% endblock %}
+{% block extra_css %}
+<link href="{% static 'css/error500.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block header_title %}{% endblock %}  <!-- ここで空にする -->
+
+{% block content %}
+<div class="fixed-bar">
+    <nav>
+        <div class="nav-left">
+            <a href="{% url 'apps:calendar_redirect' %}">
+                <img src="{% static 'images/icon-calendar.svg' %}" alt="calendar-icon">
+            </a>
+            <a href="{% url 'apps:schedules_list' %}">
+                <img src="{% static 'images/icon-list.svg' %}" alt="list-icon">
+            </a>
+        </div>
+        <div class="nav-right">
+            <a href="{% url 'apps:account_mypage' %}">
+                <img src="{% static 'images/icon-account.svg' %}" alt="signout-icon">
+            </a>   
+        </div>
+    </nav>
+</div>
+
+<div class="error-container">
+    <h2>サーバーにエラーが<br>発生しました</h2>
+    <p>申し訳ありませんが、しばらくしてから再度お試しください</p>
+</div>
+
+<!-- 家事すけロゴ（500エラー） --> 
+<div>
+    <img class="logo" src="{% static 'images/kajisuke_500.svg' %}" alt="Kaji suke">
+</div>
+
+{% endblock %}
