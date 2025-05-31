@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
     const images = document.querySelectorAll('.check-icon');
-    console.log(csrfToken);
 
     images.forEach(function(image) {
         image.addEventListener('click', function() {
