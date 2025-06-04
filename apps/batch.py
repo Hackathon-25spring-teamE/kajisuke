@@ -12,12 +12,6 @@ from .utils.calendar_utils import get_recurrenced_and_exceptional_dates
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-@retry(
-    stop=stop_after_attempt(3),  # 最大3回までリトライ
-    wait=wait_fixed(2),  # 2秒待ってから再試行
-    retry=retry_if_exception_type(OperationalError)  # OperationalErrorのときのみリトライ
-)
-
 # 昨日のスケジュールをpast_schedulesテーブルへinsertする
 def insert_past_schedules():
     try:
@@ -79,3 +73,16 @@ def insert_past_schedules():
     except Exception as e:
         logger.error(f'error: {str(e)}')
 
+@retry(
+    stop=stop_after_attempt(3),  # 最大3回までリトライ
+    wait=wait_fixed(2),  # 2秒待ってから再試行
+    retry=retry_if_exception_type(OperationalError)  # OperationalErrorのときのみリトライ
+)
+
+def job_logic():
+    from django.db import connection
+    connection.close()  # 古い接続を強制的に破棄（MySQLのwait_timeout対応）
+    insert_past_schedules()
+
+if __name__ == '__main__':
+    job_logic()
