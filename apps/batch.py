@@ -82,7 +82,5 @@ def insert_past_schedules():
 def job_logic():
     from django.db import connection
     connection.close()  # 古い接続を強制的に破棄（MySQLのwait_timeout対応）
+    logger.info("[Batch Job] Closed old DB connection before running batch.")
     insert_past_schedules()
-
-if __name__ == '__main__':
-    job_logic()

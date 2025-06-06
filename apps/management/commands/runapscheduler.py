@@ -4,7 +4,7 @@ import requests
 from django.core.management.base import BaseCommand
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
-from apps.batch import insert_past_schedules
+from apps.batch import job_logic
 
 logger = logging.getLogger(__name__)
 
@@ -30,8 +30,8 @@ class Command(BaseCommand):
                 instance_id = get_instance_id()
                 logger.info(f"[Batch Job] Running on EC2 instance: {instance_id}")
                 logger.info("[Batch Job] Starting schedule archiving batch.")
-                insert_past_schedules()
-                logger.info("[Batch Job] insert_past_schedules completed.")
+                job_logic()
+                logger.info("[Batch Job] job_logic completed.")
             except Exception as e:
                 instance_id = get_instance_id()
                 logger.exception(f"[Batch Job] Exception on instance {instance_id}: {str(e)}")
